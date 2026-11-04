@@ -1,0 +1,2470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWMS - Banking Engineering & Support Workspace [Brutalist Edition]</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN for Analytics View -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Immediate theme initialization to prevent flash
+    (function() {
+      const savedTheme = localStorage.getItem('pwms_theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          colors: {
+            brutal: {
+              yellow: '#FFE600',
+              cyan: '#00F0FF',
+              pink: '#FF3366',
+              green: '#00F59B',
+              purple: '#B388FF',
+              orange: '#FF8800',
+              bgLight: '#F3F4F6',
+              bgDark: '#0D0E12',
+              surfaceLight: '#FFFFFF',
+              surfaceDark: '#1A1C23',
+              cardDark: '#232631',
+              borderDark: '#FFFFFF'
+            }
+          },
+          boxShadow: {
+            'brutal': '4px 4px 0px 0px #000000',
+            'brutal-sm': '2px 2px 0px 0px #000000',
+            'brutal-lg': '6px 6px 0px 0px #000000',
+            'brutal-dark': '4px 4px 0px 0px #FFE600',
+            'brutal-dark-sm': '2px 2px 0px 0px #FFE600',
+            'brutal-white': '4px 4px 0px 0px #FFFFFF',
+            'brutal-white-sm': '2px 2px 0px 0px #FFFFFF'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Space+Grotesk:wght@500;700;900&display=swap');
+
+    * {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Brutalist Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E5E7EB;
+      border-left: 2px solid #000000;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #1A1C23;
+      border-left: 2px solid #FFFFFF;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #000000;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #FFE600;
+    }
+
+    /* Kanban Drag & Drop Styles */
+    .kanban-card.dragging {
+      opacity: 0.5;
+      transform: scale(0.97) rotate(-1deg);
+      border: 3px dashed #FF3366 !important;
+    }
+    .kanban-col.drag-over {
+      background-color: #FFE600 !important;
+      outline: 3px solid #000000;
+    }
+    .dark .kanban-col.drag-over {
+      background-color: #2D2700 !important;
+      outline: 3px solid #FFE600;
+    }
+
+    /* Brutalist form controls */
+    select, input, textarea {
+      outline: none;
+    }
+  </style>
+</head>
+<body class="bg-brutal-bgLight dark:bg-brutal-bgDark text-black dark:text-white font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-150">
+
+  <!-- ================= BRUTALIST TOP NAVIGATION BAR ================= -->
+  <header class="bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white h-14 flex items-center justify-between px-4 z-30 flex-shrink-0 border-b-4 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-dark-sm">
+    <div class="flex items-center space-x-3">
+      <!-- App Switcher / Sidebar Toggle -->
+      <button id="toggleSidebarBtn" class="bg-white dark:bg-black p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-black dark:text-white" title="Toggle Sidebar">
+        <i class="fa-solid fa-bars text-base"></i>
+      </button>
+      
+      <!-- Logo & System Identifier -->
+      <div class="flex items-center space-x-2">
+        <div class="w-9 h-9 border-2 border-black dark:border-white bg-black dark:bg-white text-brutal-yellow dark:text-black flex items-center justify-center font-black shadow-brutal-sm dark:shadow-brutal-dark-sm text-base">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-black text-sm tracking-tight flex items-center gap-1.5">
+            PWMS <span class="bg-black dark:bg-brutal-yellow text-white dark:text-black text-[10px] px-1.5 py-0.5 border border-black dark:border-white font-mono font-black">CORE V2</span>
+          </span>
+          <span class="text-[11px] font-bold text-black/80 dark:text-white/80 uppercase truncate max-w-[210px] sm:max-w-none">Banking Support & Dev</span>
+        </div>
+      </div>
+
+      <!-- Project Switcher Badge -->
+      <div class="hidden md:flex items-center ml-4 pl-4 border-l-2 border-black dark:border-white text-xs">
+        <span class="bg-white dark:bg-black px-2.5 py-1 border-2 border-black dark:border-white font-bold shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-layer-group text-brutal-pink"></i>
+          <span>PROJECT:</span>
+          <span class="font-mono text-brutal-pink">BNK-ENTERPRISE</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Quick Global Actions & Controls -->
+    <div class="flex items-center space-x-2">
+      <!-- Search Input in Header -->
+      <div class="relative hidden sm:block w-48 md:w-60">
+        <input 
+          id="globalSearchInput" 
+          type="text" 
+          placeholder="SEARCH (/)..." 
+          class="w-full bg-white dark:bg-black text-black dark:text-white placeholder-black/60 dark:placeholder-white/60 text-xs font-bold px-3 py-1.5 pl-8 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm focus:bg-brutal-cyan dark:focus:bg-brutal-cardDark transition"
+        >
+        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-black dark:text-white"></i>
+      </div>
+
+      <!-- Quick Create Button (+ Task) -->
+      <button 
+        id="openCreateModalBtn" 
+        class="bg-brutal-cyan dark:bg-brutal-yellow text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition flex items-center gap-1.5"
+        title="Shortcut: Press 'c'"
+      >
+        <i class="fa-solid fa-plus text-xs"></i>
+        <span class="hidden sm:inline">CREATE TASK</span>
+      </button>
+
+      <!-- Quick Log Work Button -->
+      <button 
+        id="openCreateTimesheetModalBtn" 
+        class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition flex items-center gap-1.5"
+      >
+        <i class="fa-solid fa-stopwatch text-xs"></i>
+        <span class="hidden sm:inline">LOG WORK</span>
+      </button>
+
+      <!-- Dark / Light Mode Switcher Button -->
+      <button 
+        id="themeToggleBtn" 
+        class="bg-white dark:bg-black text-black dark:text-white p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center gap-1.5 font-bold"
+        title="Toggle Dark / Light Mode"
+      >
+        <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
+        <span class="hidden md:inline text-xs font-black" id="themeLabel">DARK</span>
+      </button>
+
+      <!-- Excel / Backup Actions Dropdown Menu -->
+      <div class="relative">
+        <button id="backupMenuBtn" class="bg-white dark:bg-black text-black dark:text-white px-2.5 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center gap-1 font-black">
+          <i class="fa-solid fa-database text-sm"></i>
+          <span class="hidden lg:inline text-xs">BACKUP</span>
+          <i class="fa-solid fa-chevron-down text-[10px] ml-0.5"></i>
+        </button>
+
+        <div id="backupMenuDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark text-xs py-2 z-50">
+          <div class="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-black text-white dark:bg-white dark:text-black mb-1">Backup & Excel Hub</div>
+          <button id="exportCsvBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-green hover:text-black font-bold flex items-center gap-2">
+            <i class="fa-solid fa-file-excel text-emerald-600 text-sm w-4"></i> Export Tasks to Excel (CSV)
+          </button>
+          <button id="exportTimesheetCsvBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-cyan hover:text-black font-bold flex items-center gap-2">
+            <i class="fa-solid fa-file-invoice text-blue-600 text-sm w-4"></i> Export Weekly Timesheet (CSV)
+          </button>
+          <button id="exportJsonBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-yellow hover:text-black font-bold flex items-center gap-2">
+            <i class="fa-solid fa-file-arrow-down text-purple-600 text-sm w-4"></i> Download Full JSON State
+          </button>
+          <label class="w-full text-left px-3 py-2 hover:bg-brutal-pink hover:text-white font-bold flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-file-arrow-up text-amber-500 text-sm w-4"></i> Restore JSON Backup
+            <input type="file" id="importJsonInput" accept=".json" class="hidden">
+          </label>
+          <div class="border-t-2 border-black dark:border-white my-1"></div>
+          <button id="resetSampleDataBtn" class="w-full text-left px-3 py-2 hover:bg-red-500 hover:text-white text-red-600 dark:text-red-400 font-black flex items-center gap-2">
+            <i class="fa-solid fa-rotate-right text-sm w-4"></i> Reload Sample Banking Tasks
+          </button>
+        </div>
+      </div>
+
+      <!-- Engineer Profile Badge -->
+      <div class="flex items-center pl-1">
+        <div class="w-8 h-8 border-2 border-black dark:border-white bg-brutal-pink text-white font-black flex items-center justify-center text-xs shadow-brutal-sm dark:shadow-brutal-white-sm">
+          RA
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN BODY CONTAINER ================= -->
+  <div class="flex flex-1 overflow-hidden">
+    
+    <!-- ================= BRUTALIST SIDEBAR ================= -->
+    <aside id="sidebar" class="bg-white dark:bg-brutal-surfaceDark text-black dark:text-white w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-150 border-r-4 border-black dark:border-white z-20 overflow-y-auto">
+      <div class="p-3">
+        <!-- Project Context Header -->
+        <div class="p-2.5 mb-3 bg-brutal-cyan dark:bg-brutal-cardDark border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+          <div class="flex items-center space-x-2">
+            <div class="w-6 h-6 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-center text-xs font-black">
+              BK
+            </div>
+            <div class="overflow-hidden leading-none">
+              <div class="text-xs font-black truncate uppercase">FinTech Core Prod</div>
+              <div class="text-[10px] font-mono font-bold mt-1 opacity-80">L3 Dev & Support Suite</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Navigation Views -->
+        <div class="space-y-1.5">
+          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">System Views</div>
+          
+          <button data-view="kanban" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-black bg-brutal-yellow text-black shadow-brutal-sm transition">
+            <i class="fa-solid fa-table-columns text-sm w-4"></i>
+            <span>Kanban Board</span>
+          </button>
+
+          <button data-view="timesheet" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-green hover:text-black transition">
+            <i class="fa-solid fa-business-time text-sm w-4"></i>
+            <span>Daily Work Timesheet</span>
+          </button>
+
+          <button data-view="list" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-cyan hover:text-black transition">
+            <i class="fa-solid fa-list-check text-sm w-4"></i>
+            <span>Detailed List / Excel</span>
+          </button>
+
+          <button data-view="meetings" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-purple hover:text-black transition">
+            <i class="fa-solid fa-calendar-day text-sm w-4"></i>
+            <span>Syncs & Deployments</span>
+          </button>
+
+          <button data-view="metrics" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-pink hover:text-white transition">
+            <i class="fa-solid fa-chart-pie text-sm w-4"></i>
+            <span>Metrics & Bottlenecks</span>
+          </button>
+        </div>
+
+        <!-- Module Quick Badges (BCRED, COLLNDISC, ARIMP, TORM, FIDB REVAMP, BULK EXPORT, FBFP, FIDB IMPORT) -->
+        <div class="mt-4 space-y-1">
+          <div class="flex items-center justify-between px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">
+            <span>Modules</span>
+            <span class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1.5 font-mono font-bold">8 APPS</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            <button onclick="applyQuickModuleFilter('BCRED')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span>BCRED</span>
+              <span id="badge-BCRED" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('COLLNDISC')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-green hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span class="truncate">COLLNDISC</span>
+              <span id="badge-COLLNDISC" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('ARIMP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span>ARIMP</span>
+              <span id="badge-ARIMP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('TORM')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-purple hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span>TORM</span>
+              <span id="badge-TORM" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FIDB REVAMP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-pink hover:text-white border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span class="truncate">FIDB REV</span>
+              <span id="badge-FIDBREVAMP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('BULK EXPORT')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-orange hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span class="truncate">BULK EXP</span>
+              <span id="badge-BULKEXPORT" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FBFP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span>FBFP</span>
+              <span id="badge-FBFP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FIDB IMPORT')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <span class="truncate">FIDB IMP</span>
+              <span id="badge-FIDBIMPORT" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Bottleneck Counters in Sidebar -->
+        <div class="mt-4 space-y-1">
+          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">Live Bottlenecks</div>
+          <div class="flex flex-col gap-1.5 pt-1">
+            <button onclick="applyQuickPendingFilter('BSG')" class="text-left px-2.5 py-1.5 bg-brutal-yellow text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+              <span>⏳ PENDING BSG</span>
+              <span id="badge-pending-BSG" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
+            </button>
+            <button onclick="applyQuickPendingFilter('Testers / QA')" class="text-left px-2.5 py-1.5 bg-brutal-purple text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+              <span>⏳ PENDING QA</span>
+              <span id="badge-pending-QA" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
+            </button>
+            <button onclick="applyQuickPendingFilter('DEV')" class="text-left px-2.5 py-1.5 bg-brutal-cyan text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+              <span>⏳ PENDING DEV</span>
+              <span id="badge-pending-DEV" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Shortcuts Info at Bottom of Sidebar -->
+      <div class="p-3 border-t-4 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-[11px] font-mono font-bold">
+        <div class="flex items-center justify-between mb-1">
+          <span>SHORTCUTS:</span>
+          <span class="bg-black text-white dark:bg-white dark:text-black px-1">c: NEW</span>
+          <span class="bg-black text-white dark:bg-white dark:text-black px-1">/: FIND</span>
+        </div>
+        <div class="text-[10px] text-center mt-1 uppercase font-black">
+          100% LOCALSTORAGE • BRUTALIST UI
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= CONTENT AREA ================= -->
+    <main class="flex-1 flex flex-col min-w-0 bg-brutal-bgLight dark:bg-brutal-bgDark overflow-hidden">
+      
+      <!-- FILTER & ACTION TOOLBAR -->
+      <section id="filterToolbar" class="bg-white dark:bg-brutal-surfaceDark border-b-4 border-black dark:border-white px-4 py-2 flex-shrink-0 flex flex-wrap items-center justify-between gap-2 z-10 shadow-brutal-sm">
+        <div class="flex flex-wrap items-center gap-2">
+          
+          <!-- Module Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-black uppercase">MODULE:</span>
+            <select id="filterModule" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+              <option value="ALL">ALL MODULES</option>
+              <option value="BCRED">BCRED</option>
+              <option value="COLLNDISC">COLLNDISC</option>
+              <option value="ARIMP">ARIMP</option>
+              <option value="TORM">TORM</option>
+              <option value="FIDB REVAMP">FIDB REVAMP</option>
+              <option value="BULK EXPORT">BULK EXPORT</option>
+              <option value="FBFP">FBFP</option>
+              <option value="FIDB IMPORT">FIDB IMPORT</option>
+            </select>
+          </div>
+
+          <!-- Pending With Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-black uppercase text-amber-600 dark:text-brutal-yellow flex items-center gap-1">
+              <i class="fa-solid fa-hourglass-half text-[10px]"></i> PENDING:
+            </span>
+            <select id="filterPendingWith" class="bg-brutal-yellow text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm">
+              <option value="ALL">ALL PENDING STATES</option>
+              <option value="BSG">BSG (Business Solutions)</option>
+              <option value="DEV">DEV (Engineering)</option>
+              <option value="Testers / QA">Testers / QA</option>
+              <option value="Business Operations">Business Operations</option>
+              <option value="DBA Team">DBA Team</option>
+              <option value="Infra / DevOps">Infra / DevOps</option>
+              <option value="InfoSec / Audit">InfoSec / Audit</option>
+              <option value="Third-Party Vendor">Third-Party Vendor</option>
+              <option value="Client / Branch User">Client / Branch User</option>
+              <option value="None (Active)">None (Active / With Me)</option>
+            </select>
+          </div>
+
+          <!-- Assignee Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-black uppercase text-blue-600 dark:text-brutal-cyan flex items-center gap-1">
+              <i class="fa-solid fa-user-tag text-[10px]"></i> ASSIGNEE:
+            </span>
+            <select id="filterAssignee" class="bg-brutal-cyan text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm max-w-[150px]">
+              <option value="ALL">ALL ASSIGNEES</option>
+            </select>
+          </div>
+
+          <!-- Issue Type Filter -->
+          <select id="filterIssueType" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <option value="ALL">ALL ISSUE TYPES</option>
+            <option value="Production Issue">Production Issue</option>
+            <option value="UAT Defect">UAT Defect</option>
+            <option value="Development Activity">Development Activity</option>
+            <option value="User Query">User Query / Ad-hoc</option>
+            <option value="KT Session">KT Session</option>
+            <option value="BRD Discussion">BRD Discussion</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Deployment">Deployment / Release</option>
+            <option value="Follow-Up">Follow-Up</option>
+          </select>
+
+          <!-- Priority Filter -->
+          <select id="filterPriority" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <option value="ALL">ALL PRIORITIES</option>
+            <option value="P1">P1 - BLOCKER / CRITICAL</option>
+            <option value="P2">P2 - HIGH</option>
+            <option value="P3">P3 - MEDIUM</option>
+            <option value="P4">P4 - LOW</option>
+          </select>
+
+          <!-- Quick Toggle Pills -->
+          <button id="toggleP1OnlyBtn" class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-red-600 dark:text-red-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            <i class="fa-solid fa-fire text-red-500"></i> P1 ONLY
+          </button>
+          
+          <button id="toggleHighAgeingBtn" class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-amber-600 dark:text-amber-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            <i class="fa-solid fa-clock-rotate-left"></i> AGEING > 5D
+          </button>
+
+          <!-- Reset Filters -->
+          <button id="clearFiltersBtn" class="text-xs bg-black text-white dark:bg-white dark:text-black font-black px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            RESET
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <!-- Active Items Counter -->
+          <span class="text-xs font-black uppercase bg-brutal-yellow dark:bg-brutal-cardDark text-black dark:text-white px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm">
+            SHOWING: <strong id="visibleTasksCount" class="font-mono font-black text-brutal-pink">0</strong> TASKS
+          </span>
+        </div>
+      </section>
+
+      <!-- ================= VIEW CONTAINERS ================= -->
+      <div class="flex-1 overflow-auto relative p-4">
+        
+        <!-- 1. KANBAN BOARD VIEW -->
+        <section id="view-kanban" class="h-full flex flex-col">
+          <div class="flex-1 overflow-x-auto pb-4">
+            <div class="flex gap-4 h-full min-w-[1380px]">
+              
+              <!-- Column: Backlog -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Backlog">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-gray-400 border border-black dark:border-white"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">Backlog</h3>
+                  </div>
+                  <span class="col-count bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-black px-2 py-0.5 border border-black dark:border-white">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Backlog"></div>
+              </div>
+
+              <!-- Column: In Progress -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="In Progress">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-cyan text-black px-1.5 py-0.5 -mx-1 -mt-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-blue-600 border border-black"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">In Progress</h3>
+                  </div>
+                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="In Progress"></div>
+              </div>
+
+              <!-- Column: UAT / Testing -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="UAT / Testing">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-purple text-black px-1.5 py-0.5 -mx-1 -mt-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-purple-600 border border-black"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">UAT / Testing</h3>
+                  </div>
+                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="UAT / Testing"></div>
+              </div>
+
+              <!-- Column: Ready for Prod -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Ready for Prod">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-yellow text-black px-1.5 py-0.5 -mx-1 -mt-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-amber-500 border border-black"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">Ready for Prod</h3>
+                  </div>
+                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Ready for Prod"></div>
+              </div>
+
+              <!-- Column: Blocked -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Blocked">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-pink text-white px-1.5 py-0.5 -mx-1 -mt-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-red-600 border border-white animate-pulse"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">Blocked</h3>
+                  </div>
+                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-white">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Blocked"></div>
+              </div>
+
+              <!-- Column: Closed -->
+              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Closed">
+                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-green text-black px-1.5 py-0.5 -mx-1 -mt-1">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-emerald-600 border border-black"></span>
+                    <h3 class="text-xs font-black uppercase tracking-wider">Closed / Done</h3>
+                  </div>
+                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Closed"></div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. DAILY WORK LOG & TIMESHEET VIEW (Matching Corporate Banking Layout)[cite: 1] -->
+        <section id="view-timesheet" class="hidden h-full flex flex-col space-y-4">
+          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-4 shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-base font-black uppercase tracking-tight flex items-center gap-2">
+                <i class="fa-solid fa-business-time text-brutal-pink"></i> Corporate Daily Activity & Weekly Timesheet
+              </h2>
+              <p class="text-xs font-bold text-black/70 dark:text-white/70">Formatted to match managerial submission template: track past-tense tasks, hours, and extra shift work[cite: 1].</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <span id="timesheetTotalHrsBadge" class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm font-mono">
+                TOTAL LOGGED: 0.0 HRS
+              </span>
+              <button onclick="exportTimesheetCsv()" class="bg-brutal-yellow text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-excel"></i> Export Timesheet to Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
+            <div class="flex-1 overflow-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
+                  <tr>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">#</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Resource Name</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">POD Name</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Day</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Date</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task Category</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task - Name / Title / Milestone</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task - Description</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Time Spent</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Priority</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Effort</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Start Date</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Target Date</th>
+                    <th class="py-2.5 px-3 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="timesheetTableBody" class="divide-y-2 divide-black dark:divide-white font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. DETAILED LIST / EXCEL GRID VIEW -->
+        <section id="view-list" class="hidden h-full flex flex-col">
+          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
+            <div class="p-3 border-b-2 border-black dark:border-white flex items-center justify-between bg-brutal-yellow text-black">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-table text-black text-sm"></i>
+                <span class="font-black text-xs uppercase tracking-wider">Enterprise Task Master Sheet</span>
+                <span class="text-[11px] font-bold">| (Click row to edit details)</span>
+              </div>
+              <button onclick="exportToCsv()" class="text-xs bg-black text-white hover:bg-white hover:text-black border-2 border-black px-2.5 py-1 font-black flex items-center gap-1.5 shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+                <i class="fa-solid fa-file-excel text-emerald-400"></i> EXPORT GRID TO EXCEL
+              </button>
+            </div>
+            
+            <div class="flex-1 overflow-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
+                  <tr>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('id')">ID <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3">Type</th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('summary')">Issue / Task Summary <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('module')">Module <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('pendingWith')">Pending With <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('priority')">Priority <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('status')">Status <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3">Env</th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('startDate')">Start Date <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('ageing')">Ageing <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('assignedTo')">Assignee <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="listTableBody" class="divide-y-2 divide-black dark:divide-white font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. MEETINGS & DEPLOYMENTS VIEW -->
+        <section id="view-meetings" class="hidden h-full flex flex-col space-y-4">
+          <div class="bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-brutal-cyan text-black border-2 border-black flex items-center justify-center text-lg font-black shadow-brutal-sm">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+              <div>
+                <h2 class="text-sm font-black uppercase">Banking Support Daily Standup & Release Schedule</h2>
+                <p class="text-xs font-bold text-black/70 dark:text-white/70">Track KT sessions, BRD reviews, CAB calls and release deployment windows</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 font-mono">
+              <span class="text-xs font-black uppercase">Scope:</span>
+              <button onclick="setMeetingsScope('today')" id="scopeTodayBtn" class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-brutal-yellow text-black shadow-brutal-sm">TODAY</button>
+              <button onclick="setMeetingsScope('all')" id="scopeAllBtn" class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm">ALL SCHEDULED</button>
+            </div>
+          </div>
+
+          <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
+            <!-- Left: Scheduled Meetings & KT Sessions -->
+            <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+              <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-purple text-black flex items-center justify-between font-black">
+                <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-video"></i> Meetings, KT Sessions & BRD Reviews
+                </span>
+                <span id="meetingsCountBadge" class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-black">0</span>
+              </div>
+              <div id="meetingsListContainer" class="flex-1 p-3 overflow-y-auto space-y-3"></div>
+            </div>
+
+            <!-- Right: Deployments & Critical P1 Followups -->
+            <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+              <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-pink text-white flex items-center justify-between font-black">
+                <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-rocket"></i> Deployments & P1 Prod Follow-Ups
+                </span>
+                <span id="deploymentsCountBadge" class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-white">0</span>
+              </div>
+              <div id="followUpsListContainer" class="flex-1 p-3 overflow-y-auto space-y-3"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. METRICS & BOTTLENECK ANALYSIS VIEW -->
+        <section id="view-metrics" class="hidden h-full overflow-y-auto space-y-4">
+          <!-- Metric KPI Stat Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider text-black/60 dark:text-white/60">Total Tasks</div>
+              <div id="statTotal" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div class="text-[10px] font-bold mt-0.5">Across all modules</div>
+            </div>
+
+            <div class="bg-brutal-pink text-white p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider opacity-90">Open P1 Blockers</div>
+              <div id="statP1" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div class="text-[10px] font-bold mt-0.5">Production SLA Critical</div>
+            </div>
+
+            <div class="bg-brutal-yellow text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider">Pending With Teams</div>
+              <div id="statPendingExternal" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div class="text-[10px] font-bold mt-0.5">Waiting BSG / QA / DBA</div>
+            </div>
+
+            <div class="bg-brutal-purple text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider">Prod Releases</div>
+              <div id="statDeployments" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div class="text-[10px] font-bold mt-0.5">Ready for release</div>
+            </div>
+
+            <div class="bg-brutal-cyan text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider">Avg Task Ageing</div>
+              <div id="statAvgAgeing" class="text-3xl font-black mt-1 font-mono">0 <span class="text-xs font-normal">d</span></div>
+              <div class="text-[10px] font-bold mt-0.5">Active backlog items</div>
+            </div>
+
+            <div class="bg-brutal-green text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider">Closed / Done</div>
+              <div id="statClosed" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div class="text-[10px] font-bold mt-0.5">Resolved items</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <i class="fa-solid fa-hourglass-half text-amber-500"></i> Bottlenecks (Pending With)
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="pendingWithChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-column text-brutal-cyan"></i> Pipeline By Status
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+
+            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <i class="fa-solid fa-cubes-stacked text-brutal-purple"></i> Module Distribution
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="moduleChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLA Ageing Health Grid -->
+          <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <h3 class="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5 text-red-600 dark:text-red-400">
+              <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-black text-white dark:bg-white dark:text-black font-mono font-black border-b-2 border-black dark:border-white uppercase">
+                  <tr>
+                    <th class="p-2">Task ID</th>
+                    <th class="p-2">Module</th>
+                    <th class="p-2">Pending With</th>
+                    <th class="p-2">Issue Type</th>
+                    <th class="p-2">Summary</th>
+                    <th class="p-2">Status</th>
+                    <th class="p-2">Priority</th>
+                    <th class="p-2">Ageing</th>
+                    <th class="p-2">Assignee</th>
+                  </tr>
+                </thead>
+                <tbody id="highAgeingTableBody" class="divide-y-2 divide-black dark:divide-white font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= BRUTALIST MODALS ================= -->
+
+  <!-- 1. CREATE / EDIT TASK MODAL -->
+  <div id="taskModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
+    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 bg-brutal-yellow text-black border-b-4 border-black dark:border-white flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-7 h-7 bg-black text-white flex items-center justify-center text-xs font-black border border-black">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </span>
+          <div>
+            <h2 id="taskModalTitle" class="text-sm font-black uppercase">Create Banking Work Item</h2>
+            <p class="text-[11px] font-bold">Track modules, technical solutions & production blockers</p>
+          </div>
+        </div>
+        <button id="closeTaskModalBtn" class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Modal Tabs Header -->
+      <div class="flex border-b-2 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-xs font-black">
+        <button data-tab="tab-general" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white">
+          <i class="fa-solid fa-circle-info mr-1"></i> 1. CORE & ASSIGNEE
+        </button>
+        <button data-tab="tab-technical" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white">
+          <i class="fa-solid fa-code mr-1"></i> 2. RCA & CODE FIX
+        </button>
+        <button data-tab="tab-meeting" class="modal-tab-btn py-2.5 px-4 text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white">
+          <i class="fa-solid fa-calendar mr-1"></i> 3. MEETING / KT SYNC
+        </button>
+      </div>
+
+      <!-- Modal Body (Tab Content) -->
+      <form id="taskForm" class="flex-1 overflow-y-auto p-5 space-y-4">
+        <input type="hidden" id="editTaskIdHidden">
+
+        <!-- TAB 1: CORE DETAILS & OWNERSHIP -->
+        <div id="tab-general" class="modal-tab-pane space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Task ID *</label>
+              <input type="text" id="taskIdInput" required class="w-full text-xs font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 uppercase shadow-brutal-sm">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Module *</label>
+              <select id="taskModuleInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+                <option value="BCRED">BCRED</option>
+                <option value="COLLNDISC">COLLNDISC</option>
+                <option value="ARIMP">ARIMP</option>
+                <option value="TORM">TORM</option>
+                <option value="FIDB REVAMP">FIDB REVAMP</option>
+                <option value="BULK EXPORT">BULK EXPORT</option>
+                <option value="FBFP">FBFP</option>
+                <option value="FIDB IMPORT">FIDB IMPORT</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Issue Type *</label>
+              <select id="taskIssueTypeInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+                <option value="Production Issue">Production Issue</option>
+                <option value="UAT Defect">UAT Defect</option>
+                <option value="Development Activity">Development Activity</option>
+                <option value="User Query">User Query / Ad-hoc</option>
+                <option value="KT Session">KT Session</option>
+                <option value="BRD Discussion">BRD Discussion</option>
+                <option value="Meeting">Meeting</option>
+                <option value="Deployment">Deployment / Release</option>
+                <option value="Follow-Up">Follow-Up</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Priority *</label>
+              <select id="taskPriorityInput" required class="w-full text-xs font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+                <option value="P1">P1 - Blocker / Critical</option>
+                <option value="P2">P2 - High</option>
+                <option value="P3" selected>P3 - Medium</option>
+                <option value="P4">P4 - Low</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Summary / Problem Statement *</label>
+            <input type="text" id="taskSummaryInput" required placeholder="e.g., EOD batch failure in BCRED_INTEREST job with ORA-01555" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
+          </div>
+
+          <!-- Status, Pending With, Environment -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Status *</label>
+              <select id="taskStatusInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+                <option value="Backlog">Backlog</option>
+                <option value="In Progress">In Progress</option>
+                <option value="UAT / Testing">UAT / Testing</option>
+                <option value="Ready for Prod">Ready for Prod</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1 text-amber-600 dark:text-brutal-yellow">
+                Pending With *
+              </label>
+              <select id="taskPendingWithInput" required class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
+                <option value="None (Active)">None (Active / With Me)</option>
+                <option value="BSG">BSG (Business Solutions Group)</option>
+                <option value="DEV">DEV (Engineering Team)</option>
+                <option value="Testers / QA">Testers / QA</option>
+                <option value="Business Operations">Business Operations</option>
+                <option value="DBA Team">DBA Team</option>
+                <option value="Infra / DevOps">Infra / DevOps</option>
+                <option value="InfoSec / Audit">InfoSec / Audit</option>
+                <option value="Third-Party Vendor">Third-Party Vendor</option>
+                <option value="Client / Branch User">Client / Branch User</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Environment</label>
+              <select id="taskEnvInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
+                <option value="PROD">PROD (Production)</option>
+                <option value="UAT">UAT</option>
+                <option value="SIT">SIT</option>
+                <option value="DEV">DEV</option>
+                <option value="DR">DR (Disaster Recovery)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Assignee & Reported By -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Assigned To (Assignee)</label>
+              <input type="text" id="taskAssignedToInput" list="assigneeDatalist" placeholder="e.g., Bhai ,  S." class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <datalist id="assigneeDatalist"></datalist>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Assigned By / Reported By</label>
+              <input type="text" id="taskAssignedByInput" placeholder="Lead / Manager Name" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+          </div>
+
+          <!-- Dates Row -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono">
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Start Date *</label>
+              <input type="date" id="taskStartDateInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Target End Date</label>
+              <input type="date" id="taskEndDateInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Target Prod Date</label>
+              <input type="date" id="taskProdDateInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+          </div>
+
+          <!-- Details -->
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Task Details & Error Traces</label>
+            <textarea id="taskDetailsInput" rows="3" placeholder="Paste incident logs, stack traces or technical description..." class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+          </div>
+        </div>
+
+        <!-- TAB 2: TECHNICAL SOLUTION & ROOT CAUSE -->
+        <div id="tab-technical" class="modal-tab-pane hidden space-y-4">
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Root Cause Analysis (RCA)</label>
+            <textarea id="taskRcaInput" rows="3" placeholder="RCA findings: e.g., Unindexed join condition on ACCT_MASTER, deadlock in Swift parser queue..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Solution / Code Fix Details / Workaround</label>
+            <textarea id="taskSolutionInput" rows="4" placeholder="Patch details, stored procedure corrections, release scripts..." class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+          </div>
+
+          <div class="bg-brutal-cyan text-black border-2 border-black p-3 font-bold text-xs shadow-brutal-sm">
+            <i class="fa-solid fa-lightbulb text-black mr-1"></i>
+            <strong>Banking Pro-Tip:</strong> When routing tasks to <em>BSG</em> or <em>Testers</em>, log the precise testing query and expected verification result here.
+          </div>
+        </div>
+
+        <!-- TAB 3: MEETING, KT & BRD SYNC -->
+        <div id="tab-meeting" class="modal-tab-pane hidden space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono">
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Meeting Time</label>
+              <input type="time" id="taskMeetingTimeInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Duration (Min)</label>
+              <input type="number" id="taskMeetingDurationInput" placeholder="30" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-black uppercase mb-1">Attendees</label>
+              <input type="text" id="taskMeetingAttendeesInput" placeholder="DBA, BSG BA, Ops Lead" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Meeting Agenda / KT Notes</label>
+            <textarea id="taskMeetingNotesInput" rows="4" placeholder="Key decisions made, action items, or KT walkthrough notes..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="pt-3 border-t-2 border-black dark:border-white flex items-center justify-between">
+          <button type="button" id="deleteTaskBtn" class="hidden text-xs bg-red-600 text-white font-black px-3 py-2 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            <i class="fa-solid fa-trash-can mr-1"></i> DELETE TASK
+          </button>
+          
+          <div class="flex items-center space-x-2 ml-auto">
+            <button type="button" id="cancelTaskModalBtn" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+              CANCEL
+            </button>
+            <button type="submit" class="text-xs bg-brutal-yellow text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+              <i class="fa-solid fa-floppy-disk"></i> SAVE ITEM
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. CREATE TIMESHEET MODAL (Corporate Layout)[cite: 1] -->
+  <div id="timesheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
+    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-3.5 bg-brutal-green text-black border-b-4 border-black dark:border-white flex items-center justify-between">
+        <h2 class="text-sm font-black uppercase flex items-center gap-2">
+          <i class="fa-solid fa-stopwatch"></i> Log Daily Work Activity (Past Tense)
+        </h2>
+        <button onclick="closeTimesheetModal()" class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="timesheetForm" class="p-5 space-y-4 overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Resource Name *</label>
+            <input type="text" id="tsResourceInput" required value="Tanmay S / Lead-ICM" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+          </div>
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">POD Name (IBG, ILC, ARIPM etc.) *</label>
+            <input type="text" id="tsPodInput" required value="IBG" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Date *</label>
+            <input type="date" id="tsDateInput" required onchange="syncTsDay()" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+          </div>
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Day Name</label>
+            <input type="text" id="tsDayInput" readonly class="w-full text-xs font-bold border-2 border-black dark:border-white bg-gray-200 dark:bg-brutal-cardDark text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+          </div>
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Time Spent (Hours) *</label>
+            <input type="number" step="0.25" min="0.25" max="24" id="tsHoursInput" required placeholder="e.g. 2.5" class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Task Category *</label>
+            <select id="tsCategoryInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <option value="New Development">New Development</option>
+              <option value="Documentation">Documentation</option>
+              <option value="Prod Support">Prod Support</option>
+              <option value="Meeting">Meeting</option>
+              <option value="KT Session">KT Session</option>
+              <option value="BRD Discussion">BRD Discussion</option>
+              <option value="Deployment">Deployment</option>
+              <option value="RnD / Investigation">RnD / Investigation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-black uppercase mb-1">Priority</label>
+            <select id="tsPriorityInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-black uppercase mb-1">Task - Name / Title / Milestone *</label>
+          <input type="text" id="tsTitleInput" required placeholder="e.g. Attended daily morning scrum call from 09:00 to 10:00" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-black uppercase mb-1">Task - Description (What you did in past tense) *</label>
+          <textarea id="tsDescInput" required rows="3" placeholder="e.g. Attended meeting from 09:00 to 10:00 for status update, then investigated incident INC882910 with DBA..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-black uppercase mb-1">Effort Estimate (e.g. 2 Hours, 1 Day)</label>
+          <input type="text" id="tsEstimateInput" placeholder="2 Hours" class="w-full text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+        </div>
+
+        <div class="pt-3 border-t-2 border-black dark:border-white flex justify-end space-x-2">
+          <button type="button" onclick="closeTimesheetModal()" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            CANCEL
+          </button>
+          <button type="submit" class="text-xs bg-brutal-green text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+            <i class="fa-solid fa-plus"></i> APPEND TIMESHEET
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. SAFE CONFIRMATION DIALOG -->
+  <div id="confirmDialog" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark max-w-sm w-full p-5 animate-in fade-in zoom-in-95">
+      <div class="flex items-center space-x-3 text-red-600 dark:text-red-400 mb-2 font-black text-sm uppercase">
+        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+        <h3 id="confirmDialogTitle">CONFIRM ACTION</h3>
+      </div>
+      <p id="confirmDialogMessage" class="text-xs font-bold mb-5">Are you sure you want to perform this action?</p>
+      <div class="flex justify-end space-x-2">
+        <button id="confirmDialogCancelBtn" class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CANCEL</button>
+        <button id="confirmDialogProceedBtn" class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-red-600 text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CONFIRM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. BRUTALIST TOAST CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ================= CORE JAVASCRIPT ================= -->
+  <script>
+    /* -------------------------------------------------------------
+       1. STORAGE KEYS & SEED DATA
+    ------------------------------------------------------------- */
+    const STORAGE_KEY_TASKS = 'PWMS_BANKING_TASKS_DATA_V2';
+    const STORAGE_KEY_TIMESHEET = 'PWMS_BANKING_TIMESHEET_DATA_V2';
+    
+    // Seed Banking Tasks with requested modules (BCRED, COLLNDISC, ARIMP, etc.)
+    const SAMPLE_TASKS = [
+      {
+        id: "BNK-1001",
+        module: "BCRED",
+        issueType: "Production Issue",
+        priority: "P1",
+        status: "In Progress",
+        pendingWith: "DBA Team",
+        summary: "EOD batch failure in BCRED_INTEREST_ACCRUAL job with ORA-01555 snapshot too old",
+        details: "Incident INC882910. Credit cards batch aborted at step 42. Over 45,000 corporate credit cards interest unposted.",
+        rca: "Long-running query on unindexed transaction table collided with heavy concurrent undo tablespace retention.",
+        solution: "Added compound index on (CARD_ACCT_ID, POST_STATUS, TRAN_DATE). Batch tuned to commit in chunks of 5000.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Operations Manager",
+        env: "PROD",
+        startDate: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 1 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
+        meetingTime: "10:30",
+        meetingDuration: "30",
+        meetingAttendees: "DBA Lead, Core Ops, Support Engineer",
+        meetingNotes: "DBA approved hotfix deployment window for tonight at 23:30 IST.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1002",
+        module: "COLLNDISC",
+        issueType: "UAT Defect",
+        priority: "P2",
+        status: "UAT / Testing",
+        pendingWith: "BSG",
+        summary: "Collateral haircut calculation discrepancy for sovereign bond valuation",
+        details: "Defect logged by Risk BA during UAT cycle 3. Sovereign debt with maturity > 10 yrs getting 12% haircut instead of RBI guideline 8%.",
+        rca: "Table COLL_HAIRCUT_MATRIX had stale rule sequence prioritizing corporate paper category over sovereign ticker.",
+        solution: "Updated priority weight logic in valuation stored procedure SP_CALC_COLLATERAL_VAL. Waiting on BSG sign-off.",
+        assignedTo: "Pooja M. (BA)",
+        assignedBy: "Risk BA",
+        env: "UAT",
+        startDate: new Date(Date.now() - 4 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+        meetingTime: "14:00",
+        meetingDuration: "45",
+        meetingAttendees: "Risk Team, Dev Lead",
+        meetingNotes: "Walkthrough of test scenarios for sovereign and commercial paper collateral types.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1003",
+        module: "ARIMP",
+        issueType: "Development Activity",
+        priority: "P3",
+        status: "Ready for Prod",
+        pendingWith: "Testers / QA",
+        summary: "Build ARIMP inward clearing reconciler for high-value RTGS settlements",
+        details: "Mandatory compliance enhancement for high-value settlement reconciliation pipeline.",
+        rca: "Feature enhancement.",
+        solution: "Engineered transformer microservice. Code reviewed and signed off.",
+        assignedTo: "Rahul V. (Dev Lead)",
+        assignedBy: "Tech Lead",
+        env: "SIT",
+        startDate: new Date(Date.now() - 11 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 4 * 86400000).toISOString().split('T')[0],
+        meetingTime: "16:00",
+        meetingDuration: "20",
+        meetingAttendees: "Release Management, Payments BA",
+        meetingNotes: "CAB approval received. Production deployment scheduled for Sunday 01:00 AM.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1004",
+        module: "TORM",
+        issueType: "BRD Discussion",
+        priority: "P3",
+        status: "In Progress",
+        pendingWith: "BSG",
+        summary: "TORM FX forward contract mark-to-market revaluation formula update",
+        details: "Front office requesting real-time MTM valuation calculation for EUR/USD hedges.",
+        rca: "Requirement gathering.",
+        solution: "Drafting technical architecture specification and DB schema impact document.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Treasury Desk Head",
+        env: "DEV",
+        startDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "11:30",
+        meetingDuration: "60",
+        meetingAttendees: "Treasury Desk, Business Analysts, Dev Team",
+        meetingNotes: "Agreed to adopt live feed discount curve instead of static monthly table.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1005",
+        module: "FIDB REVAMP",
+        issueType: "Production Issue",
+        priority: "P1",
+        status: "Blocked",
+        pendingWith: "Third-Party Vendor",
+        summary: "Inbound customer indexing pipeline timeout via primary messaging broker",
+        details: "Cluster socket reset during high load customer indexing batch.",
+        rca: "Primary gateway vendor IP lease expired on balancer.",
+        solution: "Rerouted traffic to secondary node. Escalated vendor ticket to Critical.",
+        assignedTo: "Infra On-Call",
+        assignedBy: "Operations Lead",
+        env: "PROD",
+        startDate: new Date(Date.now() - 8 * 86400000).toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "12:15",
+        meetingDuration: "15",
+        meetingAttendees: "Infra Ops, Vendor Rep",
+        meetingNotes: "Waiting on carrier root cause report before lifting blocker tag.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1006",
+        module: "BULK EXPORT",
+        issueType: "KT Session",
+        priority: "P4",
+        status: "Backlog",
+        pendingWith: "DEV",
+        summary: "Knowledge Transfer on Bulk Export multi-threaded CSV generation daemon",
+        details: "Session for junior engineers on file generation queues and thread pools.",
+        rca: "N/A",
+        solution: "Documentation ready on shared drive.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Engineering Manager",
+        env: "DEV",
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "15:00",
+        meetingDuration: "45",
+        meetingAttendees: "Support Team, New Developers",
+        meetingNotes: "Hands-on walkthrough of staging logs and queue tables.",
+        closedDate: null
+      }
+    ];
+
+    // Seed Timesheet matching Excel Image Template[cite: 1]
+    const SAMPLE_TIMESHEET = [
+      {
+        id: 1,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "Prod Support",
+        task_title: "BNK-1001 Production triage & root cause analysis",
+        task_description: "Investigated ORA-01555 snapshot too old batch crash with DBA. Drafted numeric scale fix and cursor chunking.",
+        time_spent: 3.5,
+        priority: "High",
+        effort_estimate: "4 Hours",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 2,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "Meeting",
+        task_title: "Attended daily morning scrum call from 09:00 to 10:00",
+        task_description: "Presented progress on BCRED and COLLNDISC defects, unblocked QA team on test data setup.",
+        time_spent: 1.0,
+        priority: "Medium",
+        effort_estimate: "1 Hour",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 3,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "New Development",
+        task_title: "Engineered ARIMP outward parser microservice",
+        task_description: "Completed ISO XML parser, DTO binding and integration unit tests with 95% test coverage.",
+        time_spent: 4.0,
+        priority: "High",
+        effort_estimate: "2 Days",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      }
+    ];
+
+    /* -------------------------------------------------------------
+       2. STATE MANAGEMENT
+    ------------------------------------------------------------- */
+    let tasks = [];
+    let timesheets = [];
+    let currentView = 'kanban';
+    let currentMeetingsScope = 'today';
+    let statusChartInstance = null;
+    let moduleChartInstance = null;
+    let pendingChartInstance = null;
+    let sortColumn = 'startDate';
+    let sortDirection = 'desc';
+
+    function loadData() {
+      try {
+        const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS) || localStorage.getItem('PWMS_BANKING_TASKS_DATA_V1');
+        tasks = storedTasks ? JSON.parse(storedTasks) : [...SAMPLE_TASKS];
+        tasks.forEach(t => { if (!t.pendingWith) t.pendingWith = 'None (Active)'; });
+      } catch (e) {
+        tasks = [...SAMPLE_TASKS];
+      }
+
+      try {
+        const storedTs = localStorage.getItem(STORAGE_KEY_TIMESHEET);
+        timesheets = storedTs ? JSON.parse(storedTs) : [...SAMPLE_TIMESHEET];
+      } catch (e) {
+        timesheets = [...SAMPLE_TIMESHEET];
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+    }
+
+    function saveTimesheet() {
+      localStorage.setItem(STORAGE_KEY_TIMESHEET, JSON.stringify(timesheets));
+    }
+
+    /* -------------------------------------------------------------
+       3. BRUTALIST BADGES & HELPERS
+    ------------------------------------------------------------- */
+    function calculateAgeing(startDate, status, closedDate) {
+      if (!startDate) return 0;
+      const start = new Date(startDate);
+      const end = (status === 'Closed' && closedDate) ? new Date(closedDate) : new Date();
+      return Math.max(0, Math.floor((end - start) / 86400000));
+    }
+
+    function getAgeingBadgeHtml(ageingDays, status) {
+      if (status === 'Closed') {
+        return `<span class="bg-gray-200 dark:bg-black text-black dark:text-white px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-mono font-bold">${ageingDays}d</span>`;
+      }
+      if (ageingDays >= 8) {
+        return `<span class="bg-brutal-pink text-white px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-mono font-black flex items-center gap-1 shadow-brutal-sm" title="High Ageing Warning"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${ageingDays}d</span>`;
+      } else if (ageingDays >= 4) {
+        return `<span class="bg-brutal-yellow text-black px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-mono font-black flex items-center gap-1 shadow-brutal-sm"><i class="fa-regular fa-clock text-[9px]"></i> ${ageingDays}d</span>`;
+      }
+      return `<span class="bg-brutal-green text-black px-1.5 py-0.5 border border-black dark:border-white text-[10px] font-mono font-black shadow-brutal-sm">${ageingDays}d</span>`;
+    }
+
+    function getPendingWithBadgeHtml(pending) {
+      if (!pending || pending === 'None (Active)') {
+        return `<span class="bg-gray-100 dark:bg-black text-black dark:text-white border border-black dark:border-white px-1.5 py-0.5 text-[10px] font-mono font-bold flex items-center gap-1"><i class="fa-solid fa-user-check text-[9px]"></i> Active</span>`;
+      }
+      return `<span class="bg-brutal-yellow text-black border-2 border-black dark:border-white px-1.5 py-0.5 text-[10px] font-mono font-black flex items-center gap-1 shadow-brutal-sm">
+        <i class="fa-solid fa-hourglass-half text-[9px]"></i>
+        <span>PENDING: <strong>${escapeHtml(pending)}</strong></span>
+      </span>`;
+    }
+
+    function getPriorityBadgeHtml(p) {
+      switch (p) {
+        case 'P1':
+          return `<span class="bg-brutal-pink text-white border border-black dark:border-white px-1.5 py-0.5 font-black text-[10px] font-mono flex items-center gap-1 shadow-brutal-sm"><i class="fa-solid fa-angles-up"></i> P1 Blocker</span>`;
+        case 'P2':
+          return `<span class="bg-brutal-orange text-black border border-black dark:border-white px-1.5 py-0.5 font-black text-[10px] font-mono flex items-center gap-1 shadow-brutal-sm"><i class="fa-solid fa-angle-up"></i> P2 High</span>`;
+        case 'P3':
+          return `<span class="bg-brutal-cyan text-black border border-black dark:border-white px-1.5 py-0.5 font-black text-[10px] font-mono flex items-center gap-1 shadow-brutal-sm"><i class="fa-solid fa-bars"></i> P3 Med</span>`;
+        default:
+          return `<span class="bg-gray-200 dark:bg-black text-black dark:text-white border border-black dark:border-white px-1.5 py-0.5 font-bold text-[10px] font-mono flex items-center gap-1"><i class="fa-solid fa-angle-down"></i> P4 Low</span>`;
+      }
+    }
+
+    function getModuleBadgeHtml(mod) {
+      const colors = {
+        'BCRED': 'bg-brutal-cyan text-black',
+        'COLLNDISC': 'bg-brutal-green text-black',
+        'ARIMP': 'bg-brutal-yellow text-black',
+        'TORM': 'bg-brutal-purple text-black',
+        'FIDB REVAMP': 'bg-brutal-pink text-white',
+        'BULK EXPORT': 'bg-brutal-orange text-black',
+        'FBFP': 'bg-brutal-yellow text-black',
+        'FIDB IMPORT': 'bg-brutal-cyan text-black'
+      };
+      const cls = colors[mod] || 'bg-white dark:bg-black text-black dark:text-white';
+      return `<span class="border border-black dark:border-white px-1.5 py-0.5 text-[10px] font-mono font-black shadow-brutal-sm ${cls}">${escapeHtml(mod)}</span>`;
+    }
+
+    function getStatusBadgeHtml(status) {
+      const colors = {
+        'Backlog': 'bg-gray-200 dark:bg-black text-black dark:text-white',
+        'In Progress': 'bg-brutal-cyan text-black',
+        'UAT / Testing': 'bg-brutal-purple text-black',
+        'Ready for Prod': 'bg-brutal-yellow text-black',
+        'Blocked': 'bg-brutal-pink text-white',
+        'Closed': 'bg-brutal-green text-black'
+      };
+      const cls = colors[status] || 'bg-white dark:bg-black text-black dark:text-white';
+      return `<span class="border border-black dark:border-white px-2 py-0.5 text-[10px] font-black uppercase font-mono shadow-brutal-sm ${cls}">${escapeHtml(status)}</span>`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* -------------------------------------------------------------
+       4. THEME & TOAST SYSTEM
+    ------------------------------------------------------------- */
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('pwms_theme', isDark ? 'dark' : 'light');
+      updateThemeControls(isDark);
+      if (currentView === 'metrics') renderCharts();
+      showToast(isDark ? 'DARK BRUTALISM ACTIVATED' : 'LIGHT BRUTALISM ACTIVATED', 'info');
+    }
+
+    function updateThemeControls(isDark) {
+      const icon = document.getElementById('themeToggleIcon');
+      const label = document.getElementById('themeLabel');
+      if (icon) icon.className = isDark ? 'fa-solid fa-sun text-sm text-brutal-yellow' : 'fa-solid fa-moon text-sm';
+      if (label) label.innerText = isDark ? 'LIGHT' : 'DARK';
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const typeBg = {
+        success: 'bg-brutal-green text-black',
+        error: 'bg-brutal-pink text-white',
+        info: 'bg-brutal-yellow text-black'
+      };
+      
+      toast.className = `${typeBg[type] || 'bg-white text-black'} px-4 py-2.5 border-4 border-black dark:border-white shadow-brutal-lg text-xs font-black flex items-center space-x-2.5 uppercase pointer-events-auto transition-transform`;
+      toast.innerHTML = `
+        <i class="fa-solid fa-terminal text-sm"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 200);
+      }, 3500);
+    }
+
+    function customConfirm(title, message, onProceed) {
+      const dialog = document.getElementById('confirmDialog');
+      document.getElementById('confirmDialogTitle').innerText = title;
+      document.getElementById('confirmDialogMessage').innerText = message;
+      
+      const proceedBtn = document.getElementById('confirmDialogProceedBtn');
+      const cancelBtn = document.getElementById('confirmDialogCancelBtn');
+      
+      const closeDialog = () => {
+        dialog.classList.add('hidden');
+        proceedBtn.onclick = null;
+        cancelBtn.onclick = null;
+      };
+
+      cancelBtn.onclick = closeDialog;
+      proceedBtn.onclick = () => {
+        closeDialog();
+        onProceed();
+      };
+
+      dialog.classList.remove('hidden');
+    }
+
+    /* -------------------------------------------------------------
+       5. DYNAMIC ASSIGNEES & FILTERING
+    ------------------------------------------------------------- */
+    function syncAssigneeOptions() {
+      const assigneeSelect = document.getElementById('filterAssignee');
+      const currentSelected = assigneeSelect.value || 'ALL';
+      const datalist = document.getElementById('assigneeDatalist');
+      
+      const defaultMembers = ['Support Engineer', 'Rahul V. (Dev Lead)', 'Pooja M. (BA)', 'DBA On-Call', 'Infra On-Call', 'Unassigned'];
+      const set = new Set(defaultMembers);
+
+      tasks.forEach(t => { if (t.assignedTo && t.assignedTo.trim()) set.add(t.assignedTo.trim()); });
+      const uniqueAssignees = Array.from(set).sort();
+
+      assigneeSelect.innerHTML = `<option value="ALL">ALL ASSIGNEES</option>`;
+      uniqueAssignees.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name.toUpperCase();
+        assigneeSelect.appendChild(opt);
+      });
+      assigneeSelect.value = Array.from(assigneeSelect.options).some(o => o.value === currentSelected) ? currentSelected : 'ALL';
+
+      datalist.innerHTML = '';
+      uniqueAssignees.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        datalist.appendChild(opt);
+      });
+    }
+
+    function getFilteredTasks() {
+      const searchTerm = document.getElementById('globalSearchInput').value.trim().toLowerCase();
+      const modFilter = document.getElementById('filterModule').value;
+      const pendingFilter = document.getElementById('filterPendingWith').value;
+      const assigneeFilter = document.getElementById('filterAssignee').value;
+      const typeFilter = document.getElementById('filterIssueType').value;
+      const priorityFilter = document.getElementById('filterPriority').value;
+      const p1Only = document.getElementById('toggleP1OnlyBtn').classList.contains('bg-red-600');
+      const highAgeingOnly = document.getElementById('toggleHighAgeingBtn').classList.contains('bg-amber-500');
+
+      return tasks.filter(t => {
+        if (modFilter !== 'ALL' && t.module !== modFilter) return false;
+        if (pendingFilter !== 'ALL' && t.pendingWith !== pendingFilter) return false;
+        if (assigneeFilter !== 'ALL') {
+          if (assigneeFilter === 'Unassigned' && t.assignedTo && t.assignedTo.trim() !== '') return false;
+          else if (assigneeFilter !== 'Unassigned' && (t.assignedTo || '').trim().toLowerCase() !== assigneeFilter.toLowerCase()) return false;
+        }
+        if (typeFilter !== 'ALL' && t.issueType !== typeFilter) return false;
+        if (priorityFilter !== 'ALL' && t.priority !== priorityFilter) return false;
+        if (p1Only && t.priority !== 'P1') return false;
+        if (highAgeingOnly && calculateAgeing(t.startDate, t.status, t.closedDate) < 5) return false;
+
+        if (searchTerm) {
+          const hay = `${t.id} ${t.summary} ${t.module} ${t.pendingWith} ${t.details} ${t.solution} ${t.rca} ${t.assignedTo}`.toLowerCase();
+          if (!hay.includes(searchTerm)) return false;
+        }
+        return true;
+      });
+    }
+
+    /* -------------------------------------------------------------
+       6. RENDERING APPLICATION VIEWS
+    ------------------------------------------------------------- */
+    function renderApp() {
+      syncAssigneeOptions();
+      const filtered = getFilteredTasks();
+      document.getElementById('visibleTasksCount').innerText = filtered.length;
+      updateSidebarBadges();
+
+      if (currentView === 'kanban') renderKanban(filtered);
+      else if (currentView === 'timesheet') renderTimesheet();
+      else if (currentView === 'list') renderList(filtered);
+      else if (currentView === 'meetings') renderMeetings(tasks);
+      else if (currentView === 'metrics') renderMetrics();
+    }
+
+    function updateSidebarBadges() {
+      const modules = ['BCRED', 'COLLNDISC', 'ARIMP', 'TORM', 'FIDBREVAMP', 'BULKEXPORT', 'FBFP', 'FIDBIMPORT'];
+      const modMap = {
+        'BCRED': 'BCRED',
+        'COLLNDISC': 'COLLNDISC',
+        'ARIMP': 'ARIMP',
+        'TORM': 'TORM',
+        'FIDBREVAMP': 'FIDB REVAMP',
+        'BULKEXPORT': 'BULK EXPORT',
+        'FBFP': 'FBFP',
+        'FIDBIMPORT': 'FIDB IMPORT'
+      };
+
+      modules.forEach(m => {
+        const badge = document.getElementById(`badge-${m}`);
+        if (badge) {
+          const count = tasks.filter(t => t.module === modMap[m] && t.status !== 'Closed').length;
+          badge.innerText = count;
+        }
+      });
+
+      document.getElementById('badge-pending-BSG').innerText = tasks.filter(t => t.pendingWith === 'BSG' && t.status !== 'Closed').length;
+      document.getElementById('badge-pending-QA').innerText = tasks.filter(t => t.pendingWith === 'Testers / QA' && t.status !== 'Closed').length;
+      document.getElementById('badge-pending-DEV').innerText = tasks.filter(t => t.pendingWith === 'DEV' && t.status !== 'Closed').length;
+    }
+
+    /* --- VIEW 1: KANBAN --- */
+    function renderKanban(filteredTasks) {
+      const columns = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
+      
+      columns.forEach(col => {
+        const dropzone = document.querySelector(`.kanban-dropzone[data-status="${col}"]`);
+        const countSpan = document.querySelector(`.kanban-col[data-status="${col}"] .col-count`);
+        if (!dropzone) return;
+
+        const colTasks = filteredTasks.filter(t => t.status === col);
+        countSpan.innerText = colTasks.length;
+        dropzone.innerHTML = '';
+
+        if (colTasks.length === 0) {
+          dropzone.innerHTML = `
+            <div class="h-28 border-2 border-dashed border-black/40 dark:border-white/40 flex items-center justify-center text-black/40 dark:text-white/40 text-xs font-mono font-bold uppercase">
+              NO WORK
+            </div>
+          `;
+          return;
+        }
+
+        colTasks.forEach(task => {
+          const ageing = calculateAgeing(task.startDate, task.status, task.closedDate);
+          const card = document.createElement('div');
+          card.className = 'kanban-card bg-white dark:bg-brutal-cardDark border-2 border-black dark:border-white p-3 shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition cursor-grab active:cursor-grabbing select-none space-y-2';
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-id', task.id);
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-black text-black dark:text-white bg-brutal-yellow px-1 border border-black">${escapeHtml(task.id)}</span>
+              ${getPriorityBadgeHtml(task.priority)}
+            </div>
+
+            <div class="text-xs font-black line-clamp-2 leading-snug">
+              ${escapeHtml(task.summary)}
+            </div>
+
+            <div>
+              ${getPendingWithBadgeHtml(task.pendingWith)}
+            </div>
+
+            <div class="pt-2 border-t-2 border-black dark:border-white flex items-center justify-between text-[11px]">
+              ${getModuleBadgeHtml(task.module)}
+              <div class="flex items-center space-x-1.5">
+                ${getAgeingBadgeHtml(ageing, task.status)}
+                <div class="w-6 h-6 border border-black dark:border-white bg-brutal-cyan text-black flex items-center justify-center text-[10px] font-black" title="Assignee: ${escapeHtml(task.assignedTo || 'Unassigned')}">
+                  ${(task.assignedTo || 'U').charAt(0).toUpperCase()}
+                </div>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => openTaskModal(task.id));
+          card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', task.id);
+            card.classList.add('dragging');
+          });
+          card.addEventListener('dragend', () => card.classList.remove('dragging'));
+
+          dropzone.appendChild(card);
+        });
+      });
+    }
+
+    /* --- VIEW 2: DAILY WORK TIMESHEET (Image Layout)[cite: 1] --- */
+    function renderTimesheet() {
+      const tbody = document.getElementById('timesheetTableBody');
+      tbody.innerHTML = '';
+      let totalHours = 0;
+
+      timesheets.forEach((item, index) => {
+        totalHours += parseFloat(item.time_spent || 0);
+        const pClass = item.priority === 'High' ? 'bg-brutal-pink text-white' : item.priority === 'Medium' ? 'bg-brutal-yellow text-black' : 'bg-brutal-green text-black';
+        
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-brutal-yellow/20 dark:hover:bg-brutal-cardDark transition border-b-2 border-black dark:border-white text-xs';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono font-bold">${index + 1}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-black">${escapeHtml(item.resource_name)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono font-bold">${escapeHtml(item.pod_name)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white">${escapeHtml(item.day_name)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono">${item.log_date}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-bold">${escapeHtml(item.task_category)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-black">${escapeHtml(item.task_title)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white">${escapeHtml(item.task_description)}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono font-black bg-brutal-yellow/40 text-black dark:text-white">${item.time_spent} hrs</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white">
+            <span class="px-1.5 py-0.5 border border-black font-black text-[10px] uppercase ${pClass}">${item.priority}</span>
+          </td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono">${escapeHtml(item.effort_estimate || '-')}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono">${item.start_date || '-'}</td>
+          <td class="py-2.5 px-3 border-r-2 border-black dark:border-white font-mono">${item.target_date || '-'}</td>
+          <td class="py-2.5 px-3 text-center">
+            <button onclick="deleteTimesheet(${item.id})" class="p-1 hover:text-red-600 transition" title="Delete Log">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('timesheetTotalHrsBadge').innerText = `TOTAL LOGGED: ${totalHours.toFixed(2)} HRS`;
+    }
+
+    /* --- VIEW 3: DETAILED LIST VIEW --- */
+    function renderList(filteredTasks) {
+      const tbody = document.getElementById('listTableBody');
+      tbody.innerHTML = '';
+
+      const sorted = [...filteredTasks].sort((a, b) => {
+        let valA = a[sortColumn] || '';
+        let valB = b[sortColumn] || '';
+        if (sortColumn === 'ageing') {
+          valA = calculateAgeing(a.startDate, a.status, a.closedDate);
+          valB = calculateAgeing(b.startDate, b.status, b.closedDate);
+        }
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      if (sorted.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" class="text-center py-8 text-black/50 dark:text-white/50 font-bold font-mono">ZERO MATCHING BANKING ITEMS</td></tr>`;
+        return;
+      }
+
+      sorted.forEach(t => {
+        const ageing = calculateAgeing(t.startDate, t.status, t.closedDate);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-brutal-cyan/20 dark:hover:bg-brutal-cardDark transition cursor-pointer border-b-2 border-black dark:border-white text-xs';
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-mono font-black text-black dark:text-white">${escapeHtml(t.id)}</td>
+          <td class="py-2.5 px-3 whitespace-nowrap font-bold">${escapeHtml(t.issueType)}</td>
+          <td class="py-2.5 px-3 font-black max-w-xs truncate" title="${escapeHtml(t.summary)}">${escapeHtml(t.summary)}</td>
+          <td class="py-2.5 px-3">${getModuleBadgeHtml(t.module)}</td>
+          <td class="py-2.5 px-3 whitespace-nowrap">${getPendingWithBadgeHtml(t.pendingWith)}</td>
+          <td class="py-2.5 px-3">${getPriorityBadgeHtml(t.priority)}</td>
+          <td class="py-2.5 px-3">${getStatusBadgeHtml(t.status)}</td>
+          <td class="py-2.5 px-3 font-mono font-bold">${escapeHtml(t.env || '-')}</td>
+          <td class="py-2.5 px-3 font-mono">${escapeHtml(t.startDate || '-')}</td>
+          <td class="py-2.5 px-3">${getAgeingBadgeHtml(ageing, t.status)}</td>
+          <td class="py-2.5 px-3 font-black truncate max-w-[120px]">${escapeHtml(t.assignedTo || 'Unassigned')}</td>
+          <td class="py-2.5 px-3 text-center">
+            <button onclick="event.stopPropagation(); openTaskModal('${t.id}')" class="p-1 hover:text-brutal-pink transition" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+          </td>
+        `;
+        tr.addEventListener('click', () => openTaskModal(t.id));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function sortTable(column) {
+      if (sortColumn === column) sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      else { sortColumn = column; sortDirection = 'asc'; }
+      renderList(getFilteredTasks());
+    }
+
+    /* --- VIEW 4: MEETINGS & SYNC SCHEDULE --- */
+    function setMeetingsScope(scope) {
+      currentMeetingsScope = scope;
+      document.getElementById('scopeTodayBtn').className = scope === 'today' ? 'px-3 py-1 text-xs border-2 border-black font-black bg-brutal-yellow text-black shadow-brutal-sm' : 'px-3 py-1 text-xs border-2 border-black font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm';
+      document.getElementById('scopeAllBtn').className = scope === 'all' ? 'px-3 py-1 text-xs border-2 border-black font-black bg-brutal-yellow text-black shadow-brutal-sm' : 'px-3 py-1 text-xs border-2 border-black font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm';
+      renderMeetings(tasks);
+    }
+
+    function renderMeetings(allTasks) {
+      const meetingsContainer = document.getElementById('meetingsListContainer');
+      const followUpsContainer = document.getElementById('followUpsListContainer');
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      meetingsContainer.innerHTML = '';
+      followUpsContainer.innerHTML = '';
+
+      let meetingItems = allTasks.filter(t => t.meetingTime || ['Meeting', 'KT Session', 'BRD Discussion'].includes(t.issueType));
+      let followUpItems = allTasks.filter(t => t.priority === 'P1' || t.status === 'Ready for Prod' || t.issueType === 'Deployment');
+
+      if (currentMeetingsScope === 'today') {
+        meetingItems = meetingItems.filter(t => t.startDate === todayStr || t.meetingTime);
+        followUpItems = followUpItems.filter(t => t.startDate === todayStr || t.status !== 'Closed');
+      }
+
+      document.getElementById('meetingsCountBadge').innerText = meetingItems.length;
+      document.getElementById('deploymentsCountBadge').innerText = followUpItems.length;
+
+      if (meetingItems.length === 0) {
+        meetingsContainer.innerHTML = `<div class="text-center py-10 font-mono font-bold text-xs opacity-50">NO SCHEDULED CALLS</div>`;
+      } else {
+        meetingItems.forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'border-2 border-black dark:border-white p-3 bg-white dark:bg-brutal-cardDark shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition cursor-pointer';
+          card.onclick = () => openTaskModal(m.id);
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="bg-brutal-yellow text-black font-black px-2 py-0.5 border border-black text-[11px] font-mono">
+                <i class="fa-regular fa-clock"></i> ${escapeHtml(m.meetingTime || 'Flexible')} ${m.meetingDuration ? `(${escapeHtml(m.meetingDuration)}m)` : ''}
+              </span>
+              <span class="text-[10px] font-mono font-bold">${escapeHtml(m.startDate || 'Today')}</span>
+            </div>
+            <div class="text-xs font-black mb-1">${escapeHtml(m.summary)}</div>
+            <div class="text-[11px] bg-brutal-bgLight dark:bg-black p-2 border border-black dark:border-white mb-2 font-mono">
+              <strong>ATTENDEES:</strong> ${escapeHtml(m.meetingAttendees || 'Team Members')}<br>
+              <strong>NOTES:</strong> ${escapeHtml(m.meetingNotes || 'No specific agenda logged.')}
+            </div>
+            <div class="flex items-center justify-between text-[10px] pt-1 border-t-2 border-black dark:border-white">
+              <span class="font-mono font-black">${escapeHtml(m.id)}</span>
+              ${getStatusBadgeHtml(m.status)}
+            </div>
+          `;
+          meetingsContainer.appendChild(card);
+        });
+      }
+
+      if (followUpItems.length === 0) {
+        followUpsContainer.innerHTML = `<div class="text-center py-10 font-mono font-bold text-xs opacity-50">ZERO BLOCKERS OR RELEASES</div>`;
+      } else {
+        followUpItems.forEach(f => {
+          const ageing = calculateAgeing(f.startDate, f.status, f.closedDate);
+          const card = document.createElement('div');
+          card.className = 'border-2 border-black dark:border-white p-3 bg-white dark:bg-brutal-cardDark shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition cursor-pointer';
+          card.onclick = () => openTaskModal(f.id);
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center gap-1.5">
+                ${getPriorityBadgeHtml(f.priority)}
+                <span class="bg-black text-white px-1.5 py-0.5 text-[10px] font-mono font-bold border border-black">${escapeHtml(f.env || 'PROD')}</span>
+                ${getPendingWithBadgeHtml(f.pendingWith)}
+              </div>
+              ${getAgeingBadgeHtml(ageing, f.status)}
+            </div>
+            <div class="text-xs font-black mb-1">${escapeHtml(f.summary)}</div>
+            ${f.prodDate ? `<div class="text-[11px] font-bold bg-brutal-purple text-black px-2 py-1 border border-black mb-2"><i class="fa-solid fa-calendar-check mr-1"></i> TARGET PROD: ${escapeHtml(f.prodDate)}</div>` : ''}
+            <div class="flex items-center justify-between text-[10px] pt-1 border-t-2 border-black dark:border-white">
+              <span class="font-mono font-black">${escapeHtml(f.id)} [${escapeHtml(f.module)}]</span>
+              <span class="font-bold">OWNER: ${escapeHtml(f.assignedTo || 'Unassigned')}</span>
+            </div>
+          `;
+          followUpsContainer.appendChild(card);
+        });
+      }
+    }
+
+    /* --- VIEW 5: METRICS & CHARTS --- */
+    function renderMetrics() {
+      const total = tasks.length;
+      const openP1 = tasks.filter(t => t.priority === 'P1' && t.status !== 'Closed').length;
+      const pendingExternal = tasks.filter(t => t.status !== 'Closed' && t.pendingWith && t.pendingWith !== 'None (Active)').length;
+      const deployments = tasks.filter(t => t.status === 'Ready for Prod' || t.issueType === 'Deployment').length;
+      const closed = tasks.filter(t => t.status === 'Closed').length;
+
+      const activeTasks = tasks.filter(t => t.status !== 'Closed');
+      const totalAgeing = activeTasks.reduce((acc, t) => acc + calculateAgeing(t.startDate, t.status, t.closedDate), 0);
+      const avgAgeing = activeTasks.length > 0 ? (totalAgeing / activeTasks.length).toFixed(1) : '0';
+
+      document.getElementById('statTotal').innerText = total;
+      document.getElementById('statP1').innerText = openP1;
+      document.getElementById('statPendingExternal').innerText = pendingExternal;
+      document.getElementById('statDeployments').innerText = deployments;
+      document.getElementById('statAvgAgeing').innerHTML = `${avgAgeing} <span class="text-xs font-normal">d</span>`;
+      document.getElementById('statClosed').innerText = closed;
+
+      const highAgeingTbody = document.getElementById('highAgeingTableBody');
+      highAgeingTbody.innerHTML = '';
+      const criticalAgeingTasks = activeTasks
+        .map(t => ({ ...t, calculatedAge: calculateAgeing(t.startDate, t.status, t.closedDate) }))
+        .filter(t => t.calculatedAge > 7)
+        .sort((a, b) => b.calculatedAge - a.calculatedAge);
+
+      if (criticalAgeingTasks.length === 0) {
+        highAgeingTbody.innerHTML = `<tr><td colspan="9" class="text-center py-4 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-xs">NO TASKS EXCEEDING 7 DAYS AGEING</td></tr>`;
+      } else {
+        criticalAgeingTasks.forEach(t => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-brutal-pink/20 transition cursor-pointer border-b border-black dark:border-white text-xs';
+          tr.onclick = () => openTaskModal(t.id);
+          tr.innerHTML = `
+            <td class="p-2 font-mono font-black">${escapeHtml(t.id)}</td>
+            <td class="p-2">${getModuleBadgeHtml(t.module)}</td>
+            <td class="p-2">${getPendingWithBadgeHtml(t.pendingWith)}</td>
+            <td class="p-2 font-bold">${escapeHtml(t.issueType)}</td>
+            <td class="p-2 font-black max-w-xs truncate">${escapeHtml(t.summary)}</td>
+            <td class="p-2">${getStatusBadgeHtml(t.status)}</td>
+            <td class="p-2">${getPriorityBadgeHtml(t.priority)}</td>
+            <td class="p-2">${getAgeingBadgeHtml(t.calculatedAge, t.status)}</td>
+            <td class="p-2 font-bold">${escapeHtml(t.assignedTo || 'Unassigned')}</td>
+          `;
+          highAgeingTbody.appendChild(tr);
+        });
+      }
+
+      renderCharts();
+    }
+
+    function renderCharts() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#FFFFFF' : '#000000';
+      const gridColor = isDark ? '#333333' : '#E5E7EB';
+
+      // Chart 1: Pending With
+      const pendingCategories = ['BSG', 'Testers / QA', 'DEV', 'DBA Team', 'Third-Party Vendor', 'Business Operations', 'None (Active)'];
+      const pendingCounts = pendingCategories.map(cat => tasks.filter(t => t.pendingWith === cat && t.status !== 'Closed').length);
+
+      const ctxPending = document.getElementById('pendingWithChart').getContext('2d');
+      if (pendingChartInstance) pendingChartInstance.destroy();
+      
+      pendingChartInstance = new Chart(ctxPending, {
+        type: 'bar',
+        data: {
+          labels: ['BSG', 'QA', 'DEV', 'DBA', 'Vendor', 'Ops', 'Active'],
+          datasets: [{
+            data: pendingCounts,
+            backgroundColor: ['#FFE600', '#B388FF', '#00F0FF', '#FF3366', '#FF8800', '#00F59B', '#D1D5DB'],
+            borderColor: '#000000',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { color: gridColor } },
+            y: { beginAtZero: true, ticks: { color: textColor, font: { weight: 'bold' }, precision: 0 }, grid: { color: gridColor } }
+          }
+        }
+      });
+
+      // Chart 2: Status Chart
+      const statusLabels = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
+      const statusCounts = statusLabels.map(s => tasks.filter(t => t.status === s).length);
+
+      const ctxStatus = document.getElementById('statusChart').getContext('2d');
+      if (statusChartInstance) statusChartInstance.destroy();
+      
+      statusChartInstance = new Chart(ctxStatus, {
+        type: 'bar',
+        data: {
+          labels: statusLabels,
+          datasets: [{
+            data: statusCounts,
+            backgroundColor: ['#E5E7EB', '#00F0FF', '#B388FF', '#FFE600', '#FF3366', '#00F59B'],
+            borderColor: '#000000',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { weight: 'bold' } }, grid: { color: gridColor } },
+            y: { beginAtZero: true, ticks: { color: textColor, font: { weight: 'bold' }, precision: 0 }, grid: { color: gridColor } }
+          }
+        }
+      });
+
+      // Chart 3: Modules Chart
+      const modules = ['BCRED', 'COLLNDISC', 'ARIMP', 'TORM', 'FIDB REVAMP', 'BULK EXPORT', 'FBFP', 'FIDB IMPORT'];
+      const moduleCounts = modules.map(m => tasks.filter(t => t.module === m).length);
+
+      const ctxModule = document.getElementById('moduleChart').getContext('2d');
+      if (moduleChartInstance) moduleChartInstance.destroy();
+
+      moduleChartInstance = new Chart(ctxModule, {
+        type: 'doughnut',
+        data: {
+          labels: modules,
+          datasets: [{
+            data: moduleCounts,
+            backgroundColor: ['#00F0FF', '#00F59B', '#FFE600', '#B388FF', '#FF3366', '#FF8800', '#FFF500', '#7000FF'],
+            borderColor: '#000000',
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: textColor, font: { weight: 'bold', size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    /* -------------------------------------------------------------
+       7. DRAG AND DROP HANDLERS (KANBAN)
+    ------------------------------------------------------------- */
+    function setupDragAndDrop() {
+      const dropzones = document.querySelectorAll('.kanban-dropzone');
+      dropzones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.closest('.kanban-col').classList.add('drag-over');
+        });
+        zone.addEventListener('dragleave', () => {
+          zone.closest('.kanban-col').classList.remove('drag-over');
+        });
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.closest('.kanban-col').classList.remove('drag-over');
+          const taskId = e.dataTransfer.getData('text/plain');
+          const newStatus = zone.getAttribute('data-status');
+
+          const task = tasks.find(t => t.id === taskId);
+          if (task && task.status !== newStatus) {
+            task.status = newStatus;
+            if (newStatus === 'Closed') task.closedDate = new Date().toISOString().split('T')[0];
+            if (newStatus === 'UAT / Testing' && task.pendingWith === 'None (Active)') task.pendingWith = 'Testers / QA';
+            saveTasks();
+            renderApp();
+            showToast(`MOVED ${taskId} TO ${newStatus.toUpperCase()}`, 'success');
+          }
+        });
+      });
+    }
+
+    /* -------------------------------------------------------------
+       8. MODAL HANDLERS (TASK & TIMESHEET)
+    ------------------------------------------------------------- */
+    function openTaskModal(taskIdToEdit = null) {
+      const modal = document.getElementById('taskModal');
+      const form = document.getElementById('taskForm');
+      form.reset();
+      syncAssigneeOptions();
+      switchModalTab('tab-general');
+
+      if (taskIdToEdit) {
+        const task = tasks.find(t => t.id === taskIdToEdit);
+        if (!task) return;
+
+        document.getElementById('taskModalTitle').innerText = `EDIT TASK ${task.id}`;
+        document.getElementById('editTaskIdHidden').value = task.id;
+        document.getElementById('taskIdInput').value = task.id;
+        document.getElementById('taskIdInput').readOnly = true;
+        
+        document.getElementById('taskModuleInput').value = task.module;
+        document.getElementById('taskIssueTypeInput').value = task.issueType;
+        document.getElementById('taskPriorityInput').value = task.priority;
+        document.getElementById('taskSummaryInput').value = task.summary;
+        document.getElementById('taskStatusInput').value = task.status;
+        document.getElementById('taskPendingWithInput').value = task.pendingWith || 'None (Active)';
+        document.getElementById('taskEnvInput').value = task.env || 'PROD';
+        document.getElementById('taskAssignedToInput').value = task.assignedTo || '';
+        document.getElementById('taskAssignedByInput').value = task.assignedBy || '';
+        document.getElementById('taskStartDateInput').value = task.startDate || '';
+        document.getElementById('taskEndDateInput').value = task.endDate || '';
+        document.getElementById('taskProdDateInput').value = task.prodDate || '';
+        document.getElementById('taskDetailsInput').value = task.details || '';
+        document.getElementById('taskRcaInput').value = task.rca || '';
+        document.getElementById('taskSolutionInput').value = task.solution || '';
+        document.getElementById('taskMeetingTimeInput').value = task.meetingTime || '';
+        document.getElementById('taskMeetingDurationInput').value = task.meetingDuration || '';
+        document.getElementById('taskMeetingAttendeesInput').value = task.meetingAttendees || '';
+        document.getElementById('taskMeetingNotesInput').value = task.meetingNotes || '';
+
+        document.getElementById('deleteTaskBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('taskModalTitle').innerText = 'CREATE BANKING WORK ITEM';
+        document.getElementById('editTaskIdHidden').value = '';
+        document.getElementById('taskIdInput').readOnly = false;
+        
+        const highestNum = tasks.reduce((max, t) => {
+          const num = parseInt(t.id.replace('BNK-', ''), 10);
+          return !isNaN(num) && num > max ? num : max;
+        }, 1000);
+        document.getElementById('taskIdInput').value = `BNK-${highestNum + 1}`;
+        document.getElementById('taskStartDateInput').value = new Date().toISOString().split('T')[0];
+        document.getElementById('taskPendingWithInput').value = 'None (Active)';
+        document.getElementById('taskAssignedToInput').value = 'Support Engineer';
+        document.getElementById('taskAssignedByInput').value = 'Operations Lead';
+        document.getElementById('deleteTaskBtn').classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    function switchModalTab(targetTabId) {
+      document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === targetTabId) {
+          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white font-black';
+        } else {
+          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 font-black';
+        }
+      });
+      document.querySelectorAll('.modal-tab-pane').forEach(pane => {
+        pane.classList.toggle('hidden', pane.id !== targetTabId);
+      });
+    }
+
+    function openTimesheetModal() {
+      document.getElementById('timesheetForm').reset();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('tsDateInput').value = today;
+      syncTsDay();
+      document.getElementById('timesheetModal').classList.remove('hidden');
+    }
+
+    function closeTimesheetModal() {
+      document.getElementById('timesheetModal').classList.add('hidden');
+    }
+
+    function syncTsDay() {
+      const val = document.getElementById('tsDateInput').value;
+      if (!val) return;
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('tsDayInput').value = days[new Date(val).getDay()];
+    }
+
+    function deleteTimesheet(id) {
+      customConfirm("Delete Timesheet Entry", "Remove this work entry?", () => {
+        timesheets = timesheets.filter(ts => ts.id !== id);
+        saveTimesheet();
+        renderTimesheet();
+        showToast("Timesheet entry removed", "info");
+      });
+    }
+
+    /* -------------------------------------------------------------
+       9. EXCEL & BACKUP IMPORT / EXPORT
+    ------------------------------------------------------------- */
+    function exportToCsv() {
+      if (tasks.length === 0) return showToast("No tasks to export", "error");
+
+      const headers = [
+        "Task ID", "Module", "Issue Type", "Priority", "Status", "Pending With", 
+        "Environment", "Summary", "Task Details", "RCA", "Solution Fix",
+        "Assigned To", "Assigned By", "Start Date", "Target End Date", 
+        "Production Date", "Ageing Days", "Meeting Time", "Meeting Notes"
+      ];
+
+      const csvRows = [headers.map(h => `"${h}"`).join(',')];
+
+      tasks.forEach(t => {
+        const ageing = calculateAgeing(t.startDate, t.status, t.closedDate);
+        const row = [
+          t.id || '', t.module || '', t.issueType || '', t.priority || '', t.status || '',
+          t.pendingWith || 'None (Active)', t.env || '', t.summary || '', t.details || '',
+          t.rca || '', t.solution || '', t.assignedTo || '', t.assignedBy || '',
+          t.startDate || '', t.endDate || '', t.prodDate || '', ageing,
+          t.meetingTime || '', t.meetingNotes || ''
+        ];
+        csvRows.push(row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+      });
+
+      const csvContent = "\uFEFF" + csvRows.join('\r\n');
+      downloadBlob(csvContent, `PWMS_Tasks_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
+      showToast("Tasks CSV exported successfully!", "success");
+    }
+
+    function exportTimesheetCsv() {
+      if (timesheets.length === 0) return showToast("No timesheet entries to export", "error");
+
+      const headers = [
+        "#", "Resource Name", "POD Name (IBG, ILC, ARIPM etc.)", "Day", "Date",
+        "Task Category", "Task - Name / Title / Milestone", "Task - Description",
+        "Time Spent (Hrs)", "Priority (High, Low, Medium)", "Effort Estimate (Month/Days/Hours)",
+        "Start Date", "Target Completion Date"
+      ];
+
+      const csvRows = [headers.map(h => `"${h}"`).join(',')];
+
+      timesheets.forEach((r, idx) => {
+        const row = [
+          idx + 1, r.resource_name, r.pod_name, r.day_name, r.log_date,
+          r.task_category, r.task_title, r.task_description, r.time_spent,
+          r.priority, r.effort_estimate || '', r.start_date || '', r.target_date || ''
+        ];
+        csvRows.push(row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+      });
+
+      const csvContent = "\uFEFF" + csvRows.join('\r\n');
+      downloadBlob(csvContent, `Timesheet_Weekly_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
+      showToast("Timesheet CSV exported successfully!", "success");
+    }
+
+    function exportToJson() {
+      const backupData = {
+        app: "PWMS_Brutalist_Edition",
+        exportDate: new Date().toISOString(),
+        tasks: tasks,
+        timesheets: timesheets
+      };
+      downloadBlob(JSON.stringify(backupData, null, 2), `PWMS_Backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+      showToast("Full JSON Backup downloaded!", "success");
+    }
+
+    function importFromJson(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const importedTasks = Array.isArray(parsed) ? parsed : (parsed.tasks || []);
+          const importedTs = parsed.timesheets || [];
+
+          customConfirm("Restore Workspace", `Import data (${importedTasks.length} tasks)?`, () => {
+            tasks = importedTasks;
+            if (importedTs.length) timesheets = importedTs;
+            saveTasks();
+            saveTimesheet();
+            renderApp();
+            showToast("Workspace state restored!", "success");
+          });
+        } catch (err) {
+          showToast("Failed to parse JSON backup file.", "error");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function downloadBlob(content, filename, type) {
+      const blob = new Blob([content], { type: type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    /* -------------------------------------------------------------
+       10. UI VIEW SWITCHING & FILTERS
+    ------------------------------------------------------------- */
+    function applyQuickModuleFilter(moduleName) {
+      document.getElementById('filterModule').value = moduleName;
+      if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
+      else renderApp();
+    }
+
+    function applyQuickPendingFilter(pendingName) {
+      document.getElementById('filterPendingWith').value = pendingName;
+      if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
+      else renderApp();
+    }
+
+    function switchView(viewName) {
+      currentView = viewName;
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        if (btn.getAttribute('data-view') === viewName) {
+          btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-black bg-brutal-yellow text-black shadow-brutal-sm transition';
+        } else {
+          btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-cyan hover:text-black transition';
+        }
+      });
+
+      document.getElementById('view-kanban').classList.toggle('hidden', viewName !== 'kanban');
+      document.getElementById('view-timesheet').classList.toggle('hidden', viewName !== 'timesheet');
+      document.getElementById('view-list').classList.toggle('hidden', viewName !== 'list');
+      document.getElementById('view-meetings').classList.toggle('hidden', viewName !== 'meetings');
+      document.getElementById('view-metrics').classList.toggle('hidden', viewName !== 'metrics');
+
+      document.getElementById('filterToolbar').classList.toggle('hidden', viewName === 'metrics' || viewName === 'timesheet');
+
+      renderApp();
+    }
+
+    /* -------------------------------------------------------------
+       11. EVENT LISTENERS INITIALIZATION
+    ------------------------------------------------------------- */
+    window.onload = function () {
+      loadData();
+      setupDragAndDrop();
+      updateThemeControls(document.documentElement.classList.contains('dark'));
+      renderApp();
+
+      // Theme Toggle
+      document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+
+      // View Navigation
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+      });
+
+      // Sidebar Toggle
+      document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('-ml-64');
+      });
+
+      // Filters
+      document.getElementById('globalSearchInput').addEventListener('input', renderApp);
+      document.getElementById('filterModule').addEventListener('change', renderApp);
+      document.getElementById('filterPendingWith').addEventListener('change', renderApp);
+      document.getElementById('filterAssignee').addEventListener('change', renderApp);
+      document.getElementById('filterIssueType').addEventListener('change', renderApp);
+      document.getElementById('filterPriority').addEventListener('change', renderApp);
+
+      document.getElementById('toggleP1OnlyBtn').addEventListener('click', function() {
+        this.classList.toggle('bg-red-600');
+        this.classList.toggle('text-white');
+        renderApp();
+      });
+
+      document.getElementById('toggleHighAgeingBtn').addEventListener('click', function() {
+        this.classList.toggle('bg-amber-500');
+        this.classList.toggle('text-white');
+        renderApp();
+      });
+
+      document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+        document.getElementById('globalSearchInput').value = '';
+        document.getElementById('filterModule').value = 'ALL';
+        document.getElementById('filterPendingWith').value = 'ALL';
+        document.getElementById('filterAssignee').value = 'ALL';
+        document.getElementById('filterIssueType').value = 'ALL';
+        document.getElementById('filterPriority').value = 'ALL';
+        document.getElementById('toggleP1OnlyBtn').classList.remove('bg-red-600', 'text-white');
+        document.getElementById('toggleHighAgeingBtn').classList.remove('bg-amber-500', 'text-white');
+        renderApp();
+        showToast("FILTERS RESET");
+      });
+
+      // Modals
+      document.getElementById('openCreateModalBtn').addEventListener('click', () => openTaskModal());
+      document.getElementById('openCreateTimesheetModalBtn').addEventListener('click', openTimesheetModal);
+      document.getElementById('closeTaskModalBtn').addEventListener('click', closeTaskModal);
+      document.getElementById('cancelTaskModalBtn').addEventListener('click', closeTaskModal);
+
+      document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchModalTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      // Save Task Form
+      document.getElementById('taskForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('editTaskIdHidden').value;
+        const taskId = document.getElementById('taskIdInput').value.trim().toUpperCase();
+
+        const taskData = {
+          id: taskId,
+          module: document.getElementById('taskModuleInput').value,
+          issueType: document.getElementById('taskIssueTypeInput').value,
+          priority: document.getElementById('taskPriorityInput').value,
+          summary: document.getElementById('taskSummaryInput').value.trim(),
+          status: document.getElementById('taskStatusInput').value,
+          pendingWith: document.getElementById('taskPendingWithInput').value,
+          env: document.getElementById('taskEnvInput').value,
+          assignedTo: document.getElementById('taskAssignedToInput').value.trim() || 'Unassigned',
+          assignedBy: document.getElementById('taskAssignedByInput').value.trim(),
+          startDate: document.getElementById('taskStartDateInput').value,
+          endDate: document.getElementById('taskEndDateInput').value,
+          prodDate: document.getElementById('taskProdDateInput').value,
+          details: document.getElementById('taskDetailsInput').value.trim(),
+          rca: document.getElementById('taskRcaInput').value.trim(),
+          solution: document.getElementById('taskSolutionInput').value.trim(),
+          meetingTime: document.getElementById('taskMeetingTimeInput').value,
+          meetingDuration: document.getElementById('taskMeetingDurationInput').value,
+          meetingAttendees: document.getElementById('taskMeetingAttendeesInput').value.trim(),
+          meetingNotes: document.getElementById('taskMeetingNotesInput').value.trim(),
+          closedDate: document.getElementById('taskStatusInput').value === 'Closed' ? (new Date().toISOString().split('T')[0]) : null
+        };
+
+        if (editId) {
+          const idx = tasks.findIndex(t => t.id === editId);
+          if (idx !== -1) tasks[idx] = { ...tasks[idx], ...taskData };
+          showToast(`TASK ${taskId} UPDATED`, 'success');
+        } else {
+          if (tasks.some(t => t.id === taskId)) {
+            showToast(`TASK ID ${taskId} ALREADY EXISTS`, 'error');
+            return;
+          }
+          tasks.unshift(taskData);
+          showToast(`TASK ${taskId} CREATED`, 'success');
+        }
+
+        saveTasks();
+        closeTaskModal();
+        renderApp();
+      });
+
+      // Save Timesheet Form
+      document.getElementById('timesheetForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const entry = {
+          id: Date.now(),
+          resource_name: document.getElementById('tsResourceInput').value.trim(),
+          pod_name: document.getElementById('tsPodInput').value.trim(),
+          log_date: document.getElementById('tsDateInput').value,
+          day_name: document.getElementById('tsDayInput').value,
+          task_category: document.getElementById('tsCategoryInput').value,
+          task_title: document.getElementById('tsTitleInput').value.trim(),
+          task_description: document.getElementById('tsDescInput').value.trim(),
+          time_spent: parseFloat(document.getElementById('tsHoursInput').value),
+          priority: document.getElementById('tsPriorityInput').value,
+          effort_estimate: document.getElementById('tsEstimateInput').value.trim(),
+          start_date: document.getElementById('tsDateInput').value,
+          target_date: document.getElementById('tsDateInput').value
+        };
+
+        timesheets.unshift(entry);
+        saveTimesheet();
+        closeTimesheetModal();
+        if (currentView === 'timesheet') renderTimesheet();
+        showToast("WORK LOG APPENDED", "success");
+      });
+
+      // Delete Task Button
+      document.getElementById('deleteTaskBtn').addEventListener('click', () => {
+        const idToDelete = document.getElementById('editTaskIdHidden').value;
+        if (!idToDelete) return;
+        customConfirm("Delete Item", `Permanently delete task ${idToDelete}?`, () => {
+          tasks = tasks.filter(t => t.id !== idToDelete);
+          saveTasks();
+          closeTaskModal();
+          renderApp();
+          showToast(`TASK ${idToDelete} DELETED`, 'info');
+        });
+      });
+
+      // Dropdown Backup Menu
+      const backupMenuBtn = document.getElementById('backupMenuBtn');
+      const backupMenuDropdown = document.getElementById('backupMenuDropdown');
+      backupMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        backupMenuDropdown.classList.toggle('hidden');
+      });
+      document.addEventListener('click', () => backupMenuDropdown.classList.add('hidden'));
+
+      // Backup Handlers
+      document.getElementById('exportCsvBtn').addEventListener('click', exportToCsv);
+      document.getElementById('exportTimesheetCsvBtn').addEventListener('click', exportTimesheetCsv);
+      document.getElementById('exportJsonBtn').addEventListener('click', exportToJson);
+      document.getElementById('importJsonInput').addEventListener('change', (e) => {
+        if (e.target.files.length > 0) importFromJson(e.target.files[0]);
+      });
+      document.getElementById('resetSampleDataBtn').addEventListener('click', () => {
+        customConfirm("Reload Sample Data", "Reset workspace to sample banking dataset?", () => {
+          tasks = [...SAMPLE_TASKS];
+          timesheets = [...SAMPLE_TIMESHEET];
+          saveTasks();
+          saveTimesheet();
+          renderApp();
+          showToast("SAMPLE DATASET RESTORED", "success");
+        });
+      });
+
+      // Keyboard Shortcuts
+      document.addEventListener('keydown', (e) => {
+        if ((e.key === 'c' || e.key === 'C') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          openTaskModal();
+        }
+        if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          document.getElementById('globalSearchInput').focus();
+        }
+        if (e.key === 'Escape') {
+          closeTaskModal();
+          closeTimesheetModal();
+          document.getElementById('confirmDialog').classList.add('hidden');
+        }
+      });
+    };
+  </script>
+</body>
+</html>

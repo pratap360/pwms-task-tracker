@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWMS - Banking Dev & Support Workspace [Glassmorphism Edition]</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js CDN for Analytics View -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Immediate theme initialization to prevent flash
+    (function() {
+      const savedTheme = localStorage.getItem('pwms_theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    * {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Ambient Glassmorphism Background Mesh */
+    body {
+      background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                  radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                  radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.18) 0px, transparent 50%),
+                  #f1f5f9;
+      background-attachment: fixed;
+    }
+
+    .dark body {
+      background: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.28) 0px, transparent 50%),
+                  radial-gradient(at 100% 0%, rgba(219, 39, 119, 0.22) 0px, transparent 50%),
+                  radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.24) 0px, transparent 50%),
+                  #090d16;
+      background-attachment: fixed;
+    }
+
+    /* Frosted Glass Panes */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.07);
+    }
+
+    .dark .glass-panel {
+      background: rgba(18, 24, 38, 0.62);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .dark .glass-card {
+      background: rgba(28, 36, 54, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Glass Inputs & Controls */
+    .glass-input {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .dark .glass-input {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f1f5f9;
+    }
+
+    /* Glass Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.25);
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Drag & Drop Glass Visuals */
+    .kanban-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.97) rotate(-1deg);
+      border: 1px dashed #6366f1 !important;
+    }
+    .kanban-col.drag-over {
+      background: rgba(99, 102, 241, 0.15) !important;
+      border-color: rgba(99, 102, 241, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="text-slate-800 dark:text-slate-100 font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-200">
+
+  <!-- ================= GLASS TOP NAVIGATION BAR ================= -->
+  <header class="glass-panel h-16 flex items-center justify-between px-5 z-30 flex-shrink-0 border-b border-white/40 dark:border-white/10 shadow-sm">
+    <div class="flex items-center space-x-3.5">
+      <!-- Sidebar Toggle -->
+      <button id="toggleSidebarBtn" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-white/60 dark:border-white/10 shadow-xs transition duration-150" title="Toggle Sidebar">
+        <i class="fa-solid fa-bars-staggered text-sm"></i>
+      </button>
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 text-white flex items-center justify-center font-black shadow-md shadow-indigo-500/25">
+          <i class="fa-solid fa-building-columns text-base"></i>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-extrabold text-sm tracking-tight flex items-center gap-1.5 text-slate-900 dark:text-white">
+            PWMS <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full font-mono font-bold tracking-wider uppercase shadow-xs">GLASS</span>
+          </span>
+          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate max-w-[210px] sm:max-w-none">Banking Support & Dev Workspace</span>
+        </div>
+      </div>
+
+      <!-- Project Pill -->
+      <div class="hidden lg:flex items-center ml-3 pl-3 border-l border-slate-300 dark:border-white/10 text-xs">
+        <span class="bg-white/60 dark:bg-white/5 backdrop-blur-md px-3 py-1 rounded-xl border border-white/80 dark:border-white/10 font-medium text-slate-600 dark:text-slate-300 shadow-2xs flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>CORE-FINTECH-PROD</span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center space-x-2.5">
+      <!-- Search Input -->
+      <div class="relative hidden sm:block w-48 md:w-60">
+        <input 
+          id="globalSearchInput" 
+          type="text" 
+          placeholder="Quick search (/)..." 
+          class="glass-input w-full text-xs rounded-xl pl-9 pr-3 py-2 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 transition"
+        >
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400 dark:text-slate-500"></i>
+      </div>
+
+      <!-- Quick Create Task Button -->
+      <button 
+        id="openCreateModalBtn" 
+        class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-md shadow-indigo-500/20 active:scale-95 transition flex items-center gap-1.5"
+        title="Shortcut: Press 'c'"
+      >
+        <i class="fa-solid fa-plus text-xs"></i>
+        <span class="hidden sm:inline">New Task</span>
+      </button>
+
+      <!-- Quick Log Timesheet Button -->
+      <button 
+        id="openCreateTimesheetModalBtn" 
+        class="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-md shadow-emerald-500/20 active:scale-95 transition flex items-center gap-1.5"
+      >
+        <i class="fa-solid fa-stopwatch text-xs"></i>
+        <span class="hidden sm:inline">Log Work</span>
+      </button>
+
+      <!-- Theme Switcher -->
+      <button 
+        id="themeToggleBtn" 
+        class="p-2 rounded-xl bg-white/50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-white/60 dark:border-white/10 shadow-xs transition text-xs flex items-center gap-1.5 font-bold"
+        title="Toggle Theme"
+      >
+        <i id="themeToggleIcon" class="fa-solid fa-moon text-sm text-indigo-500"></i>
+      </button>
+
+      <!-- Backup Dropdown -->
+      <div class="relative">
+        <button id="backupMenuBtn" class="p-2 px-3 rounded-xl bg-white/50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-white/60 dark:border-white/10 shadow-xs transition text-xs flex items-center gap-1.5 font-bold">
+          <i class="fa-solid fa-cloud-arrow-down text-indigo-500"></i>
+          <span class="hidden lg:inline text-xs">Backup</span>
+          <i class="fa-solid fa-chevron-down text-[10px] opacity-70"></i>
+        </button>
+
+        <div id="backupMenuDropdown" class="hidden absolute right-0 mt-2 w-64 glass-panel rounded-2xl p-2 z-50 text-xs shadow-xl border border-white/60 dark:border-white/10">
+          <div class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Excel & Storage Hub</div>
+          <button id="exportCsvBtn" class="w-full text-left px-3 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-file-excel text-emerald-500 text-sm w-4"></i> Export Tasks to Excel (CSV)
+          </button>
+          <button id="exportTimesheetCsvBtn" class="w-full text-left px-3 py-2 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-file-invoice text-teal-500 text-sm w-4"></i> Export Timesheet to Excel
+          </button>
+          <button id="exportJsonBtn" class="w-full text-left px-3 py-2 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/40 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-file-arrow-down text-purple-500 text-sm w-4"></i> Download Full JSON Backup
+          </button>
+          <label class="w-full text-left px-3 py-2 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-950/40 text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-2 transition cursor-pointer">
+            <i class="fa-solid fa-file-arrow-up text-pink-500 text-sm w-4"></i> Restore JSON Backup
+            <input type="file" id="importJsonInput" accept=".json" class="hidden">
+          </label>
+          <div class="border-t border-slate-200 dark:border-white/10 my-1"></div>
+          <button id="resetSampleDataBtn" class="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-semibold flex items-center gap-2 transition">
+            <i class="fa-solid fa-rotate-right text-sm w-4"></i> Reload Sample Banking Tasks
+          </button>
+        </div>
+      </div>
+
+      <!-- Avatar Profile -->
+      <div class="flex items-center pl-1">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-400 text-white font-extrabold flex items-center justify-center text-xs shadow-md shadow-pink-500/25 border border-white/60 dark:border-white/20">
+          RA
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN BODY CONTAINER ================= -->
+  <div class="flex flex-1 overflow-hidden p-3 gap-3">
+    
+    <!-- ================= GLASS SIDEBAR ================= -->
+    <aside id="sidebar" class="glass-panel rounded-3xl w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-20 overflow-hidden shadow-md">
+      <div class="p-3.5 space-y-4 overflow-y-auto">
+        <!-- Views Nav -->
+        <div class="space-y-1">
+          <div class="px-2 text-[10px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500">Workspace Views</div>
+          
+          <button data-view="kanban" class="nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25 transition">
+            <i class="fa-solid fa-table-columns text-sm w-4"></i>
+            <span>Kanban Board</span>
+          </button>
+
+          <button data-view="timesheet" class="nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition">
+            <i class="fa-solid fa-business-time text-sm w-4 text-emerald-500"></i>
+            <span>Daily Timesheet Log</span>
+          </button>
+
+          <button data-view="list" class="nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition">
+            <i class="fa-solid fa-list-check text-sm w-4 text-blue-500"></i>
+            <span>Detailed Grid List</span>
+          </button>
+
+          <button data-view="meetings" class="nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition">
+            <i class="fa-solid fa-calendar-day text-sm w-4 text-purple-500"></i>
+            <span>Syncs & Releases</span>
+          </button>
+
+          <button data-view="metrics" class="nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition">
+            <i class="fa-solid fa-chart-pie text-sm w-4 text-pink-500"></i>
+            <span>Metrics & SLA SLA</span>
+          </button>
+        </div>
+
+        <!-- Modules Section -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-white/5">
+          <div class="flex items-center justify-between px-2 text-[10px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500">
+            <span>Modules</span>
+            <span class="text-[9px] bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full font-mono font-bold">8 APPS</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            <button onclick="applyQuickModuleFilter('BCRED')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-indigo-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-indigo-600 dark:text-indigo-400">BCRED</span>
+              <span id="badge-BCRED" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('COLLNDISC')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-emerald-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-emerald-600 dark:text-emerald-400 truncate">COLL</span>
+              <span id="badge-COLLNDISC" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('ARIMP')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-amber-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-amber-600 dark:text-amber-400">ARIMP</span>
+              <span id="badge-ARIMP" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('TORM')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-purple-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-purple-600 dark:text-purple-400">TORM</span>
+              <span id="badge-TORM" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FIDB REVAMP')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-pink-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-pink-600 dark:text-pink-400 truncate">FIDB-R</span>
+              <span id="badge-FIDBREVAMP" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('BULK EXPORT')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-cyan-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-cyan-600 dark:text-cyan-400 truncate">B-EXP</span>
+              <span id="badge-BULKEXPORT" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FBFP')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-rose-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-rose-600 dark:text-rose-400">FBFP</span>
+              <span id="badge-FBFP" class="text-[10px] text-slate-400">0</span>
+            </button>
+            <button onclick="applyQuickModuleFilter('FIDB IMPORT')" class="text-left px-2.5 py-1.5 rounded-xl glass-card hover:border-teal-400 text-[11px] font-mono font-bold flex items-center justify-between transition">
+              <span class="text-teal-600 dark:text-teal-400 truncate">FIDB-I</span>
+              <span id="badge-FIDBIMPORT" class="text-[10px] text-slate-400">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Bottlenecks Section -->
+        <div class="space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-white/5">
+          <div class="px-2 text-[10px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500">Live Bottlenecks</div>
+          <div class="flex flex-col gap-1.5 pt-1">
+            <button onclick="applyQuickPendingFilter('BSG')" class="text-left px-3 py-2 rounded-xl glass-card hover:bg-amber-500/10 text-xs font-bold flex items-center justify-between transition">
+              <span class="text-amber-700 dark:text-amber-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span> Pending BSG
+              </span>
+              <span id="badge-pending-BSG" class="font-mono bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-[10px] px-2 py-0.5 rounded-md">0</span>
+            </button>
+            <button onclick="applyQuickPendingFilter('Testers / QA')" class="text-left px-3 py-2 rounded-xl glass-card hover:bg-purple-500/10 text-xs font-bold flex items-center justify-between transition">
+              <span class="text-purple-700 dark:text-purple-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span> Pending QA
+              </span>
+              <span id="badge-pending-QA" class="font-mono bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 text-[10px] px-2 py-0.5 rounded-md">0</span>
+            </button>
+            <button onclick="applyQuickPendingFilter('DEV')" class="text-left px-3 py-2 rounded-xl glass-card hover:bg-indigo-500/10 text-xs font-bold flex items-center justify-between transition">
+              <span class="text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-indigo-400"></span> Pending DEV
+              </span>
+              <span id="badge-pending-DEV" class="font-mono bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 text-[10px] px-2 py-0.5 rounded-md">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="p-3.5 border-t border-slate-200/60 dark:border-white/5 bg-white/30 dark:bg-white/5 text-[11px] font-mono">
+        <div class="flex items-center justify-between text-slate-500 dark:text-slate-400 font-semibold mb-1">
+          <span>Shortcuts:</span>
+          <span class="bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded">c: New</span>
+          <span class="bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded">/: Search</span>
+        </div>
+        <div class="text-[10px] text-center text-slate-400 dark:text-slate-500 font-bold mt-1">
+          100% LOCALSTORAGE • GLASS UI
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= CONTENT AREA ================= -->
+    <main class="flex-1 flex flex-col min-w-0 glass-panel rounded-3xl overflow-hidden shadow-lg">
+      
+      <!-- FILTER & ACTION TOOLBAR -->
+      <section id="filterToolbar" class="px-5 py-3 border-b border-slate-200/60 dark:border-white/5 flex-shrink-0 flex flex-wrap items-center justify-between gap-2.5 bg-white/40 dark:bg-white/5 backdrop-blur-md">
+        <div class="flex flex-wrap items-center gap-2">
+          
+          <!-- Module Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">Module:</span>
+            <select id="filterModule" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+              <option value="ALL">All Modules</option>
+              <option value="BCRED">BCRED</option>
+              <option value="COLLNDISC">COLLNDISC</option>
+              <option value="ARIMP">ARIMP</option>
+              <option value="TORM">TORM</option>
+              <option value="FIDB REVAMP">FIDB REVAMP</option>
+              <option value="BULK EXPORT">BULK EXPORT</option>
+              <option value="FBFP">FBFP</option>
+              <option value="FIDB IMPORT">FIDB IMPORT</option>
+            </select>
+          </div>
+
+          <!-- Pending With Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 flex items-center gap-1">
+              <i class="fa-solid fa-hourglass-half text-[10px]"></i> Pending:
+            </span>
+            <select id="filterPendingWith" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1.5 bg-amber-50/70 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 border-amber-300/50 dark:border-amber-700/40 focus:outline-none">
+              <option value="ALL">All Pending States</option>
+              <option value="BSG">BSG (Business Solutions)</option>
+              <option value="DEV">DEV (Engineering)</option>
+              <option value="Testers / QA">Testers / QA</option>
+              <option value="Business Operations">Business Operations</option>
+              <option value="DBA Team">DBA Team</option>
+              <option value="Infra / DevOps">Infra / DevOps</option>
+              <option value="InfoSec / Audit">InfoSec / Audit</option>
+              <option value="Third-Party Vendor">Third-Party Vendor</option>
+              <option value="Client / Branch User">Client / Branch User</option>
+              <option value="None (Active)">None (Active / With Me)</option>
+            </select>
+          </div>
+
+          <!-- Assignee Filter -->
+          <div class="flex items-center space-x-1">
+            <span class="text-[10px] font-bold uppercase text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+              <i class="fa-solid fa-user-tag text-[10px]"></i> Assignee:
+            </span>
+            <select id="filterAssignee" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1.5 bg-indigo-50/70 dark:bg-indigo-950/30 text-indigo-800 dark:text-indigo-300 border-indigo-300/50 dark:border-indigo-700/40 focus:outline-none max-w-[150px]">
+              <option value="ALL">All Assignees</option>
+            </select>
+          </div>
+
+          <!-- Issue Type Filter -->
+          <select id="filterIssueType" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+            <option value="ALL">All Issue Types</option>
+            <option value="Production Issue">Production Issue</option>
+            <option value="UAT Defect">UAT Defect</option>
+            <option value="Development Activity">Development Activity</option>
+            <option value="User Query">User Query / Ad-hoc</option>
+            <option value="KT Session">KT Session</option>
+            <option value="BRD Discussion">BRD Discussion</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Deployment">Deployment / Release</option>
+            <option value="Follow-Up">Follow-Up</option>
+          </select>
+
+          <!-- Priority Filter -->
+          <select id="filterPriority" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+            <option value="ALL">All Priorities</option>
+            <option value="P1">P1 - Blocker / Critical</option>
+            <option value="P2">P2 - High</option>
+            <option value="P3">P3 - Medium</option>
+            <option value="P4">P4 - Low</option>
+          </select>
+
+          <!-- Quick Toggle Pills -->
+          <button id="toggleP1OnlyBtn" class="px-3 py-1 text-xs rounded-xl glass-card font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition flex items-center gap-1">
+            <i class="fa-solid fa-fire text-rose-500"></i> P1 Only
+          </button>
+          
+          <button id="toggleHighAgeingBtn" class="px-3 py-1 text-xs rounded-xl glass-card font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition flex items-center gap-1">
+            <i class="fa-solid fa-clock-rotate-left"></i> Ageing > 5d
+          </button>
+
+          <!-- Reset Filters -->
+          <button id="clearFiltersBtn" class="text-xs px-2.5 py-1 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white font-semibold transition">
+            Reset
+          </button>
+        </div>
+
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold px-3 py-1 rounded-xl bg-white/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-white/60 dark:border-white/10 shadow-2xs">
+            Showing <strong id="visibleTasksCount" class="font-mono text-indigo-600 dark:text-indigo-400 font-extrabold">0</strong> Tasks
+          </span>
+        </div>
+      </section>
+
+      <!-- ================= VIEW CONTAINERS ================= -->
+      <div class="flex-1 overflow-auto relative p-5">
+        
+        <!-- 1. KANBAN BOARD VIEW -->
+        <section id="view-kanban" class="h-full flex flex-col">
+          <div class="flex-1 overflow-x-auto pb-4">
+            <div class="flex gap-4 h-full min-w-[1380px]">
+              
+              <!-- Backlog Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-white/60 dark:border-white/10 transition" data-status="Backlog">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-slate-200/60 dark:border-white/5">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-slate-400 shadow-xs"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Backlog</h3>
+                  </div>
+                  <span class="col-count bg-slate-200/70 dark:bg-white/10 text-slate-700 dark:text-slate-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Backlog"></div>
+              </div>
+
+              <!-- In Progress Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-indigo-200/60 dark:border-indigo-900/40 bg-indigo-50/20 dark:bg-indigo-950/20 transition" data-status="In Progress">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-indigo-200/60 dark:border-indigo-900/30">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 shadow-xs shadow-indigo-500/50"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300">In Progress</h3>
+                  </div>
+                  <span class="col-count bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="In Progress"></div>
+              </div>
+
+              <!-- UAT / Testing Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-purple-200/60 dark:border-purple-900/40 bg-purple-50/20 dark:bg-purple-950/20 transition" data-status="UAT / Testing">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-purple-200/60 dark:border-purple-900/30">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-xs shadow-purple-500/50"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">UAT / Testing</h3>
+                  </div>
+                  <span class="col-count bg-purple-100 dark:bg-purple-900/60 text-purple-700 dark:text-purple-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="UAT / Testing"></div>
+              </div>
+
+              <!-- Ready for Prod Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-amber-200/60 dark:border-amber-900/40 bg-amber-50/20 dark:bg-amber-950/20 transition" data-status="Ready for Prod">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-amber-200/60 dark:border-amber-900/30">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-xs shadow-amber-500/50"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">Ready for Prod</h3>
+                  </div>
+                  <span class="col-count bg-amber-100 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Ready for Prod"></div>
+              </div>
+
+              <!-- Blocked Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-rose-200/60 dark:border-rose-900/40 bg-rose-50/20 dark:bg-rose-950/20 transition" data-status="Blocked">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-rose-200/60 dark:border-rose-900/30">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 shadow-xs shadow-rose-500/50 animate-pulse"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-rose-700 dark:text-rose-300">Blocked</h3>
+                  </div>
+                  <span class="col-count bg-rose-100 dark:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Blocked"></div>
+              </div>
+
+              <!-- Closed Column -->
+              <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/20 dark:bg-emerald-950/20 transition" data-status="Closed">
+                <div class="flex items-center justify-between pb-3 mb-2 border-b border-emerald-200/60 dark:border-emerald-900/30">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs shadow-emerald-500/50"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Closed</h3>
+                  </div>
+                  <span class="col-count bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 text-xs font-mono font-bold px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Closed"></div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. DAILY WORK LOG & TIMESHEET VIEW (Matching Corporate Banking Layout)[cite: 1] -->
+        <section id="view-timesheet" class="hidden h-full flex flex-col space-y-4">
+          <div class="glass-card p-4 rounded-3xl flex flex-wrap items-center justify-between gap-3 border border-white/60 dark:border-white/10 shadow-sm">
+            <div>
+              <h2 class="text-base font-extrabold flex items-center gap-2 text-slate-800 dark:text-white">
+                <i class="fa-solid fa-business-time text-indigo-500"></i> Corporate Daily Activity & Timesheet Log[cite: 1]
+              </h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Capture daily past-tense tasks, meetings, support, and overtime for weekly manager submission[cite: 1].</p>
+            </div>
+            
+            <div class="flex items-center gap-3">
+              <span id="timesheetTotalHrsBadge" class="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-extrabold text-xs px-3.5 py-1.5 rounded-2xl font-mono shadow-2xs">
+                TOTAL: 0.0 HRS
+              </span>
+              <button onclick="exportTimesheetCsv()" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold text-xs px-3.5 py-2 rounded-2xl shadow-md shadow-indigo-500/20 active:scale-95 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-file-excel"></i> Export Timesheet (CSV)
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-3xl flex-1 flex flex-col overflow-hidden border border-white/60 dark:border-white/10 shadow-md">
+            <div class="flex-1 overflow-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-slate-600 dark:text-slate-300 uppercase font-bold text-[11px] sticky top-0 z-10 border-b border-slate-200/80 dark:border-white/10">
+                  <tr>
+                    <th class="py-3 px-3">#</th>
+                    <th class="py-3 px-3">Resource Name</th>
+                    <th class="py-3 px-3">POD Name</th>
+                    <th class="py-3 px-3">Day</th>
+                    <th class="py-3 px-3">Date</th>
+                    <th class="py-3 px-3">Task Category</th>
+                    <th class="py-3 px-3">Task - Name / Title / Milestone</th>
+                    <th class="py-3 px-3">Task - Description</th>
+                    <th class="py-3 px-3">Time Spent</th>
+                    <th class="py-3 px-3">Priority</th>
+                    <th class="py-3 px-3">Effort</th>
+                    <th class="py-3 px-3">Start Date</th>
+                    <th class="py-3 px-3">Target Date</th>
+                    <th class="py-3 px-3 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="timesheetTableBody" class="divide-y divide-slate-200/50 dark:divide-white/5 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. DETAILED LIST / EXCEL GRID VIEW -->
+        <section id="view-list" class="hidden h-full flex flex-col">
+          <div class="glass-card rounded-3xl flex-1 flex flex-col overflow-hidden border border-white/60 dark:border-white/10 shadow-md">
+            <div class="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-white/5">
+              <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-table text-indigo-500 text-sm"></i>
+                <span class="font-bold text-xs uppercase tracking-wider text-slate-800 dark:text-white">Enterprise Task Master Sheet</span>
+                <span class="text-[11px] text-slate-400 font-medium">| (Click any row to edit)</span>
+              </div>
+              <button onclick="exportToCsv()" class="text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-file-excel"></i> Export Grid to Excel
+              </button>
+            </div>
+            
+            <div class="flex-1 overflow-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-slate-600 dark:text-slate-300 uppercase font-bold text-[11px] sticky top-0 z-10 border-b border-slate-200/80 dark:border-white/10 font-mono">
+                  <tr>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('id')">ID <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3">Type</th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('summary')">Issue / Summary <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('module')">Module <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('pendingWith')">Pending With <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('priority')">Priority <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('status')">Status <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3">Env</th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('startDate')">Start Date <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('ageing')">Ageing <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 cursor-pointer" onclick="sortTable('assignedTo')">Assignee <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-3 px-3 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="listTableBody" class="divide-y divide-slate-200/50 dark:divide-white/5 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. MEETINGS & DEPLOYMENTS VIEW -->
+        <section id="view-meetings" class="hidden h-full flex flex-col space-y-4">
+          <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center text-lg font-bold shadow-md shadow-purple-500/20">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+              <div>
+                <h2 class="text-sm font-extrabold text-slate-800 dark:text-white">Daily Standups, KT Syncs & Releases</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Track BRD discussions, deployment windows, and live triage sessions</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-2 font-mono">
+              <span class="text-xs font-bold text-slate-500">Scope:</span>
+              <button onclick="setMeetingsScope('today')" id="scopeTodayBtn" class="px-3 py-1 text-xs rounded-xl font-bold bg-indigo-600 text-white shadow-xs">TODAY</button>
+              <button onclick="setMeetingsScope('all')" id="scopeAllBtn" class="px-3 py-1 text-xs rounded-xl font-bold glass-panel text-slate-700 dark:text-slate-300 hover:bg-white/80">ALL</button>
+            </div>
+          </div>
+
+          <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
+            <!-- Left: Scheduled Meetings -->
+            <div class="glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
+              <div class="p-3.5 border-b border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-white/5 flex items-center justify-between font-bold">
+                <span class="text-xs uppercase tracking-wider flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
+                  <i class="fa-solid fa-video text-indigo-500"></i> Meetings, KT Sessions & BRD Reviews
+                </span>
+                <span id="meetingsCountBadge" class="bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-mono px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="meetingsListContainer" class="flex-1 p-3.5 overflow-y-auto space-y-3"></div>
+            </div>
+
+            <!-- Right: Deployments & P1 Blockers -->
+            <div class="glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
+              <div class="p-3.5 border-b border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-white/5 flex items-center justify-between font-bold">
+                <span class="text-xs uppercase tracking-wider flex items-center gap-2 text-rose-700 dark:text-rose-300">
+                  <i class="fa-solid fa-rocket text-rose-500"></i> Deployments & P1 Prod Follow-Ups
+                </span>
+                <span id="deploymentsCountBadge" class="bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 text-xs font-mono px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="followUpsListContainer" class="flex-1 p-3.5 overflow-y-auto space-y-3"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. METRICS & BOTTLENECK ANALYSIS VIEW -->
+        <section id="view-metrics" class="hidden h-full overflow-y-auto space-y-4">
+          <!-- KPI Stat Cards -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Tasks</div>
+              <div id="statTotal" class="text-3xl font-extrabold mt-1 font-mono text-slate-800 dark:text-white">0</div>
+              <div class="text-[10px] text-slate-400 font-medium mt-0.5">Across modules</div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-rose-300/40 dark:border-rose-900/40 bg-rose-500/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">P1 Blockers</div>
+              <div id="statP1" class="text-3xl font-extrabold mt-1 font-mono text-rose-600 dark:text-rose-400">0</div>
+              <div class="text-[10px] text-rose-500 font-medium mt-0.5">SLA Critical</div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-amber-300/40 dark:border-amber-900/40 bg-amber-500/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Pending With</div>
+              <div id="statPendingExternal" class="text-3xl font-extrabold mt-1 font-mono text-amber-600 dark:text-amber-400">0</div>
+              <div class="text-[10px] text-amber-500 font-medium mt-0.5">Waiting on Teams</div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-purple-300/40 dark:border-purple-900/40 bg-purple-500/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Prod Releases</div>
+              <div id="statDeployments" class="text-3xl font-extrabold mt-1 font-mono text-purple-600 dark:text-purple-400">0</div>
+              <div class="text-[10px] text-purple-500 font-medium mt-0.5">Ready for release</div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-indigo-300/40 dark:border-indigo-900/40 bg-indigo-500/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Avg Ageing</div>
+              <div id="statAvgAgeing" class="text-3xl font-extrabold mt-1 font-mono text-indigo-600 dark:text-indigo-400">0 <span class="text-xs font-normal">d</span></div>
+              <div class="text-[10px] text-indigo-500 font-medium mt-0.5">Active backlog</div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-emerald-300/40 dark:border-emerald-900/40 bg-emerald-500/10 shadow-sm">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Closed / Done</div>
+              <div id="statClosed" class="text-3xl font-extrabold mt-1 font-mono text-emerald-600 dark:text-emerald-400">0</div>
+              <div class="text-[10px] text-emerald-500 font-medium mt-0.5">Resolved items</div>
+            </div>
+          </div>
+
+          <!-- Charts Row -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+              <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-hourglass-half text-amber-500"></i> Bottlenecks (Pending With)
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="pendingWithChart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+              <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-chart-column text-indigo-500"></i> Pipeline By Status
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+              <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
+                <i class="fa-solid fa-cubes-stacked text-purple-500"></i> Module Distribution
+              </h3>
+              <div class="h-64 relative">
+                <canvas id="moduleChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLA Ageing Grid -->
+          <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+            <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+              <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-white/40 dark:bg-white/5 font-mono font-bold text-slate-600 dark:text-slate-400 uppercase border-b border-slate-200/60 dark:border-white/5">
+                  <tr>
+                    <th class="p-2.5">Task ID</th>
+                    <th class="p-2.5">Module</th>
+                    <th class="p-2.5">Pending With</th>
+                    <th class="p-2.5">Issue Type</th>
+                    <th class="p-2.5">Summary</th>
+                    <th class="p-2.5">Status</th>
+                    <th class="p-2.5">Priority</th>
+                    <th class="p-2.5">Ageing</th>
+                    <th class="p-2.5">Assignee</th>
+                  </tr>
+                </thead>
+                <tbody id="highAgeingTableBody" class="divide-y divide-slate-200/40 dark:divide-white/5 font-medium"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= FROSTED GLASS MODALS ================= -->
+
+  <!-- 1. CREATE / EDIT TASK MODAL -->
+  <div id="taskModal" class="hidden fixed inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-3 animate-in fade-in duration-200">
+    <div class="glass-panel rounded-3xl border border-white/80 dark:border-white/10 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-200/60 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-white/5">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm font-bold border border-indigo-500/30">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <div>
+            <h2 id="taskModalTitle" class="text-sm font-extrabold text-slate-800 dark:text-white">Create Banking Work Item</h2>
+            <p class="text-[11px] text-slate-400 font-medium">Track modules, solutions, and pending dependencies</p>
+          </div>
+        </div>
+        <button id="closeTaskModalBtn" class="w-8 h-8 rounded-xl glass-card flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Modal Tabs Header -->
+      <div class="flex border-b border-slate-200/60 dark:border-white/10 px-6 bg-white/20 dark:bg-white/5 text-xs font-bold">
+        <button data-tab="tab-general" class="modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400">
+          <i class="fa-solid fa-circle-info mr-1.5"></i> 1. Core & Ownership
+        </button>
+        <button data-tab="tab-technical" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+          <i class="fa-solid fa-code mr-1.5"></i> 2. RCA & Solution Fix
+        </button>
+        <button data-tab="tab-meeting" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+          <i class="fa-solid fa-calendar mr-1.5"></i> 3. Meetings / KT Sync
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="taskForm" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <input type="hidden" id="editTaskIdHidden">
+
+        <!-- TAB 1: CORE DETAILS & OWNERSHIP -->
+        <div id="tab-general" class="modal-tab-pane space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3.5">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Task ID *</label>
+              <input type="text" id="taskIdInput" required class="glass-input w-full text-xs font-mono font-bold rounded-xl px-3 py-2 uppercase focus:ring-2 focus:ring-indigo-500/40">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Module *</label>
+              <select id="taskModuleInput" required class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500/40">
+                <option value="BCRED">BCRED</option>
+                <option value="COLLNDISC">COLLNDISC</option>
+                <option value="ARIMP">ARIMP</option>
+                <option value="TORM">TORM</option>
+                <option value="FIDB REVAMP">FIDB REVAMP</option>
+                <option value="BULK EXPORT">BULK EXPORT</option>
+                <option value="FBFP">FBFP</option>
+                <option value="FIDB IMPORT">FIDB IMPORT</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Issue Type *</label>
+              <select id="taskIssueTypeInput" required class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500/40">
+                <option value="Production Issue">Production Issue</option>
+                <option value="UAT Defect">UAT Defect</option>
+                <option value="Development Activity">Development Activity</option>
+                <option value="User Query">User Query / Ad-hoc</option>
+                <option value="KT Session">KT Session</option>
+                <option value="BRD Discussion">BRD Discussion</option>
+                <option value="Meeting">Meeting</option>
+                <option value="Deployment">Deployment / Release</option>
+                <option value="Follow-Up">Follow-Up</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Priority *</label>
+              <select id="taskPriorityInput" required class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500/40">
+                <option value="P1">P1 - Blocker / Critical</option>
+                <option value="P2">P2 - High</option>
+                <option value="P3" selected>P3 - Medium</option>
+                <option value="P4">P4 - Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Summary / Title *</label>
+            <input type="text" id="taskSummaryInput" required placeholder="e.g., EOD batch failure in BCRED_INTEREST with ORA-01555" class="glass-input w-full text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-indigo-500/40">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Status *</label>
+              <select id="taskStatusInput" required class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500/40">
+                <option value="Backlog">Backlog</option>
+                <option value="In Progress">In Progress</option>
+                <option value="UAT / Testing">UAT / Testing</option>
+                <option value="Ready for Prod">Ready for Prod</option>
+                <option value="Blocked">Blocked</option>
+                <option value="Closed">Closed</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-amber-600 dark:text-amber-400 mb-1">Pending With *</label>
+              <select id="taskPendingWithInput" required class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2 bg-amber-50/60 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 border-amber-300/60 focus:ring-2 focus:ring-amber-500/40">
+                <option value="None (Active)">None (Active / With Me)</option>
+                <option value="BSG">BSG (Business Solutions Group)</option>
+                <option value="DEV">DEV (Engineering Team)</option>
+                <option value="Testers / QA">Testers / QA</option>
+                <option value="Business Operations">Business Operations</option>
+                <option value="DBA Team">DBA Team</option>
+                <option value="Infra / DevOps">Infra / DevOps</option>
+                <option value="InfoSec / Audit">InfoSec / Audit</option>
+                <option value="Third-Party Vendor">Third-Party Vendor</option>
+                <option value="Client / Branch User">Client / Branch User</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Environment</label>
+              <select id="taskEnvInput" class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2 font-mono">
+                <option value="PROD">PROD</option>
+                <option value="UAT">UAT</option>
+                <option value="SIT">SIT</option>
+                <option value="DEV">DEV</option>
+                <option value="DR">DR</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Assignee</label>
+              <input type="text" id="taskAssignedToInput" list="assigneeDatalist" placeholder="e.g., bhai S." class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2">
+              <datalist id="assigneeDatalist"></datalist>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Assigned By / Lead</label>
+              <input type="text" id="taskAssignedByInput" placeholder="Lead / Manager Name" class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 font-mono">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Start Date *</label>
+              <input type="date" id="taskStartDateInput" required class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Target End Date</label>
+              <input type="date" id="taskEndDateInput" class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Target Prod Date</label>
+              <input type="date" id="taskProdDateInput" class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Details & Error Log Excerpt</label>
+            <textarea id="taskDetailsInput" rows="3" placeholder="Context, log traces, transaction ref..." class="glass-input w-full text-xs font-mono rounded-xl p-3"></textarea>
+          </div>
+        </div>
+
+        <!-- TAB 2: TECHNICAL SOLUTION & ROOT CAUSE -->
+        <div id="tab-technical" class="modal-tab-pane hidden space-y-4">
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Root Cause Analysis (RCA)</label>
+            <textarea id="taskRcaInput" rows="3" placeholder="Why did this occur in the banking workflow?" class="glass-input w-full text-xs rounded-xl p-3"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Solution / Code Fix / Patch</label>
+            <textarea id="taskSolutionInput" rows="4" placeholder="Stored proc updates, SQL scripts, patch details..." class="glass-input w-full text-xs font-mono rounded-xl p-3"></textarea>
+          </div>
+
+          <div class="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-3 text-xs text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-indigo-500 text-sm"></i>
+            <span><strong>Pro-Tip:</strong> Summarize verification scripts before moving tasks to BSG or QA for sign-off.</span>
+          </div>
+        </div>
+
+        <!-- TAB 3: MEETING, KT & SYNC -->
+        <div id="tab-meeting" class="modal-tab-pane hidden space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 font-mono">
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Meeting Time</label>
+              <input type="time" id="taskMeetingTimeInput" class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Duration (Min)</label>
+              <input type="number" id="taskMeetingDurationInput" placeholder="30" class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Attendees</label>
+              <input type="text" id="taskMeetingAttendeesInput" placeholder="DBA, QA Lead, BA" class="glass-input w-full text-xs rounded-xl px-3 py-2">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Meeting Agenda / KT Notes</label>
+            <textarea id="taskMeetingNotesInput" rows="4" placeholder="Discussion points, decisions made, KT takeaways..." class="glass-input w-full text-xs rounded-xl p-3"></textarea>
+          </div>
+        </div>
+
+        <!-- Modal Footer Actions -->
+        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between">
+          <button type="button" id="deleteTaskBtn" class="hidden text-xs bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border border-rose-500/20 font-bold px-3 py-2 rounded-xl transition">
+            <i class="fa-solid fa-trash-can mr-1"></i> Delete Task
+          </button>
+          
+          <div class="flex items-center space-x-2 ml-auto">
+            <button type="button" id="cancelTaskModalBtn" class="text-xs px-4 py-2 rounded-xl glass-card font-bold hover:bg-white/80 dark:hover:bg-white/10 transition">
+              Cancel
+            </button>
+            <button type="submit" class="text-xs bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-5 py-2 rounded-xl font-bold shadow-md shadow-indigo-500/20 hover:from-indigo-600 hover:to-purple-700 transition">
+              Save Work Item
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. CREATE TIMESHEET MODAL (Corporate Layout)[cite: 1] -->
+  <div id="timesheetModal" class="hidden fixed inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-3 animate-in fade-in duration-200">
+    <div class="glass-panel rounded-3xl border border-white/80 dark:border-white/10 shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200/60 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-white/5">
+        <h2 class="text-sm font-extrabold flex items-center gap-2 text-slate-800 dark:text-white">
+          <i class="fa-solid fa-stopwatch text-emerald-500"></i> Log Daily Work Activity (Past Tense)[cite: 1]
+        </h2>
+        <button onclick="closeTimesheetModal()" class="w-8 h-8 rounded-xl glass-card flex items-center justify-center text-slate-400 hover:text-slate-700 dark:hover:text-white transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <form id="timesheetForm" class="p-6 space-y-4 overflow-y-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Resource Name *</label>
+            <input type="text" id="tsResourceInput" required value="Tanmay S / Lead-ICM" class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">POD Name *</label>
+            <input type="text" id="tsPodInput" required value="IBG" class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2 font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 font-mono">
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Date *</label>
+            <input type="date" id="tsDateInput" required onchange="syncTsDay()" class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Day</label>
+            <input type="text" id="tsDayInput" readonly class="glass-input w-full text-xs font-bold rounded-xl px-3 py-2 bg-slate-100 dark:bg-slate-900">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Time Spent (Hrs) *</label>
+            <input type="number" step="0.25" min="0.25" max="24" id="tsHoursInput" required placeholder="e.g. 2.5" class="glass-input w-full text-xs font-extrabold rounded-xl px-3 py-2 bg-emerald-50/60 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Task Category *</label>
+            <select id="tsCategoryInput" required class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2">
+              <option value="New Development">New Development</option>
+              <option value="Documentation">Documentation</option>
+              <option value="Prod Support">Prod Support</option>
+              <option value="Meeting">Meeting</option>
+              <option value="KT Session">KT Session</option>
+              <option value="BRD Discussion">BRD Discussion</option>
+              <option value="Deployment">Deployment</option>
+              <option value="RnD / Investigation">RnD / Investigation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Priority</label>
+            <select id="tsPriorityInput" class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Task - Name / Title / Milestone *</label>
+          <input type="text" id="tsTitleInput" required placeholder="e.g. Attended daily morning scrum call from 09:00 to 10:00" class="glass-input w-full text-xs font-bold rounded-xl px-3.5 py-2.5">
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Task - Description (What you did) *</label>
+          <textarea id="tsDescInput" required rows="3" placeholder="e.g. Attended meeting from 09:00 to 10:00 for status update, then investigated incident INC882910 with DBA..." class="glass-input w-full text-xs rounded-xl p-3"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Effort Estimate (e.g. 2 Hours, 1 Day)</label>
+          <input type="text" id="tsEstimateInput" placeholder="2 Hours" class="glass-input w-full text-xs font-mono rounded-xl px-3 py-2">
+        </div>
+
+        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex justify-end space-x-2">
+          <button type="button" onclick="closeTimesheetModal()" class="text-xs px-4 py-2 rounded-xl glass-card font-bold hover:bg-white/80 dark:hover:bg-white/10 transition">
+            Cancel
+          </button>
+          <button type="submit" class="text-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white px-5 py-2 rounded-xl font-bold shadow-md shadow-emerald-500/20 transition">
+            Append Timesheet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. SAFE CONFIRMATION DIALOG -->
+  <div id="confirmDialog" class="hidden fixed inset-0 bg-slate-900/40 dark:bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <div class="glass-panel rounded-3xl border border-white/80 dark:border-white/10 shadow-2xl max-w-sm w-full p-5 animate-in fade-in duration-150">
+      <div class="flex items-center space-x-3 text-rose-500 mb-2 font-bold text-sm">
+        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+        <h3 id="confirmDialogTitle">Confirm Action</h3>
+      </div>
+      <p id="confirmDialogMessage" class="text-xs text-slate-600 dark:text-slate-300 font-medium mb-4">Are you sure you want to perform this action?</p>
+      <div class="flex justify-end space-x-2">
+        <button id="confirmDialogCancelBtn" class="px-3.5 py-1.5 text-xs rounded-xl glass-card font-bold text-slate-600 dark:text-slate-300">Cancel</button>
+        <button id="confirmDialogProceedBtn" class="px-3.5 py-1.5 text-xs rounded-xl bg-rose-600 text-white font-bold shadow-md shadow-rose-500/20">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. TOAST CONTAINER -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- ================= CORE SCRIPT ================= -->
+  <script>
+    /* -------------------------------------------------------------
+       1. STORAGE KEYS & SEED DATA
+    ------------------------------------------------------------- */
+    const STORAGE_KEY_TASKS = 'PWMS_BANKING_TASKS_DATA_V2';
+    const STORAGE_KEY_TIMESHEET = 'PWMS_BANKING_TIMESHEET_DATA_V2';
+    
+    const SAMPLE_TASKS = [
+      {
+        id: "BNK-1001",
+        module: "BCRED",
+        issueType: "Production Issue",
+        priority: "P1",
+        status: "In Progress",
+        pendingWith: "DBA Team",
+        summary: "EOD batch failure in BCRED_INTEREST_ACCRUAL job with ORA-01555 snapshot too old",
+        details: "Incident INC882910. Credit cards batch aborted at step 42. Over 45,000 corporate credit cards interest unposted.",
+        rca: "Long-running query on unindexed transaction table collided with heavy concurrent undo tablespace retention.",
+        solution: "Added compound index on (CARD_ACCT_ID, POST_STATUS, TRAN_DATE). Batch tuned to commit in chunks of 5000.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Operations Manager",
+        env: "PROD",
+        startDate: new Date(Date.now() - 2 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 1 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
+        meetingTime: "10:30",
+        meetingDuration: "30",
+        meetingAttendees: "DBA Lead, Core Ops, Support Engineer",
+        meetingNotes: "DBA approved hotfix deployment window for tonight at 23:30 IST.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1002",
+        module: "COLLNDISC",
+        issueType: "UAT Defect",
+        priority: "P2",
+        status: "UAT / Testing",
+        pendingWith: "BSG",
+        summary: "Collateral haircut calculation discrepancy for sovereign bond valuation",
+        details: "Defect logged by Risk BA during UAT cycle 3. Sovereign debt with maturity > 10 yrs getting 12% haircut instead of RBI guideline 8%.",
+        rca: "Table COLL_HAIRCUT_MATRIX had stale rule sequence prioritizing corporate paper category over sovereign ticker.",
+        solution: "Updated priority weight logic in valuation stored procedure SP_CALC_COLLATERAL_VAL. Waiting on BSG sign-off.",
+        assignedTo: "Pooja M. (BA)",
+        assignedBy: "Risk BA",
+        env: "UAT",
+        startDate: new Date(Date.now() - 4 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+        meetingTime: "14:00",
+        meetingDuration: "45",
+        meetingAttendees: "Risk Team, Dev Lead",
+        meetingNotes: "Walkthrough of test scenarios for sovereign and commercial paper collateral types.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1003",
+        module: "ARIMP",
+        issueType: "Development Activity",
+        priority: "P3",
+        status: "Ready for Prod",
+        pendingWith: "Testers / QA",
+        summary: "Build ARIMP inward clearing reconciler for high-value RTGS settlements",
+        details: "Mandatory compliance enhancement for high-value settlement reconciliation pipeline.",
+        rca: "Feature enhancement.",
+        solution: "Engineered transformer microservice. Code reviewed and signed off.",
+        assignedTo: "Rahul V. (Dev Lead)",
+        assignedBy: "Tech Lead",
+        env: "SIT",
+        startDate: new Date(Date.now() - 11 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 3 * 86400000).toISOString().split('T')[0],
+        prodDate: new Date(Date.now() + 4 * 86400000).toISOString().split('T')[0],
+        meetingTime: "16:00",
+        meetingDuration: "20",
+        meetingAttendees: "Release Management, Payments BA",
+        meetingNotes: "CAB approval received. Production deployment scheduled for Sunday 01:00 AM.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1004",
+        module: "TORM",
+        issueType: "BRD Discussion",
+        priority: "P3",
+        status: "In Progress",
+        pendingWith: "BSG",
+        summary: "TORM FX forward contract mark-to-market revaluation formula update",
+        details: "Front office requesting real-time MTM valuation calculation for EUR/USD hedges.",
+        rca: "Requirement gathering.",
+        solution: "Drafting technical architecture specification and DB schema impact document.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Treasury Desk Head",
+        env: "DEV",
+        startDate: new Date(Date.now() - 1 * 86400000).toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "11:30",
+        meetingDuration: "60",
+        meetingAttendees: "Treasury Desk, Business Analysts, Dev Team",
+        meetingNotes: "Agreed to adopt live feed discount curve instead of static monthly table.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1005",
+        module: "FIDB REVAMP",
+        issueType: "Production Issue",
+        priority: "P1",
+        status: "Blocked",
+        pendingWith: "Third-Party Vendor",
+        summary: "Inbound customer indexing pipeline timeout via primary messaging broker",
+        details: "Cluster socket reset during high load customer indexing batch.",
+        rca: "Primary gateway vendor IP lease expired on balancer.",
+        solution: "Rerouted traffic to secondary node. Escalated vendor ticket to Critical.",
+        assignedTo: "Infra On-Call",
+        assignedBy: "Operations Lead",
+        env: "PROD",
+        startDate: new Date(Date.now() - 8 * 86400000).toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "12:15",
+        meetingDuration: "15",
+        meetingAttendees: "Infra Ops, Vendor Rep",
+        meetingNotes: "Waiting on carrier root cause report before lifting blocker tag.",
+        closedDate: null
+      },
+      {
+        id: "BNK-1006",
+        module: "BULK EXPORT",
+        issueType: "KT Session",
+        priority: "P4",
+        status: "Backlog",
+        pendingWith: "DEV",
+        summary: "Knowledge Transfer on Bulk Export multi-threaded CSV generation daemon",
+        details: "Session for junior engineers on file generation queues and thread pools.",
+        rca: "N/A",
+        solution: "Documentation ready on shared drive.",
+        assignedTo: "Support Engineer",
+        assignedBy: "Engineering Manager",
+        env: "DEV",
+        startDate: new Date().toISOString().split('T')[0],
+        endDate: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0],
+        prodDate: "",
+        meetingTime: "15:00",
+        meetingDuration: "45",
+        meetingAttendees: "Support Team, New Developers",
+        meetingNotes: "Hands-on walkthrough of staging logs and queue tables.",
+        closedDate: null
+      }
+    ];
+
+    const SAMPLE_TIMESHEET = [
+      {
+        id: 1,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "Prod Support",
+        task_title: "BNK-1001 Production triage & root cause analysis",
+        task_description: "Investigated ORA-01555 snapshot too old batch crash with DBA. Drafted numeric scale fix and cursor chunking.",
+        time_spent: 3.5,
+        priority: "High",
+        effort_estimate: "4 Hours",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 2,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "Meeting",
+        task_title: "Attended daily morning scrum call from 09:00 to 10:00",
+        task_description: "Presented progress on BCRED and COLLNDISC defects, unblocked QA team on test data setup.",
+        time_spent: 1.0,
+        priority: "Medium",
+        effort_estimate: "1 Hour",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      },
+      {
+        id: 3,
+        resource_name: "Tanmay S / Lead-ICM",
+        pod_name: "IBG",
+        day_name: "Monday",
+        log_date: new Date().toISOString().split('T')[0],
+        task_category: "New Development",
+        task_title: "Engineered ARIMP outward parser microservice",
+        task_description: "Completed ISO XML parser, DTO binding and integration unit tests with 95% test coverage.",
+        time_spent: 4.0,
+        priority: "High",
+        effort_estimate: "2 Days",
+        start_date: new Date().toISOString().split('T')[0],
+        target_date: new Date().toISOString().split('T')[0]
+      }
+    ];
+
+    /* -------------------------------------------------------------
+       2. STATE MANAGEMENT
+    ------------------------------------------------------------- */
+    let tasks = [];
+    let timesheets = [];
+    let currentView = 'kanban';
+    let currentMeetingsScope = 'today';
+    let statusChartInstance = null;
+    let moduleChartInstance = null;
+    let pendingChartInstance = null;
+    let sortColumn = 'startDate';
+    let sortDirection = 'desc';
+
+    function loadData() {
+      try {
+        const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS) || localStorage.getItem('PWMS_BANKING_TASKS_DATA_V1');
+        tasks = storedTasks ? JSON.parse(storedTasks) : [...SAMPLE_TASKS];
+        tasks.forEach(t => { if (!t.pendingWith) t.pendingWith = 'None (Active)'; });
+      } catch (e) {
+        tasks = [...SAMPLE_TASKS];
+      }
+
+      try {
+        const storedTs = localStorage.getItem(STORAGE_KEY_TIMESHEET);
+        timesheets = storedTs ? JSON.parse(storedTs) : [...SAMPLE_TIMESHEET];
+      } catch (e) {
+        timesheets = [...SAMPLE_TIMESHEET];
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(tasks));
+    }
+
+    function saveTimesheet() {
+      localStorage.setItem(STORAGE_KEY_TIMESHEET, JSON.stringify(timesheets));
+    }
+
+    /* -------------------------------------------------------------
+       3. GLASS BADGES & HELPERS
+    ------------------------------------------------------------- */
+    function calculateAgeing(startDate, status, closedDate) {
+      if (!startDate) return 0;
+      const start = new Date(startDate);
+      const end = (status === 'Closed' && closedDate) ? new Date(closedDate) : new Date();
+      return Math.max(0, Math.floor((end - start) / 86400000));
+    }
+
+    function getAgeingBadgeHtml(ageingDays, status) {
+      if (status === 'Closed') {
+        return `<span class="bg-slate-200/50 dark:bg-white/10 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold">${ageingDays}d</span>`;
+      }
+      if (ageingDays >= 8) {
+        return `<span class="bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-lg text-[10px] font-mono font-extrabold flex items-center gap-1 shadow-2xs" title="High Ageing Warning"><i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${ageingDays}d</span>`;
+      } else if (ageingDays >= 4) {
+        return `<span class="bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1 shadow-2xs"><i class="fa-regular fa-clock text-[9px]"></i> ${ageingDays}d</span>`;
+      }
+      return `<span class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold">${ageingDays}d</span>`;
+    }
+
+    function getPendingWithBadgeHtml(pending) {
+      if (!pending || pending === 'None (Active)') {
+        return `<span class="bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20 px-2 py-0.5 rounded-lg text-[10px] font-medium flex items-center gap-1"><i class="fa-solid fa-user-check text-[9px]"></i> Active</span>`;
+      }
+      return `<span class="bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-lg text-[10px] font-semibold flex items-center gap-1 shadow-2xs">
+        <i class="fa-solid fa-hourglass-half text-[9px] opacity-75"></i>
+        <span>Pending: <strong>${escapeHtml(pending)}</strong></span>
+      </span>`;
+    }
+
+    function getPriorityBadgeHtml(p) {
+      switch (p) {
+        case 'P1':
+          return `<span class="bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 px-2 py-0.5 rounded-lg font-bold text-[10px] flex items-center gap-1 shadow-2xs"><i class="fa-solid fa-angles-up"></i> P1 Blocker</span>`;
+        case 'P2':
+          return `<span class="bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-lg font-semibold text-[10px] flex items-center gap-1 shadow-2xs"><i class="fa-solid fa-angle-up"></i> P2 High</span>`;
+        case 'P3':
+          return `<span class="bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-lg font-semibold text-[10px] flex items-center gap-1 shadow-2xs"><i class="fa-solid fa-bars"></i> P3 Med</span>`;
+        default:
+          return `<span class="bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20 px-2 py-0.5 rounded-lg text-[10px] flex items-center gap-1"><i class="fa-solid fa-angle-down"></i> P4 Low</span>`;
+      }
+    }
+
+    function getModuleBadgeHtml(mod) {
+      const colors = {
+        'BCRED': 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border-indigo-500/30',
+        'COLLNDISC': 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+        'ARIMP': 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30',
+        'TORM': 'bg-purple-500/15 text-purple-600 dark:text-purple-400 border-purple-500/30',
+        'FIDB REVAMP': 'bg-pink-500/15 text-pink-600 dark:text-pink-400 border-pink-500/30',
+        'BULK EXPORT': 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border-cyan-500/30',
+        'FBFP': 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30',
+        'FIDB IMPORT': 'bg-teal-500/15 text-teal-600 dark:text-teal-400 border-teal-500/30'
+      };
+      const cls = colors[mod] || 'bg-slate-500/15 text-slate-600 dark:text-slate-400 border-slate-500/30';
+      return `<span class="border px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold shadow-2xs ${cls}">${escapeHtml(mod)}</span>`;
+    }
+
+    function getStatusBadgeHtml(status) {
+      const colors = {
+        'Backlog': 'bg-slate-500/15 text-slate-700 dark:text-slate-300 border-slate-500/30',
+        'In Progress': 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/30 font-semibold',
+        'UAT / Testing': 'bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-500/30 font-semibold',
+        'Ready for Prod': 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 font-semibold',
+        'Blocked': 'bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 font-bold',
+        'Closed': 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 font-semibold'
+      };
+      const cls = colors[status] || 'bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20';
+      return `<span class="border px-2.5 py-0.5 rounded-full text-[10px] uppercase font-mono shadow-2xs ${cls}">${escapeHtml(status)}</span>`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /* -------------------------------------------------------------
+       4. THEME & TOAST SYSTEM
+    ------------------------------------------------------------- */
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('pwms_theme', isDark ? 'dark' : 'light');
+      updateThemeControls(isDark);
+      if (currentView === 'metrics') renderCharts();
+      showToast(isDark ? 'Dark glass theme active' : 'Light glass theme active', 'info');
+    }
+
+    function updateThemeControls(isDark) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) icon.className = isDark ? 'fa-solid fa-sun text-sm text-amber-400' : 'fa-solid fa-moon text-sm text-indigo-500';
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const icons = {
+        success: 'fa-circle-check text-emerald-500',
+        error: 'fa-triangle-exclamation text-rose-500',
+        info: 'fa-circle-info text-indigo-500'
+      };
+      
+      toast.className = 'glass-panel px-4 py-3 rounded-2xl shadow-xl border border-white/80 dark:border-white/10 text-xs font-bold flex items-center space-x-2.5 text-slate-800 dark:text-white pointer-events-auto transition duration-200';
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 250);
+      }, 3500);
+    }
+
+    function customConfirm(title, message, onProceed) {
+      const dialog = document.getElementById('confirmDialog');
+      document.getElementById('confirmDialogTitle').innerText = title;
+      document.getElementById('confirmDialogMessage').innerText = message;
+      
+      const proceedBtn = document.getElementById('confirmDialogProceedBtn');
+      const cancelBtn = document.getElementById('confirmDialogCancelBtn');
+      
+      const closeDialog = () => {
+        dialog.classList.add('hidden');
+        proceedBtn.onclick = null;
+        cancelBtn.onclick = null;
+      };
+
+      cancelBtn.onclick = closeDialog;
+      proceedBtn.onclick = () => {
+        closeDialog();
+        onProceed();
+      };
+
+      dialog.classList.remove('hidden');
+    }
+
+    /* -------------------------------------------------------------
+       5. DYNAMIC ASSIGNEES & FILTERING
+    ------------------------------------------------------------- */
+    function syncAssigneeOptions() {
+      const assigneeSelect = document.getElementById('filterAssignee');
+      const currentSelected = assigneeSelect.value || 'ALL';
+      const datalist = document.getElementById('assigneeDatalist');
+      
+      const defaultMembers = ['Support Engineer', 'Rahul V. (Dev Lead)', 'Pooja M. (BA)', 'DBA On-Call', 'Infra On-Call', 'Unassigned'];
+      const set = new Set(defaultMembers);
+
+      tasks.forEach(t => { if (t.assignedTo && t.assignedTo.trim()) set.add(t.assignedTo.trim()); });
+      const uniqueAssignees = Array.from(set).sort();
+
+      assigneeSelect.innerHTML = `<option value="ALL">All Assignees</option>`;
+      uniqueAssignees.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        assigneeSelect.appendChild(opt);
+      });
+      assigneeSelect.value = Array.from(assigneeSelect.options).some(o => o.value === currentSelected) ? currentSelected : 'ALL';
+
+      datalist.innerHTML = '';
+      uniqueAssignees.forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        datalist.appendChild(opt);
+      });
+    }
+
+    function getFilteredTasks() {
+      const searchTerm = document.getElementById('globalSearchInput').value.trim().toLowerCase();
+      const modFilter = document.getElementById('filterModule').value;
+      const pendingFilter = document.getElementById('filterPendingWith').value;
+      const assigneeFilter = document.getElementById('filterAssignee').value;
+      const typeFilter = document.getElementById('filterIssueType').value;
+      const priorityFilter = document.getElementById('filterPriority').value;
+      const p1Only = document.getElementById('toggleP1OnlyBtn').classList.contains('bg-rose-500');
+      const highAgeingOnly = document.getElementById('toggleHighAgeingBtn').classList.contains('bg-amber-500');
+
+      return tasks.filter(t => {
+        if (modFilter !== 'ALL' && t.module !== modFilter) return false;
+        if (pendingFilter !== 'ALL' && t.pendingWith !== pendingFilter) return false;
+        if (assigneeFilter !== 'ALL') {
+          if (assigneeFilter === 'Unassigned' && t.assignedTo && t.assignedTo.trim() !== '') return false;
+          else if (assigneeFilter !== 'Unassigned' && (t.assignedTo || '').trim().toLowerCase() !== assigneeFilter.toLowerCase()) return false;
+        }
+        if (typeFilter !== 'ALL' && t.issueType !== typeFilter) return false;
+        if (priorityFilter !== 'ALL' && t.priority !== priorityFilter) return false;
+        if (p1Only && t.priority !== 'P1') return false;
+        if (highAgeingOnly && calculateAgeing(t.startDate, t.status, t.closedDate) < 5) return false;
+
+        if (searchTerm) {
+          const hay = `${t.id} ${t.summary} ${t.module} ${t.pendingWith} ${t.details} ${t.solution} ${t.rca} ${t.assignedTo}`.toLowerCase();
+          if (!hay.includes(searchTerm)) return false;
+        }
+        return true;
+      });
+    }
+
+    /* -------------------------------------------------------------
+       6. RENDERING APPLICATION VIEWS
+    ------------------------------------------------------------- */
+    function renderApp() {
+      syncAssigneeOptions();
+      const filtered = getFilteredTasks();
+      document.getElementById('visibleTasksCount').innerText = filtered.length;
+      updateSidebarBadges();
+
+      if (currentView === 'kanban') renderKanban(filtered);
+      else if (currentView === 'timesheet') renderTimesheet();
+      else if (currentView === 'list') renderList(filtered);
+      else if (currentView === 'meetings') renderMeetings(tasks);
+      else if (currentView === 'metrics') renderMetrics();
+    }
+
+    function updateSidebarBadges() {
+      const modules = ['BCRED', 'COLLNDISC', 'ARIMP', 'TORM', 'FIDBREVAMP', 'BULKEXPORT', 'FBFP', 'FIDBIMPORT'];
+      const modMap = {
+        'BCRED': 'BCRED',
+        'COLLNDISC': 'COLLNDISC',
+        'ARIMP': 'ARIMP',
+        'TORM': 'TORM',
+        'FIDBREVAMP': 'FIDB REVAMP',
+        'BULKEXPORT': 'BULK EXPORT',
+        'FBFP': 'FBFP',
+        'FIDBIMPORT': 'FIDB IMPORT'
+      };
+
+      modules.forEach(m => {
+        const badge = document.getElementById(`badge-${m}`);
+        if (badge) {
+          const count = tasks.filter(t => t.module === modMap[m] && t.status !== 'Closed').length;
+          badge.innerText = count;
+        }
+      });
+
+      document.getElementById('badge-pending-BSG').innerText = tasks.filter(t => t.pendingWith === 'BSG' && t.status !== 'Closed').length;
+      document.getElementById('badge-pending-QA').innerText = tasks.filter(t => t.pendingWith === 'Testers / QA' && t.status !== 'Closed').length;
+      document.getElementById('badge-pending-DEV').innerText = tasks.filter(t => t.pendingWith === 'DEV' && t.status !== 'Closed').length;
+    }
+
+    /* --- VIEW 1: KANBAN --- */
+    function renderKanban(filteredTasks) {
+      const columns = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
+      
+      columns.forEach(col => {
+        const dropzone = document.querySelector(`.kanban-dropzone[data-status="${col}"]`);
+        const countSpan = document.querySelector(`.kanban-col[data-status="${col}"] .col-count`);
+        if (!dropzone) return;
+
+        const colTasks = filteredTasks.filter(t => t.status === col);
+        countSpan.innerText = colTasks.length;
+        dropzone.innerHTML = '';
+
+        if (colTasks.length === 0) {
+          dropzone.innerHTML = `
+            <div class="h-28 rounded-2xl border border-dashed border-slate-300 dark:border-white/10 flex items-center justify-center text-slate-400 text-xs font-mono font-medium">
+              No Tasks
+            </div>
+          `;
+          return;
+        }
+
+        colTasks.forEach(task => {
+          const ageing = calculateAgeing(task.startDate, task.status, task.closedDate);
+          const card = document.createElement('div');
+          card.className = 'kanban-card glass-card p-3.5 rounded-2xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition duration-150 cursor-grab active:cursor-grabbing select-none space-y-2';
+          card.setAttribute('draggable', 'true');
+          card.setAttribute('data-id', task.id);
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono font-extrabold text-indigo-600 dark:text-indigo-400 hover:underline">${escapeHtml(task.id)}</span>
+              ${getPriorityBadgeHtml(task.priority)}
+            </div>
+
+            <div class="text-xs font-bold line-clamp-2 leading-snug text-slate-800 dark:text-slate-100">
+              ${escapeHtml(task.summary)}
+            </div>
+
+            <div>
+              ${getPendingWithBadgeHtml(task.pendingWith)}
+            </div>
+
+            <div class="pt-2 border-t border-slate-200/50 dark:border-white/5 flex items-center justify-between text-[11px]">
+              ${getModuleBadgeHtml(task.module)}
+              <div class="flex items-center space-x-1.5">
+                ${getAgeingBadgeHtml(ageing, task.status)}
+                <div class="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center text-[10px] font-extrabold shadow-xs" title="Assignee: ${escapeHtml(task.assignedTo || 'Unassigned')}">
+                  ${(task.assignedTo || 'U').charAt(0).toUpperCase()}
+                </div>
+              </div>
+            </div>
+          `;
+
+          card.addEventListener('click', () => openTaskModal(task.id));
+          card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', task.id);
+            card.classList.add('dragging');
+          });
+          card.addEventListener('dragend', () => card.classList.remove('dragging'));
+
+          dropzone.appendChild(card);
+        });
+      });
+    }
+
+    /* --- VIEW 2: DAILY TIMESHEET VIEW (Corporate Image Layout)[cite: 1] --- */
+    function renderTimesheet() {
+      const tbody = document.getElementById('timesheetTableBody');
+      tbody.innerHTML = '';
+      let totalHours = 0;
+
+      timesheets.forEach((item, index) => {
+        totalHours += parseFloat(item.time_spent || 0);
+        const pClass = item.priority === 'High' ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30' : item.priority === 'Medium' ? 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30' : 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30';
+        
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/60 dark:hover:bg-white/5 transition text-xs border-b border-slate-200/50 dark:border-white/5';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-bold text-slate-400">${index + 1}</td>
+          <td class="py-3 px-3 font-bold text-slate-800 dark:text-slate-100">${escapeHtml(item.resource_name)}</td>
+          <td class="py-3 px-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">${escapeHtml(item.pod_name)}</td>
+          <td class="py-3 px-3 text-slate-600 dark:text-slate-300">${escapeHtml(item.day_name)}</td>
+          <td class="py-3 px-3 font-mono text-slate-500">${item.log_date}</td>
+          <td class="py-3 px-3 font-bold text-slate-700 dark:text-slate-300">${escapeHtml(item.task_category)}</td>
+          <td class="py-3 px-3 font-extrabold text-slate-800 dark:text-slate-100 max-w-xs truncate">${escapeHtml(item.task_title)}</td>
+          <td class="py-3 px-3 text-slate-600 dark:text-slate-400 max-w-sm truncate">${escapeHtml(item.task_description)}</td>
+          <td class="py-3 px-3 font-mono font-extrabold text-emerald-600 dark:text-emerald-400">${item.time_spent} hrs</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-lg border font-bold text-[10px] uppercase ${pClass}">${item.priority}</span>
+          </td>
+          <td class="py-3 px-3 font-mono text-slate-500">${escapeHtml(item.effort_estimate || '-')}</td>
+          <td class="py-3 px-3 font-mono text-slate-500">${item.start_date || '-'}</td>
+          <td class="py-3 px-3 font-mono text-slate-500">${item.target_date || '-'}</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="deleteTimesheet(${item.id})" class="p-1 hover:text-rose-500 transition" title="Delete Log">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('timesheetTotalHrsBadge').innerText = `TOTAL: ${totalHours.toFixed(2)} HRS`;
+    }
+
+    /* --- VIEW 3: DETAILED GRID VIEW --- */
+    function renderList(filteredTasks) {
+      const tbody = document.getElementById('listTableBody');
+      tbody.innerHTML = '';
+
+      const sorted = [...filteredTasks].sort((a, b) => {
+        let valA = a[sortColumn] || '';
+        let valB = b[sortColumn] || '';
+        if (sortColumn === 'ageing') {
+          valA = calculateAgeing(a.startDate, a.status, a.closedDate);
+          valB = calculateAgeing(b.startDate, b.status, b.closedDate);
+        }
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      if (sorted.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" class="text-center py-8 text-slate-400 font-bold font-mono">No Matching Banking Items</td></tr>`;
+        return;
+      }
+
+      sorted.forEach(t => {
+        const ageing = calculateAgeing(t.startDate, t.status, t.closedDate);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-white/60 dark:hover:bg-white/5 transition cursor-pointer border-b border-slate-200/50 dark:border-white/5 text-xs';
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-mono font-extrabold text-indigo-600 dark:text-indigo-400">${escapeHtml(t.id)}</td>
+          <td class="py-3 px-3 whitespace-nowrap text-slate-600 dark:text-slate-300 font-medium">${escapeHtml(t.issueType)}</td>
+          <td class="py-3 px-3 font-bold text-slate-800 dark:text-slate-100 max-w-xs truncate" title="${escapeHtml(t.summary)}">${escapeHtml(t.summary)}</td>
+          <td class="py-3 px-3">${getModuleBadgeHtml(t.module)}</td>
+          <td class="py-3 px-3 whitespace-nowrap">${getPendingWithBadgeHtml(t.pendingWith)}</td>
+          <td class="py-3 px-3">${getPriorityBadgeHtml(t.priority)}</td>
+          <td class="py-3 px-3">${getStatusBadgeHtml(t.status)}</td>
+          <td class="py-3 px-3 font-mono font-bold text-slate-500">${escapeHtml(t.env || '-')}</td>
+          <td class="py-3 px-3 font-mono text-slate-500">${escapeHtml(t.startDate || '-')}</td>
+          <td class="py-3 px-3">${getAgeingBadgeHtml(ageing, t.status)}</td>
+          <td class="py-3 px-3 font-bold text-slate-700 dark:text-slate-200 truncate max-w-[120px]">${escapeHtml(t.assignedTo || 'Unassigned')}</td>
+          <td class="py-3 px-3 text-center">
+            <button onclick="event.stopPropagation(); openTaskModal('${t.id}')" class="p-1 hover:text-indigo-500 transition" title="Edit">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+          </td>
+        `;
+        tr.addEventListener('click', () => openTaskModal(t.id));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function sortTable(column) {
+      if (sortColumn === column) sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      else { sortColumn = column; sortDirection = 'asc'; }
+      renderList(getFilteredTasks());
+    }
+
+    /* --- VIEW 4: MEETINGS & SYNC SCHEDULE --- */
+    function setMeetingsScope(scope) {
+      currentMeetingsScope = scope;
+      document.getElementById('scopeTodayBtn').className = scope === 'today' ? 'px-3 py-1 text-xs rounded-xl font-bold bg-indigo-600 text-white shadow-xs' : 'px-3 py-1 text-xs rounded-xl font-bold glass-panel text-slate-700 dark:text-slate-300';
+      document.getElementById('scopeAllBtn').className = scope === 'all' ? 'px-3 py-1 text-xs rounded-xl font-bold bg-indigo-600 text-white shadow-xs' : 'px-3 py-1 text-xs rounded-xl font-bold glass-panel text-slate-700 dark:text-slate-300';
+      renderMeetings(tasks);
+    }
+
+    function renderMeetings(allTasks) {
+      const meetingsContainer = document.getElementById('meetingsListContainer');
+      const followUpsContainer = document.getElementById('followUpsListContainer');
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      meetingsContainer.innerHTML = '';
+      followUpsContainer.innerHTML = '';
+
+      let meetingItems = allTasks.filter(t => t.meetingTime || ['Meeting', 'KT Session', 'BRD Discussion'].includes(t.issueType));
+      let followUpItems = allTasks.filter(t => t.priority === 'P1' || t.status === 'Ready for Prod' || t.issueType === 'Deployment');
+
+      if (currentMeetingsScope === 'today') {
+        meetingItems = meetingItems.filter(t => t.startDate === todayStr || t.meetingTime);
+        followUpItems = followUpItems.filter(t => t.startDate === todayStr || t.status !== 'Closed');
+      }
+
+      document.getElementById('meetingsCountBadge').innerText = meetingItems.length;
+      document.getElementById('deploymentsCountBadge').innerText = followUpItems.length;
+
+      if (meetingItems.length === 0) {
+        meetingsContainer.innerHTML = `<div class="text-center py-12 font-mono text-xs text-slate-400">No scheduled calls or KT sessions.</div>`;
+      } else {
+        meetingItems.forEach(m => {
+          const card = document.createElement('div');
+          card.className = 'glass-card p-4 rounded-2xl hover:border-indigo-400 transition cursor-pointer shadow-xs space-y-2';
+          card.onclick = () => openTaskModal(m.id);
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <span class="bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 font-bold px-2.5 py-0.5 rounded-lg text-[11px] font-mono border border-indigo-500/30">
+                <i class="fa-regular fa-clock"></i> ${escapeHtml(m.meetingTime || 'Flexible')} ${m.meetingDuration ? `(${escapeHtml(m.meetingDuration)}m)` : ''}
+              </span>
+              <span class="text-[10px] font-mono text-slate-400">${escapeHtml(m.startDate || 'Today')}</span>
+            </div>
+            <div class="text-xs font-extrabold text-slate-800 dark:text-white">${escapeHtml(m.summary)}</div>
+            <div class="text-[11px] bg-white/40 dark:bg-white/5 p-2.5 rounded-xl border border-slate-200/50 dark:border-white/5 font-mono">
+              <strong>Attendees:</strong> ${escapeHtml(m.meetingAttendees || 'Team Members')}<br>
+              <strong>Agenda:</strong> ${escapeHtml(m.meetingNotes || 'No notes logged.')}
+            </div>
+            <div class="flex items-center justify-between text-[10px] pt-1">
+              <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">${escapeHtml(m.id)}</span>
+              ${getStatusBadgeHtml(m.status)}
+            </div>
+          `;
+          meetingsContainer.appendChild(card);
+        });
+      }
+
+      if (followUpItems.length === 0) {
+        followUpsContainer.innerHTML = `<div class="text-center py-12 font-mono text-xs text-slate-400">Zero active P1 blockers or releases.</div>`;
+      } else {
+        followUpItems.forEach(f => {
+          const ageing = calculateAgeing(f.startDate, f.status, f.closedDate);
+          const card = document.createElement('div');
+          card.className = 'glass-card p-4 rounded-2xl hover:border-rose-400 transition cursor-pointer shadow-xs space-y-2';
+          card.onclick = () => openTaskModal(f.id);
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                ${getPriorityBadgeHtml(f.priority)}
+                <span class="bg-slate-500/10 text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold">${escapeHtml(f.env || 'PROD')}</span>
+                ${getPendingWithBadgeHtml(f.pendingWith)}
+              </div>
+              ${getAgeingBadgeHtml(ageing, f.status)}
+            </div>
+            <div class="text-xs font-extrabold text-slate-800 dark:text-white">${escapeHtml(f.summary)}</div>
+            ${f.prodDate ? `<div class="text-[11px] font-bold text-purple-700 dark:text-purple-300 bg-purple-500/10 px-2.5 py-1 rounded-xl border border-purple-500/20"><i class="fa-solid fa-calendar-check mr-1"></i> Target Prod: ${escapeHtml(f.prodDate)}</div>` : ''}
+            <div class="flex items-center justify-between text-[10px] pt-1">
+              <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">${escapeHtml(f.id)} [${escapeHtml(f.module)}]</span>
+              <span class="font-bold text-slate-600 dark:text-slate-400">Owner: ${escapeHtml(f.assignedTo || 'Unassigned')}</span>
+            </div>
+          `;
+          followUpsContainer.appendChild(card);
+        });
+      }
+    }
+
+    /* --- VIEW 5: METRICS & CHARTS --- */
+    function renderMetrics() {
+      const total = tasks.length;
+      const openP1 = tasks.filter(t => t.priority === 'P1' && t.status !== 'Closed').length;
+      const pendingExternal = tasks.filter(t => t.status !== 'Closed' && t.pendingWith && t.pendingWith !== 'None (Active)').length;
+      const deployments = tasks.filter(t => t.status === 'Ready for Prod' || t.issueType === 'Deployment').length;
+      const closed = tasks.filter(t => t.status === 'Closed').length;
+
+      const activeTasks = tasks.filter(t => t.status !== 'Closed');
+      const totalAgeing = activeTasks.reduce((acc, t) => acc + calculateAgeing(t.startDate, t.status, t.closedDate), 0);
+      const avgAgeing = activeTasks.length > 0 ? (totalAgeing / activeTasks.length).toFixed(1) : '0';
+
+      document.getElementById('statTotal').innerText = total;
+      document.getElementById('statP1').innerText = openP1;
+      document.getElementById('statPendingExternal').innerText = pendingExternal;
+      document.getElementById('statDeployments').innerText = deployments;
+      document.getElementById('statAvgAgeing').innerHTML = `${avgAgeing} <span class="text-xs font-normal">d</span>`;
+      document.getElementById('statClosed').innerText = closed;
+
+      const highAgeingTbody = document.getElementById('highAgeingTableBody');
+      highAgeingTbody.innerHTML = '';
+      const criticalAgeingTasks = activeTasks
+        .map(t => ({ ...t, calculatedAge: calculateAgeing(t.startDate, t.status, t.closedDate) }))
+        .filter(t => t.calculatedAge > 7)
+        .sort((a, b) => b.calculatedAge - a.calculatedAge);
+
+      if (criticalAgeingTasks.length === 0) {
+        highAgeingTbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-xs">No tasks exceeding 7 days ageing. Excellent SLA!</td></tr>`;
+      } else {
+        criticalAgeingTasks.forEach(t => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-rose-500/10 transition cursor-pointer text-xs';
+          tr.onclick = () => openTaskModal(t.id);
+          tr.innerHTML = `
+            <td class="p-2.5 font-mono font-bold text-indigo-600 dark:text-indigo-400">${escapeHtml(t.id)}</td>
+            <td class="p-2.5">${getModuleBadgeHtml(t.module)}</td>
+            <td class="p-2.5">${getPendingWithBadgeHtml(t.pendingWith)}</td>
+            <td class="p-2.5 text-slate-500">${escapeHtml(t.issueType)}</td>
+            <td class="p-2.5 font-bold text-slate-800 dark:text-white max-w-xs truncate">${escapeHtml(t.summary)}</td>
+            <td class="p-2.5">${getStatusBadgeHtml(t.status)}</td>
+            <td class="p-2.5">${getPriorityBadgeHtml(t.priority)}</td>
+            <td class="p-2.5">${getAgeingBadgeHtml(t.calculatedAge, t.status)}</td>
+            <td class="p-2.5 font-bold text-slate-600 dark:text-slate-300">${escapeHtml(t.assignedTo || 'Unassigned')}</td>
+          `;
+          highAgeingTbody.appendChild(tr);
+        });
+      }
+
+      renderCharts();
+    }
+
+    function renderCharts() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#94a3b8' : '#64748b';
+      const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)';
+
+      // Chart 1: Pending With
+      const pendingCategories = ['BSG', 'Testers / QA', 'DEV', 'DBA Team', 'Third-Party Vendor', 'Business Operations', 'None (Active)'];
+      const pendingCounts = pendingCategories.map(cat => tasks.filter(t => t.pendingWith === cat && t.status !== 'Closed').length);
+
+      const ctxPending = document.getElementById('pendingWithChart').getContext('2d');
+      if (pendingChartInstance) pendingChartInstance.destroy();
+      
+      pendingChartInstance = new Chart(ctxPending, {
+        type: 'bar',
+        data: {
+          labels: ['BSG', 'QA', 'DEV', 'DBA', 'Vendor', 'Ops', 'Active'],
+          datasets: [{
+            data: pendingCounts,
+            backgroundColor: ['#f59e0b', '#a855f7', '#6366f1', '#f43f5e', '#fb923c', '#10b981', '#94a3b8'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { weight: '600' } }, grid: { color: gridColor } },
+            y: { beginAtZero: true, ticks: { color: textColor, font: { weight: '600' }, precision: 0 }, grid: { color: gridColor } }
+          }
+        }
+      });
+
+      // Chart 2: Status
+      const statusLabels = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
+      const statusCounts = statusLabels.map(s => tasks.filter(t => t.status === s).length);
+
+      const ctxStatus = document.getElementById('statusChart').getContext('2d');
+      if (statusChartInstance) statusChartInstance.destroy();
+      
+      statusChartInstance = new Chart(ctxStatus, {
+        type: 'bar',
+        data: {
+          labels: statusLabels,
+          datasets: [{
+            data: statusCounts,
+            backgroundColor: ['#94a3b8', '#6366f1', '#a855f7', '#f59e0b', '#f43f5e', '#10b981'],
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: textColor, font: { weight: '600' } }, grid: { color: gridColor } },
+            y: { beginAtZero: true, ticks: { color: textColor, font: { weight: '600' }, precision: 0 }, grid: { color: gridColor } }
+          }
+        }
+      });
+
+      // Chart 3: Modules
+      const modules = ['BCRED', 'COLLNDISC', 'ARIMP', 'TORM', 'FIDB REVAMP', 'BULK EXPORT', 'FBFP', 'FIDB IMPORT'];
+      const moduleCounts = modules.map(m => tasks.filter(t => t.module === m).length);
+
+      const ctxModule = document.getElementById('moduleChart').getContext('2d');
+      if (moduleChartInstance) moduleChartInstance.destroy();
+
+      moduleChartInstance = new Chart(ctxModule, {
+        type: 'doughnut',
+        data: {
+          labels: modules,
+          datasets: [{
+            data: moduleCounts,
+            backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#a855f7', '#ec4899', '#06b6d4', '#f43f5e', '#14b8a6'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: textColor, font: { weight: '600', size: 10 } }
+            }
+          }
+        }
+      });
+    }
+
+    /* -------------------------------------------------------------
+       7. DRAG AND DROP HANDLERS (KANBAN)
+    ------------------------------------------------------------- */
+    function setupDragAndDrop() {
+      const dropzones = document.querySelectorAll('.kanban-dropzone');
+      dropzones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          zone.closest('.kanban-col').classList.add('drag-over');
+        });
+        zone.addEventListener('dragleave', () => {
+          zone.closest('.kanban-col').classList.remove('drag-over');
+        });
+        zone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          zone.closest('.kanban-col').classList.remove('drag-over');
+          const taskId = e.dataTransfer.getData('text/plain');
+          const newStatus = zone.getAttribute('data-status');
+
+          const task = tasks.find(t => t.id === taskId);
+          if (task && task.status !== newStatus) {
+            task.status = newStatus;
+            if (newStatus === 'Closed') task.closedDate = new Date().toISOString().split('T')[0];
+            if (newStatus === 'UAT / Testing' && task.pendingWith === 'None (Active)') task.pendingWith = 'Testers / QA';
+            saveTasks();
+            renderApp();
+            showToast(`Moved ${taskId} to ${newStatus}`, 'success');
+          }
+        });
+      });
+    }
+
+    /* -------------------------------------------------------------
+       8. MODAL HANDLERS
+    ------------------------------------------------------------- */
+    function openTaskModal(taskIdToEdit = null) {
+      const modal = document.getElementById('taskModal');
+      const form = document.getElementById('taskForm');
+      form.reset();
+      syncAssigneeOptions();
+      switchModalTab('tab-general');
+
+      if (taskIdToEdit) {
+        const task = tasks.find(t => t.id === taskIdToEdit);
+        if (!task) return;
+
+        document.getElementById('taskModalTitle').innerText = `Edit Task ${task.id}`;
+        document.getElementById('editTaskIdHidden').value = task.id;
+        document.getElementById('taskIdInput').value = task.id;
+        document.getElementById('taskIdInput').readOnly = true;
+        
+        document.getElementById('taskModuleInput').value = task.module;
+        document.getElementById('taskIssueTypeInput').value = task.issueType;
+        document.getElementById('taskPriorityInput').value = task.priority;
+        document.getElementById('taskSummaryInput').value = task.summary;
+        document.getElementById('taskStatusInput').value = task.status;
+        document.getElementById('taskPendingWithInput').value = task.pendingWith || 'None (Active)';
+        document.getElementById('taskEnvInput').value = task.env || 'PROD';
+        document.getElementById('taskAssignedToInput').value = task.assignedTo || '';
+        document.getElementById('taskAssignedByInput').value = task.assignedBy || '';
+        document.getElementById('taskStartDateInput').value = task.startDate || '';
+        document.getElementById('taskEndDateInput').value = task.endDate || '';
+        document.getElementById('taskProdDateInput').value = task.prodDate || '';
+        document.getElementById('taskDetailsInput').value = task.details || '';
+        document.getElementById('taskRcaInput').value = task.rca || '';
+        document.getElementById('taskSolutionInput').value = task.solution || '';
+        document.getElementById('taskMeetingTimeInput').value = task.meetingTime || '';
+        document.getElementById('taskMeetingDurationInput').value = task.meetingDuration || '';
+        document.getElementById('taskMeetingAttendeesInput').value = task.meetingAttendees || '';
+        document.getElementById('taskMeetingNotesInput').value = task.meetingNotes || '';
+
+        document.getElementById('deleteTaskBtn').classList.remove('hidden');
+      } else {
+        document.getElementById('taskModalTitle').innerText = 'Create Banking Work Item';
+        document.getElementById('editTaskIdHidden').value = '';
+        document.getElementById('taskIdInput').readOnly = false;
+        
+        const highestNum = tasks.reduce((max, t) => {
+          const num = parseInt(t.id.replace('BNK-', ''), 10);
+          return !isNaN(num) && num > max ? num : max;
+        }, 1000);
+        document.getElementById('taskIdInput').value = `BNK-${highestNum + 1}`;
+        document.getElementById('taskStartDateInput').value = new Date().toISOString().split('T')[0];
+        document.getElementById('taskPendingWithInput').value = 'None (Active)';
+        document.getElementById('taskAssignedToInput').value = 'Support Engineer';
+        document.getElementById('taskAssignedByInput').value = 'Operations Lead';
+        document.getElementById('deleteTaskBtn').classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeTaskModal() {
+      document.getElementById('taskModal').classList.add('hidden');
+    }
+
+    function switchModalTab(targetTabId) {
+      document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === targetTabId) {
+          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold';
+        } else {
+          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium';
+        }
+      });
+      document.querySelectorAll('.modal-tab-pane').forEach(pane => {
+        pane.classList.toggle('hidden', pane.id !== targetTabId);
+      });
+    }
+
+    function openTimesheetModal() {
+      document.getElementById('timesheetForm').reset();
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('tsDateInput').value = today;
+      syncTsDay();
+      document.getElementById('timesheetModal').classList.remove('hidden');
+    }
+
+    function closeTimesheetModal() {
+      document.getElementById('timesheetModal').classList.add('hidden');
+    }
+
+    function syncTsDay() {
+      const val = document.getElementById('tsDateInput').value;
+      if (!val) return;
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('tsDayInput').value = days[new Date(val).getDay()];
+    }
+
+    function deleteTimesheet(id) {
+      customConfirm("Delete Timesheet Entry", "Remove this work entry?", () => {
+        timesheets = timesheets.filter(ts => ts.id !== id);
+        saveTimesheet();
+        renderTimesheet();
+        showToast("Timesheet entry removed", "info");
+      });
+    }
+
+    /* -------------------------------------------------------------
+       9. EXCEL & BACKUP IMPORT / EXPORT
+    ------------------------------------------------------------- */
+    function exportToCsv() {
+      if (tasks.length === 0) return showToast("No tasks to export", "error");
+
+      const headers = [
+        "Task ID", "Module", "Issue Type", "Priority", "Status", "Pending With", 
+        "Environment", "Summary", "Task Details", "RCA", "Solution Fix",
+        "Assigned To", "Assigned By", "Start Date", "Target End Date", 
+        "Production Date", "Ageing Days", "Meeting Time", "Meeting Notes"
+      ];
+
+      const csvRows = [headers.map(h => `"${h}"`).join(',')];
+
+      tasks.forEach(t => {
+        const ageing = calculateAgeing(t.startDate, t.status, t.closedDate);
+        const row = [
+          t.id || '', t.module || '', t.issueType || '', t.priority || '', t.status || '',
+          t.pendingWith || 'None (Active)', t.env || '', t.summary || '', t.details || '',
+          t.rca || '', t.solution || '', t.assignedTo || '', t.assignedBy || '',
+          t.startDate || '', t.endDate || '', t.prodDate || '', ageing,
+          t.meetingTime || '', t.meetingNotes || ''
+        ];
+        csvRows.push(row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+      });
+
+      const csvContent = "\uFEFF" + csvRows.join('\r\n');
+      downloadBlob(csvContent, `PWMS_Tasks_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
+      showToast("Tasks CSV exported successfully!", "success");
+    }
+
+    function exportTimesheetCsv() {
+      if (timesheets.length === 0) return showToast("No timesheet entries to export", "error");
+
+      const headers = [
+        "#", "Resource Name", "POD Name (IBG, ILC, ARIPM etc.)", "Day", "Date",
+        "Task Category", "Task - Name / Title / Milestone", "Task - Description",
+        "Time Spent (Hrs)", "Priority (High, Low, Medium)", "Effort Estimate (Month/Days/Hours)",
+        "Start Date", "Target Completion Date"
+      ];
+
+      const csvRows = [headers.map(h => `"${h}"`).join(',')];
+
+      timesheets.forEach((r, idx) => {
+        const row = [
+          idx + 1, r.resource_name, r.pod_name, r.day_name, r.log_date,
+          r.task_category, r.task_title, r.task_description, r.time_spent,
+          r.priority, r.effort_estimate || '', r.start_date || '', r.target_date || ''
+        ];
+        csvRows.push(row.map(val => `"${String(val).replace(/"/g, '""')}"`).join(','));
+      });
+
+      const csvContent = "\uFEFF" + csvRows.join('\r\n');
+      downloadBlob(csvContent, `Timesheet_Weekly_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
+      showToast("Timesheet CSV exported successfully!", "success");
+    }
+
+    function exportToJson() {
+      const backupData = {
+        app: "PWMS_Glassmorphism_Edition",
+        exportDate: new Date().toISOString(),
+        tasks: tasks,
+        timesheets: timesheets
+      };
+      downloadBlob(JSON.stringify(backupData, null, 2), `PWMS_Backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
+      showToast("Full JSON Backup downloaded!", "success");
+    }
+
+    function importFromJson(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          const importedTasks = Array.isArray(parsed) ? parsed : (parsed.tasks || []);
+          const importedTs = parsed.timesheets || [];
+
+          customConfirm("Restore Workspace", `Import data (${importedTasks.length} tasks)?`, () => {
+            tasks = importedTasks;
+            if (importedTs.length) timesheets = importedTs;
+            saveTasks();
+            saveTimesheet();
+            renderApp();
+            showToast("Workspace state restored!", "success");
+          });
+        } catch (err) {
+          showToast("Failed to parse JSON backup file.", "error");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function downloadBlob(content, filename, type) {
+      const blob = new Blob([content], { type: type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    /* -------------------------------------------------------------
+       10. UI VIEW SWITCHING & FILTERS
+    ------------------------------------------------------------- */
+    function applyQuickModuleFilter(moduleName) {
+      document.getElementById('filterModule').value = moduleName;
+      if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
+      else renderApp();
+    }
+
+    function applyQuickPendingFilter(pendingName) {
+      document.getElementById('filterPendingWith').value = pendingName;
+      if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
+      else renderApp();
+    }
+
+    function switchView(viewName) {
+      currentView = viewName;
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        if (btn.getAttribute('data-view') === viewName) {
+          btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25 transition';
+        } else {
+          btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition';
+        }
+      });
+
+      document.getElementById('view-kanban').classList.toggle('hidden', viewName !== 'kanban');
+      document.getElementById('view-timesheet').classList.toggle('hidden', viewName !== 'timesheet');
+      document.getElementById('view-list').classList.toggle('hidden', viewName !== 'list');
+      document.getElementById('view-meetings').classList.toggle('hidden', viewName !== 'meetings');
+      document.getElementById('view-metrics').classList.toggle('hidden', viewName !== 'metrics');
+
+      document.getElementById('filterToolbar').classList.toggle('hidden', viewName === 'metrics' || viewName === 'timesheet');
+
+      renderApp();
+    }
+
+    /* -------------------------------------------------------------
+       11. EVENT LISTENERS INITIALIZATION
+    ------------------------------------------------------------- */
+    window.onload = function () {
+      loadData();
+      setupDragAndDrop();
+      updateThemeControls(document.documentElement.classList.contains('dark'));
+      renderApp();
+
+      // Theme Toggle
+      document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
+
+      // View Navigation
+      document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+      });
+
+      // Sidebar Toggle
+      document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('-ml-64');
+      });
+
+      // Filters
+      document.getElementById('globalSearchInput').addEventListener('input', renderApp);
+      document.getElementById('filterModule').addEventListener('change', renderApp);
+      document.getElementById('filterPendingWith').addEventListener('change', renderApp);
+      document.getElementById('filterAssignee').addEventListener('change', renderApp);
+      document.getElementById('filterIssueType').addEventListener('change', renderApp);
+      document.getElementById('filterPriority').addEventListener('change', renderApp);
+
+      document.getElementById('toggleP1OnlyBtn').addEventListener('click', function() {
+        this.classList.toggle('bg-rose-500');
+        this.classList.toggle('text-white');
+        renderApp();
+      });
+
+      document.getElementById('toggleHighAgeingBtn').addEventListener('click', function() {
+        this.classList.toggle('bg-amber-500');
+        this.classList.toggle('text-white');
+        renderApp();
+      });
+
+      document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+        document.getElementById('globalSearchInput').value = '';
+        document.getElementById('filterModule').value = 'ALL';
+        document.getElementById('filterPendingWith').value = 'ALL';
+        document.getElementById('filterAssignee').value = 'ALL';
+        document.getElementById('filterIssueType').value = 'ALL';
+        document.getElementById('filterPriority').value = 'ALL';
+        document.getElementById('toggleP1OnlyBtn').classList.remove('bg-rose-500', 'text-white');
+        document.getElementById('toggleHighAgeingBtn').classList.remove('bg-amber-500', 'text-white');
+        renderApp();
+        showToast("Filters reset to default.");
+      });
+
+      // Modals
+      document.getElementById('openCreateModalBtn').addEventListener('click', () => openTaskModal());
+      document.getElementById('openCreateTimesheetModalBtn').addEventListener('click', openTimesheetModal);
+      document.getElementById('closeTaskModalBtn').addEventListener('click', closeTaskModal);
+      document.getElementById('cancelTaskModalBtn').addEventListener('click', closeTaskModal);
+
+      document.querySelectorAll('.modal-tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          switchModalTab(btn.getAttribute('data-tab'));
+        });
+      });
+
+      // Save Task Form
+      document.getElementById('taskForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const editId = document.getElementById('editTaskIdHidden').value;
+        const taskId = document.getElementById('taskIdInput').value.trim().toUpperCase();
+
+        const taskData = {
+          id: taskId,
+          module: document.getElementById('taskModuleInput').value,
+          issueType: document.getElementById('taskIssueTypeInput').value,
+          priority: document.getElementById('taskPriorityInput').value,
+          summary: document.getElementById('taskSummaryInput').value.trim(),
+          status: document.getElementById('taskStatusInput').value,
+          pendingWith: document.getElementById('taskPendingWithInput').value,
+          env: document.getElementById('taskEnvInput').value,
+          assignedTo: document.getElementById('taskAssignedToInput').value.trim() || 'Unassigned',
+          assignedBy: document.getElementById('taskAssignedByInput').value.trim(),
+          startDate: document.getElementById('taskStartDateInput').value,
+          endDate: document.getElementById('taskEndDateInput').value,
+          prodDate: document.getElementById('taskProdDateInput').value,
+          details: document.getElementById('taskDetailsInput').value.trim(),
+          rca: document.getElementById('taskRcaInput').value.trim(),
+          solution: document.getElementById('taskSolutionInput').value.trim(),
+          meetingTime: document.getElementById('taskMeetingTimeInput').value,
+          meetingDuration: document.getElementById('taskMeetingDurationInput').value,
+          meetingAttendees: document.getElementById('taskMeetingAttendeesInput').value.trim(),
+          meetingNotes: document.getElementById('taskMeetingNotesInput').value.trim(),
+          closedDate: document.getElementById('taskStatusInput').value === 'Closed' ? (new Date().toISOString().split('T')[0]) : null
+        };
+
+        if (editId) {
+          const idx = tasks.findIndex(t => t.id === editId);
+          if (idx !== -1) tasks[idx] = { ...tasks[idx], ...taskData };
+          showToast(`Task ${taskId} updated successfully!`, 'success');
+        } else {
+          if (tasks.some(t => t.id === taskId)) {
+            showToast(`Task ID ${taskId} already exists!`, 'error');
+            return;
+          }
+          tasks.unshift(taskData);
+          showToast(`Created task ${taskId}!`, 'success');
+        }
+
+        saveTasks();
+        closeTaskModal();
+        renderApp();
+      });
+
+      // Save Timesheet Form
+      document.getElementById('timesheetForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const entry = {
+          id: Date.now(),
+          resource_name: document.getElementById('tsResourceInput').value.trim(),
+          pod_name: document.getElementById('tsPodInput').value.trim(),
+          log_date: document.getElementById('tsDateInput').value,
+          day_name: document.getElementById('tsDayInput').value,
+          task_category: document.getElementById('tsCategoryInput').value,
+          task_title: document.getElementById('tsTitleInput').value.trim(),
+          task_description: document.getElementById('tsDescInput').value.trim(),
+          time_spent: parseFloat(document.getElementById('tsHoursInput').value),
+          priority: document.getElementById('tsPriorityInput').value,
+          effort_estimate: document.getElementById('tsEstimateInput').value.trim(),
+          start_date: document.getElementById('tsDateInput').value,
+          target_date: document.getElementById('tsDateInput').value
+        };
+
+        timesheets.unshift(entry);
+        saveTimesheet();
+        closeTimesheetModal();
+        if (currentView === 'timesheet') renderTimesheet();
+        showToast("Activity logged to timesheet!", "success");
+      });
+
+      // Delete Task Button
+      document.getElementById('deleteTaskBtn').addEventListener('click', () => {
+        const idToDelete = document.getElementById('editTaskIdHidden').value;
+        if (!idToDelete) return;
+        customConfirm("Delete Item", `Permanently delete task ${idToDelete}?`, () => {
+          tasks = tasks.filter(t => t.id !== idToDelete);
+          saveTasks();
+          closeTaskModal();
+          renderApp();
+          showToast(`Task ${idToDelete} removed.`, 'info');
+        });
+      });
+
+      // Backup Dropdown Menu
+      const backupMenuBtn = document.getElementById('backupMenuBtn');
+      const backupMenuDropdown = document.getElementById('backupMenuDropdown');
+      backupMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        backupMenuDropdown.classList.toggle('hidden');
+      });
+      document.addEventListener('click', () => backupMenuDropdown.classList.add('hidden'));
+
+      // Backup Handlers
+      document.getElementById('exportCsvBtn').addEventListener('click', exportToCsv);
+      document.getElementById('exportTimesheetCsvBtn').addEventListener('click', exportTimesheetCsv);
+      document.getElementById('exportJsonBtn').addEventListener('click', exportToJson);
+      document.getElementById('importJsonInput').addEventListener('change', (e) => {
+        if (e.target.files.length > 0) importFromJson(e.target.files[0]);
+      });
+      document.getElementById('resetSampleDataBtn').addEventListener('click', () => {
+        customConfirm("Reload Sample Data", "Reset workspace to sample banking dataset?", () => {
+          tasks = [...SAMPLE_TASKS];
+          timesheets = [...SAMPLE_TIMESHEET];
+          saveTasks();
+          saveTimesheet();
+          renderApp();
+          showToast("Sample dataset reloaded!", "success");
+        });
+      });
+
+      // Keyboard Shortcuts
+      document.addEventListener('keydown', (e) => {
+        if ((e.key === 'c' || e.key === 'C') && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          openTaskModal();
+        }
+        if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+          e.preventDefault();
+          document.getElementById('globalSearchInput').focus();
+        }
+        if (e.key === 'Escape') {
+          closeTaskModal();
+          closeTimesheetModal();
+          document.getElementById('confirmDialog').classList.add('hidden');
+        }
+      });
+    };
+  </script>
+</body>
+</html>

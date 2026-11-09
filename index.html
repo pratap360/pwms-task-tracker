@@ -1,415 +1,609 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PWMS Design System Hub | Personal Web Management Suite</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome 6 CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <script>
-    // Theme initialization
-    (function () {
-      const savedTheme = localStorage.getItem('pwms_hub_theme');
-      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    })();
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWMS Design System Hub | Personal Web Management Suite</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
 
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              50: '#f0f7ff',
-              500: '#0052cc',
-              600: '#0747a6',
-              900: '#0c2340',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* Smooth card transitions and mesh glows */
-    .mesh-glow {
-      background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 65%);
-    }
-    .dark .mesh-glow {
-      background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.12) 0%, transparent 70%);
-    }
-    .theme-card {
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .theme-card:hover {
-      transform: translateY(-6px);
-    }
-  </style>
-</head>
-
-<body class="bg-slate-50 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
-
-  <!-- ================= TOP NAVIGATION ================= -->
-  <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#0c1427]/80 border-b border-slate-200 dark:border-slate-800/80 px-6 py-3.5 transition-colors">
-    <div class="max-w-7xl mx-auto flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 text-white flex items-center justify-center font-black shadow-md shadow-blue-500/20">
-          <i class="fa-solid fa-building-columns text-sm"></i>
+  <body
+    class="bg-slate-50 dark:bg-[#090d16] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200"
+  >
+    <!-- ================= TOP NAVIGATION ================= -->
+    <header
+      class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-[#0c1427]/80 border-b border-slate-200 dark:border-slate-800/80 px-6 py-3.5 transition-colors"
+    >
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <!-- Brand Logo -->
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 text-white flex items-center justify-center font-black shadow-md shadow-blue-500/20"
+          >
+            <i class="fa-solid fa-building-columns text-sm"></i>
+          </div>
+          <div>
+            <div
+              class="font-extrabold text-base tracking-tight flex items-center gap-2"
+            >
+              PWMS
+              <span
+                class="bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold"
+                >FINTECH CORE</span
+              >
+            </div>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              Design System Hub & UI Showcase
+            </p>
+          </div>
         </div>
+
+        <!-- Quick Actions -->
+        <div class="flex items-center space-x-3">
+          <a
+            href="https://github.com/codeInfiltr4tor/pwms-task-tracker"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          >
+            <i class="fa-brands fa-github text-sm"></i>
+            <span>Repository</span>
+          </a>
+
+          <!-- Dark Mode Switcher -->
+          <button
+            id="themeToggleBtn"
+            class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-xs"
+            title="Toggle Theme"
+          >
+            <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= HERO SECTION ================= -->
+    <section
+      class="relative overflow-hidden mesh-glow py-14 px-6 border-b border-slate-200 dark:border-slate-800/60"
+    >
+      <div class="max-w-4xl mx-auto text-center space-y-4">
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium"
+        >
+          <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> 1 Engine • 6
+          Modern Design Paradigms
+        </div>
+
+        <h1
+          class="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight"
+        >
+          Select Your Preferred <br class="hidden sm:inline" />
+          <span
+            class="bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent"
+            >Interface Experience</span
+          >
+        </h1>
+
+        <p
+          class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed"
+        >
+          The Personal Web Management Suite (PWMS) is an enterprise retail &
+          corporate banking tracker. All data is synchronized locally across all
+          6 designs via browser
+          <code
+            class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800"
+            >localStorage</code
+          >.
+        </p>
+
+        <!-- Key Capabilities Badges -->
+        <div
+          class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs font-medium text-slate-600 dark:text-slate-300"
+        >
+          <span
+            class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs"
+          >
+            <i class="fa-solid fa-table-columns text-blue-500"></i> Drag & Drop
+            Kanban
+          </span>
+          <span
+            class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs"
+          >
+            <i class="fa-solid fa-calendar-check text-emerald-500"></i> Weekly
+            Manager Timesheet
+          </span>
+          <span
+            class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs"
+          >
+            <i class="fa-solid fa-chart-pie text-purple-500"></i> Bottleneck
+            Analytics
+          </span>
+          <span
+            class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs"
+          >
+            <i class="fa-solid fa-file-excel text-green-600"></i> Excel CSV &
+            JSON Backups
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= UI SHOWCASE GRID ================= -->
+    <main class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
+      <div class="flex items-center justify-between mb-8">
         <div>
-          <div class="font-extrabold text-base tracking-tight flex items-center gap-2">
-            PWMS <span class="bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold">FINTECH CORE</span>
-          </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Design System Hub & UI Showcase</p>
+          <h2
+            class="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2"
+          >
+            <i class="fa-solid fa-palette text-blue-600 dark:text-blue-400"></i>
+            Interface Collections
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Launch any visual variant with a single click
+          </p>
+        </div>
+        <div class="text-xs text-slate-500 dark:text-slate-400 font-mono">
+          Total Variants: <strong>6 UI Engines</strong>
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="flex items-center space-x-3">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
-           class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-          <i class="fa-brands fa-github text-sm"></i>
-          <span>Repository</span>
-        </a>
-
-        <!-- Dark Mode Switcher -->
-        <button id="themeToggleBtn" class="p-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-xs" title="Toggle Theme">
-          <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- ================= HERO SECTION ================= -->
-  <section class="relative overflow-hidden mesh-glow py-14 px-6 border-b border-slate-200 dark:border-slate-800/60">
-    <div class="max-w-4xl mx-auto text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-medium">
-        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i> 1 Engine • 6 Modern Design Paradigms
-      </div>
-      
-      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-        Select Your Preferred <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 bg-clip-text text-transparent">Interface Experience</span>
-      </h1>
-      
-      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-        The Personal Web Management Suite (PWMS) is an enterprise retail & corporate banking tracker. All data is synchronized locally across all 6 designs via browser <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800">localStorage</code>.
-      </p>
-
-      <!-- Key Capabilities Badges -->
-      <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs font-medium text-slate-600 dark:text-slate-300">
-        <span class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs">
-          <i class="fa-solid fa-table-columns text-blue-500"></i> Drag & Drop Kanban
-        </span>
-        <span class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs">
-          <i class="fa-solid fa-calendar-check text-emerald-500"></i> Weekly Manager Timesheet
-        </span>
-        <span class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs">
-          <i class="fa-solid fa-chart-pie text-purple-500"></i> Bottleneck Analytics
-        </span>
-        <span class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs">
-          <i class="fa-solid fa-file-excel text-green-600"></i> Excel CSV & JSON Backups
-        </span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= UI SHOWCASE GRID ================= -->
-  <main class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h2 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-          <i class="fa-solid fa-palette text-blue-600 dark:text-blue-400"></i>
-          Interface Collections
-        </h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400">Launch any visual variant with a single click</p>
-      </div>
-      <div class="text-xs text-slate-500 dark:text-slate-400 font-mono">
-        Total Variants: <strong>6 UI Engines</strong>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- 1. Enterprise / Jira Style -->
-      <div class="theme-card bg-white dark:bg-[#111927] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition"></div>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 flex items-center justify-center text-lg font-bold">
-              <i class="fa-solid fa-jira"></i>
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-              Enterprise
-            </span>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 1. Enterprise / Jira Style -->
+        <div
+          class="theme-card bg-white dark:bg-[#111927] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition"
+          ></div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 flex items-center justify-center text-lg font-bold"
+              >
+                <i class="fa-brands fa-jira"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
+              >
+                Enterprise
+              </span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                Enterprise Jira UI
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"
+              >
+                Clean, functional corporate layout mimicking Atlassian Jira with
+                standard banking color coding, sidebar navigation, and dense
+                data displays.
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >Dense Grid</span
+              >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >Jira Blue</span
+              >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >High Contrast</span
+              >
+            </div>
           </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Enterprise Jira UI</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Clean, functional corporate layout mimicking Atlassian Jira with standard banking color coding, sidebar navigation, and dense data displays.
+          <div class="pt-6">
+            <a
+              href="/themes/PWMS_Enterprise_Jira.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition active:scale-98 shadow-sm shadow-blue-500/20"
+            >
+              <span>Launch Jira UI</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Brutalism UI -->
+        <div
+          class="theme-card bg-white dark:bg-[#111927] border-2 border-black dark:border-green-400 rounded-2xl p-6 shadow-[4px_4px_0px_#000] dark:shadow-[4px_4px_0px_#22c55e] flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 border-2 border-black dark:border-green-400 bg-yellow-300 dark:bg-black text-black dark:text-green-400 flex items-center justify-center text-lg font-black"
+              >
+                <i class="fa-solid fa-cube"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 text-[11px] font-mono font-black border-2 border-black dark:border-green-400 bg-black text-yellow-300 dark:bg-green-400 dark:text-black"
+              >
+                RAW NEO
+              </span>
+            </div>
+            <div>
+              <h3
+                class="text-base font-black text-slate-900 dark:text-green-400 font-mono"
+              >
+                Brutalism UI
+              </h3>
+              <p
+                class="text-xs text-slate-600 dark:text-green-300/80 mt-1 leading-relaxed font-mono"
+              >
+                High-impact neo-brutalist styling with 3px solid black outlines,
+                flat hard shadows, monospace typography, and a cyberpunk
+                terminal dark theme.
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono font-bold"
+            >
+              <span
+                class="px-2 py-0.5 border border-black dark:border-green-400 bg-white dark:bg-black text-black dark:text-green-400"
+                >Hard Shadows</span
+              >
+              <span
+                class="px-2 py-0.5 border border-black dark:border-green-400 bg-white dark:bg-black text-black dark:text-green-400"
+                >Zero Radius</span
+              >
+            </div>
+          </div>
+          <div class="pt-6">
+            <a
+              href="pwms_BrutalistUI.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-black dark:border-green-400 bg-yellow-400 hover:bg-yellow-300 dark:bg-green-500 dark:hover:bg-green-400 text-black font-black text-xs transition active:translate-x-1 active:translate-y-1"
+            >
+              <span>LAUNCH BRUTALISM</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Glassmorphism UI -->
+        <div
+          class="theme-card bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-white/80 dark:border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div
+            class="absolute top-0 right-0 w-32 h-32 bg-cyan-400/20 rounded-full blur-3xl group-hover:bg-cyan-400/30 transition"
+          ></div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-300 flex items-center justify-center text-lg font-bold border border-cyan-200 dark:border-cyan-800"
+              >
+                <i class="fa-solid fa-droplet"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-50 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-700"
+              >
+                Frosted Glass
+              </span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                Glassmorphism UI
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"
+              >
+                Multi-layer frosted glass panels, ambient aurora background,
+                translucent dropzones, and soft diffuse shadows with luminous
+                edges.
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span
+                class="px-2 py-0.5 rounded-md bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-white/10"
+                >Backdrop Blur</span
+              >
+              <span
+                class="px-2 py-0.5 rounded-md bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-white/10"
+                >Aurora Mesh</span
+              >
+            </div>
+          </div>
+          <div class="pt-6">
+            <a
+              href="pwms_GlassmorphismUI.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs transition active:scale-98 shadow-md shadow-cyan-500/20"
+            >
+              <span>Launch Glassmorphism</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 4. Spatial UI (visionOS) -->
+        <div
+          class="theme-card bg-white dark:bg-[#111927] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div
+            class="absolute -top-6 -right-6 w-32 h-32 bg-sky-400/10 rounded-full blur-2xl group-hover:bg-sky-400/20 transition"
+          ></div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center text-lg font-bold border border-slate-300 dark:border-slate-700"
+              >
+                <i class="fa-brands fa-apple text-base"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+              >
+                visionOS
+              </span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                Spatial UI
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"
+              >
+                Apple Vision Pro inspired volumetric depth, squircle curvature
+                radii, floating glass pods, and top-edge specular highlights.
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span
+                class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800"
+                >3D Depth</span
+              >
+              <span
+                class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800"
+                >Capsule Pills</span
+              >
+              <span
+                class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800"
+                >Specular Lighting</span
+              >
+            </div>
+          </div>
+          <div class="pt-6">
+            <a
+              href="PWMS_Spatial.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs transition active:scale-98 shadow-sm"
+            >
+              <span>Launch Spatial UI</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 5. Liquid Glass UI -->
+        <div
+          class="theme-card bg-white/80 dark:bg-slate-900/70 border border-sky-200/80 dark:border-sky-800/40 rounded-3xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div
+            class="absolute -bottom-6 -left-6 w-36 h-36 bg-purple-500/15 rounded-full blur-3xl group-hover:bg-purple-500/25 transition"
+          ></div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center text-lg font-bold border border-purple-200 dark:border-purple-800"
+              >
+                <i class="fa-solid fa-water"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700"
+              >
+                Fluid Caustic
+              </span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                Liquid Glass UI
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"
+              >
+                Molten glass bevels, asymmetric fluid edge refractions, organic
+                water-tension curves, and bioluminescent ocean abyss dark mode.
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span
+                class="px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                >Fluid Bevel</span
+              >
+              <span
+                class="px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300"
+                >Caustic Light</span
+              >
+            </div>
+          </div>
+          <div class="pt-6">
+            <a
+              href="PWMS_LiquidGlass.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:opacity-95 text-white font-semibold text-xs transition active:scale-98 shadow-md shadow-indigo-500/25"
+            >
+              <span>Launch Liquid Glass</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- 6. Bento Grid UI -->
+        <div
+          class="theme-card bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group"
+        >
+          <div
+            class="absolute top-0 right-0 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"
+          ></div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <span
+                class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex items-center justify-center text-lg font-bold border border-slate-200 dark:border-slate-700"
+              >
+                <i class="fa-solid fa-table-cells-large"></i>
+              </span>
+              <span
+                class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+              >
+                Green Theme
+              </span>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">
+                Hacker Style UI
+              </h3>
+              <p
+                class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed"
+              >
+                Switch to Dark mode and feel the hackers Task Tracker style Full
+                Green text and shadows UI
+              </p>
+            </div>
+            <div
+              class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400"
+            >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >1px Hairline</span
+              >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >Bento Cells</span
+              >
+              <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800"
+                >Linear Dark</span
+              >
+            </div>
+          </div>
+          <div class="pt-6">
+            <a
+              href="PWMS_BrutalismHacker.html"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-semibold text-xs transition active:scale-98 shadow-sm"
+            >
+              <span>Launch Hacker Style</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ================= ARCHITECTURE HIGHLIGHTS ================= -->
+    <section
+      class="bg-white dark:bg-[#0c1427] border-t border-slate-200 dark:border-slate-800/80 py-12 px-6 transition-colors"
+    >
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+            Unified System Architecture
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Switch interfaces anytime without losing task updates or logged
+            hours
+          </p>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center sm:text-left"
+        >
+          <div
+            class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5"
+          >
+            <div
+              class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0"
+            >
+              <i class="fa-solid fa-database"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">
+              Shared LocalStorage
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              All 6 interfaces read and write to the same key (<code
+                class="font-mono text-[10px]"
+                >PWMS_BANKING_TASKS_DATA_V2</code
+              >).
             </p>
           </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Dense Grid</span>
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Jira Blue</span>
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">High Contrast</span>
-          </div>
-        </div>
-        <div class="pt-6">
-          <a href="PWMS_Glassmorphism.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition active:scale-98 shadow-sm shadow-blue-500/20">
-            <span>Launch Jira UI</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
-        </div>
-      </div>
 
-      <!-- 2. Brutalism UI -->
-      <div class="theme-card bg-white dark:bg-[#111927] border-2 border-black dark:border-green-400 rounded-2xl p-6 shadow-[4px_4px_0px_#000] dark:shadow-[4px_4px_0px_#22c55e] flex flex-col justify-between relative overflow-hidden group">
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 border-2 border-black dark:border-green-400 bg-yellow-300 dark:bg-black text-black dark:text-green-400 flex items-center justify-center text-lg font-black">
-              <i class="fa-solid fa-cube"></i>
-            </span>
-            <span class="px-2.5 py-0.5 text-[11px] font-mono font-black border-2 border-black dark:border-green-400 bg-black text-yellow-300 dark:bg-green-400 dark:text-black">
-              RAW NEO
-            </span>
-          </div>
-          <div>
-            <h3 class="text-base font-black text-slate-900 dark:text-green-400 font-mono">Brutalism UI</h3>
-            <p class="text-xs text-slate-600 dark:text-green-300/80 mt-1 leading-relaxed font-mono">
-              High-impact neo-brutalist styling with 3px solid black outlines, flat hard shadows, monospace typography, and a cyberpunk terminal dark theme.
+          <div
+            class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5"
+          >
+            <div
+              class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0"
+            >
+              <i class="fa-solid fa-calendar-week"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">
+              Manager Timesheet
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              Track past-tense daily work logs with weekly hour meters, standard
+              vs. overtime splits, and Excel exports.
             </p>
           </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono font-bold">
-            <span class="px-2 py-0.5 border border-black dark:border-green-400 bg-white dark:bg-black text-black dark:text-green-400">Hard Shadows</span>
-            <span class="px-2 py-0.5 border border-black dark:border-green-400 bg-white dark:bg-black text-black dark:text-green-400">Zero Radius</span>
-          </div>
-        </div>
-        <div class="pt-6">
-          <a href="pwms_BrutalistUI.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-black dark:border-green-400 bg-yellow-400 hover:bg-yellow-300 dark:bg-green-500 dark:hover:bg-green-400 text-black font-black text-xs transition active:translate-x-1 active:translate-y-1">
-            <span>LAUNCH BRUTALISM</span>
-            <i class="fa-solid fa-arrow-right text-[10px]"></i>
-          </a>
-        </div>
-      </div>
 
-      <!-- 3. Glassmorphism UI -->
-      <div class="theme-card bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-white/80 dark:border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-400/20 rounded-full blur-3xl group-hover:bg-cyan-400/30 transition"></div>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-300 flex items-center justify-center text-lg font-bold border border-cyan-200 dark:border-cyan-800">
-              <i class="fa-solid fa-droplet"></i>
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-cyan-50 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-700">
-              Frosted Glass
-            </span>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Glassmorphism UI</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Multi-layer frosted glass panels, ambient aurora background, translucent dropzones, and soft diffuse shadows with luminous edges.
+          <div
+            class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5"
+          >
+            <div
+              class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0"
+            >
+              <i class="fa-solid fa-chart-column"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">
+              Bottleneck Metrics
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              Real-time Chart.js visualizers for items stuck in BSG, QA, DBA,
+              and third-party vendor queues.
             </p>
           </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-            <span class="px-2 py-0.5 rounded-md bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-white/10">Backdrop Blur</span>
-            <span class="px-2 py-0.5 rounded-md bg-white/60 dark:bg-slate-800/60 border border-white/40 dark:border-white/10">Aurora Mesh</span>
-          </div>
-        </div>
-        <div class="pt-6">
-          <a href="pwms_GlassmorphismUI.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs transition active:scale-98 shadow-md shadow-cyan-500/20">
-            <span>Launch Glassmorphism</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
-        </div>
-      </div>
 
-      <!-- 4. Spatial UI (visionOS) -->
-      <div class="theme-card bg-white dark:bg-[#111927] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div class="absolute -top-6 -right-6 w-32 h-32 bg-sky-400/10 rounded-full blur-2xl group-hover:bg-sky-400/20 transition"></div>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white flex items-center justify-center text-lg font-bold border border-slate-300 dark:border-slate-700">
-              <i class="fa-brands fa-apple text-base"></i>
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-              visionOS
-            </span>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Spatial UI</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Apple Vision Pro inspired volumetric depth, squircle curvature radii, floating glass pods, and top-edge specular highlights.
+          <div
+            class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5"
+          >
+            <div
+              class="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0"
+            >
+              <i class="fa-solid fa-cloud-arrow-down"></i>
+            </div>
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white">
+              Zero Server Dependent
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+              100% client-side. Can be hosted statically on GitHub Pages,
+              Vercel, Netlify, or run completely offline.
             </p>
           </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">3D Depth</span>
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">Capsule Pills</span>
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800">Specular Lighting</span>
-          </div>
-        </div>
-        <div class="pt-6">
-          <a href="PWMS_Spatial.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-900 font-semibold text-xs transition active:scale-98 shadow-sm">
-            <span>Launch Spatial UI</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
         </div>
       </div>
+    </section>
 
-      <!-- 5. Liquid Glass UI -->
-      <div class="theme-card bg-white/80 dark:bg-slate-900/70 border border-sky-200/80 dark:border-sky-800/40 rounded-3xl p-6 shadow-xl flex flex-col justify-between relative overflow-hidden group">
-        <div class="absolute -bottom-6 -left-6 w-36 h-36 bg-purple-500/15 rounded-full blur-3xl group-hover:bg-purple-500/25 transition"></div>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-300 flex items-center justify-center text-lg font-bold border border-purple-200 dark:border-purple-800">
-              <i class="fa-solid fa-water"></i>
-            </span>
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-purple-50 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700">
-              Fluid Caustic
-            </span>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Liquid Glass UI</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Molten glass bevels, asymmetric fluid edge refractions, organic water-tension curves, and bioluminescent ocean abyss dark mode.
-            </p>
-          </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-            <span class="px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">Fluid Bevel</span>
-            <span class="px-2 py-0.5 rounded-full bg-sky-50 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">Caustic Light</span>
-          </div>
+    <!-- ================= FOOTER ================= -->
+    <footer
+      class="bg-slate-100 dark:bg-[#070b12] border-t border-slate-200 dark:border-slate-800 py-6 px-6 text-center text-xs text-slate-500 dark:text-slate-400"
+    >
+      <div
+        class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3"
+      >
+        <div class="flex items-center space-x-2">
+          <span class="font-bold text-slate-800 dark:text-slate-200">PWMS</span>
+          <span>•</span>
+          <span>Personal Web Management Suite</span>
         </div>
-        <div class="pt-6">
-          <a href="PWMS_LiquidGlass.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 hover:opacity-95 text-white font-semibold text-xs transition active:scale-98 shadow-md shadow-indigo-500/25">
-            <span>Launch Liquid Glass</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
-        </div>
+        <div>100% Client-side • Zero telemetry • LocalStorage persistent</div>
       </div>
+    </footer>
 
-      <!-- 6. Bento Grid UI -->
-      <div class="theme-card bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm flex flex-col justify-between relative overflow-hidden group">
-        <div class="absolute top-0 right-0 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/20 transition"></div>
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 flex items-center justify-center text-lg font-bold border border-slate-200 dark:border-slate-700">
-              <i class="fa-solid fa-table-cells-large"></i>
-            </span>
-            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-              Green Theme
-            </span>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Hacker Style UI</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              Switch to Dark mode and feel the hackers Task Tracker style Full Green text and shadows UI
-            </p>
-          </div>
-          <div class="pt-2 flex flex-wrap gap-1.5 text-[10px] font-mono text-slate-500 dark:text-slate-400">
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">1px Hairline</span>
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Bento Cells</span>
-            <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Linear Dark</span>
-          </div>
-        </div>
-        <div class="pt-6">
-          <a href="PWMS_BrutalismHacker.html" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-semibold text-xs transition active:scale-98 shadow-sm">
-            <span>Launch Hacker Style</span>
-            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- ================= ARCHITECTURE HIGHLIGHTS ================= -->
-  <section class="bg-white dark:bg-[#0c1427] border-t border-slate-200 dark:border-slate-800/80 py-12 px-6 transition-colors">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="text-lg font-bold text-slate-900 dark:text-white">Unified System Architecture</h2>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Switch interfaces anytime without losing task updates or logged hours</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center sm:text-left">
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
-          <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0">
-            <i class="fa-solid fa-database"></i>
-          </div>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Shared LocalStorage</h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">All 6 interfaces read and write to the same key (<code class="font-mono text-[10px]">PWMS_BANKING_TASKS_DATA_V2</code>).</p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
-          <div class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0">
-            <i class="fa-solid fa-calendar-week"></i>
-          </div>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Manager Timesheet</h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Track past-tense daily work logs with weekly hour meters, standard vs. overtime splits, and Excel exports.</p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
-          <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0">
-            <i class="fa-solid fa-chart-column"></i>
-          </div>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Bottleneck Metrics</h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">Real-time Chart.js visualizers for items stuck in BSG, QA, DBA, and third-party vendor queues.</p>
-        </div>
-
-        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 space-y-1.5">
-          <div class="w-8 h-8 rounded-lg bg-cyan-100 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-sm mb-2 mx-auto sm:mx-0">
-            <i class="fa-solid fa-cloud-arrow-down"></i>
-          </div>
-          <h4 class="text-xs font-bold text-slate-900 dark:text-white">Zero Server Dependent</h4>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">100% client-side. Can be hosted statically on GitHub Pages, Vercel, Netlify, or run completely offline.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= FOOTER ================= -->
-  <footer class="bg-slate-100 dark:bg-[#070b12] border-t border-slate-200 dark:border-slate-800 py-6 px-6 text-center text-xs text-slate-500 dark:text-slate-400">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center space-x-2">
-        <span class="font-bold text-slate-800 dark:text-slate-200">PWMS</span>
-        <span>•</span>
-        <span>Personal Web Management Suite</span>
-      </div>
-      <div>
-        100% Client-side • Zero telemetry • LocalStorage persistent
-      </div>
-    </div>
-  </footer>
-
-  <!-- ================= JAVASCRIPT ================= -->
-  <script>
-    const themeBtn = document.getElementById('themeToggleBtn');
-    const themeIcon = document.getElementById('themeToggleIcon');
-
-    function updateIcon(isDark) {
-      if (themeIcon) {
-        themeIcon.className = isDark ? 'fa-solid fa-sun text-sm text-amber-400' : 'fa-solid fa-moon text-sm';
-      }
-    }
-
-    // Init icon
-    updateIcon(document.documentElement.classList.contains('dark'));
-
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('pwms_hub_theme', isDark ? 'dark' : 'light');
-      updateIcon(isDark);
-    });
-  </script>
-</body>
+    <!-- ================= JAVASCRIPT ================= -->
+    <script src="script.js"></script>
+  </body>
 </html>

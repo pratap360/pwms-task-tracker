@@ -112,6 +112,385 @@
     select, input, textarea {
       outline: none;
     }
+
+    /* =========================================================
+       NEOBRUTALIST RESPONSIVE DESIGN & MEDIA QUERIES
+       (Comprehensive Mobile, Tablet & Desktop Layouts)
+    ========================================================= */
+
+    /* Touch & Smooth Scroll Utilities */
+    html, body {
+      overscroll-behavior-y: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    /* Safe Area Inset Support (Notched phones, iPhone home bar) */
+    .safe-pb {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Table horizontal touch scroll container styling */
+    .table-responsive-container {
+      position: relative;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ---------------------------------------------------------
+       1. SHARED MOBILE & TABLET RULES (Viewport < 1024px)
+    --------------------------------------------------------- */
+    @media (max-width: 1023px) {
+      /* Off-canvas Brutalist Drawer Navigation */
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        width: 290px !important;
+        max-width: 85vw !important;
+        z-index: 50 !important;
+        transform: translateX(-100%);
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        border-right: 4px solid #000000 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+        box-shadow: 8px 0px 0px #000000 !important;
+      }
+      .dark #sidebar.sidebar-open {
+        box-shadow: 8px 0px 0px #FFE600 !important;
+        border-right: 4px solid #FFFFFF !important;
+      }
+
+      /* Sidebar Backdrop Overlay */
+      #sidebarBackdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 45 !important;
+        background: rgba(0, 0, 0, 0.75) !important;
+        backdrop-filter: blur(2px) !important;
+        -webkit-backdrop-filter: blur(2px) !important;
+        opacity: 0;
+        pointer-events: none;
+        display: none;
+        transition: opacity 0.2s ease;
+      }
+
+      #sidebarBackdrop.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        display: block !important;
+      }
+
+      #closeSidebarBtn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Mobile Bottom Navigation Bar */
+      #mobileBottomNav {
+        display: flex !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      /* Meetings View: Fix height and clipping bug on tablet & mobile */
+      #view-meetings {
+        overflow-y: auto !important;
+        height: 100% !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1.5rem;
+      }
+
+      #view-meetings .meetings-grid {
+        grid-template-columns: 1fr !important;
+        overflow: visible !important;
+        height: auto !important;
+        flex: none !important;
+      }
+
+      #view-meetings .meetings-col {
+        min-height: 340px !important;
+        max-height: 480px !important;
+        overflow: hidden !important;
+      }
+
+      /* Modals: Ensure modals sit above sidebar and backdrop */
+      #taskModal, #timesheetModal, #confirmDialog {
+        z-index: 60 !important;
+      }
+
+      #toastContainer {
+        z-index: 70 !important;
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       2. DESKTOP VIEWPORT (Viewport >= 1024px)
+    --------------------------------------------------------- */
+    @media (min-width: 1024px) {
+      #sidebar {
+        position: relative !important;
+        transform: none !important;
+        transition: margin-left 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      #sidebar.-ml-64 {
+        margin-left: -16rem !important;
+      }
+
+      #sidebarBackdrop {
+        display: none !important;
+      }
+
+      #closeSidebarBtn {
+        display: none !important;
+      }
+
+      #mobileBottomNav {
+        display: none !important;
+      }
+
+      .kanban-board-container {
+        min-width: 1380px;
+      }
+
+      .kanban-col {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+
+      #view-meetings .meetings-grid {
+        overflow: hidden !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       3. TABLET VIEWPORT SPECIFIC (768px to 1023px)
+    --------------------------------------------------------- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      /* Kanban Columns on Tablet */
+      .kanban-board-container {
+        display: flex;
+        gap: 1rem;
+        min-width: max-content !important;
+      }
+
+      .kanban-col {
+        flex: 0 0 290px !important;
+        min-width: 290px !important;
+      }
+
+      /* Modals on Tablet */
+      #taskModal > div, #timesheetModal > div {
+        max-width: 700px !important;
+        width: 90vw !important;
+        max-height: 88vh !important;
+      }
+
+      /* Metrics KPI Cards: 3 columns on tablet */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+      /* Charts on tablet */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      #view-metrics .metrics-charts-grid > div:last-child {
+        grid-column: span 2 !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       4. MOBILE VIEWPORT SPECIFIC (Viewport < 768px)
+    --------------------------------------------------------- */
+    @media (max-width: 767px) {
+      /* Header adaptations */
+      header {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        height: 3.5rem !important;
+      }
+
+      header .header-btn-label {
+        display: none !important;
+      }
+
+      /* Kanban mobile snap swiping */
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+      }
+
+      .kanban-board-container {
+        display: flex;
+        gap: 0.75rem;
+        min-width: max-content !important;
+        padding-right: 1rem;
+      }
+
+      .kanban-col {
+        flex: 0 0 calc(85vw - 1rem) !important;
+        min-width: 275px !important;
+        max-width: 325px !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        border-width: 3px !important;
+      }
+
+      /* Kanban Cards on mobile */
+      .kanban-card {
+        padding: 0.625rem !important;
+      }
+
+      /* Modals on mobile */
+      #taskModal, #timesheetModal, #confirmDialog {
+        padding: 0.375rem !important;
+      }
+
+      #taskModal > div, #timesheetModal > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 94vh !important;
+        max-height: 94dvh !important;
+        border-width: 3px !important;
+      }
+
+      #taskForm, #timesheetForm {
+        padding: 0.75rem !important;
+        gap: 0.75rem !important;
+      }
+
+      /* Touch-friendly inputs: prevent iOS auto-zoom (<16px) */
+      #taskForm input, 
+      #taskForm select, 
+      #taskForm textarea,
+      #timesheetForm input, 
+      #timesheetForm select, 
+      #timesheetForm textarea {
+        font-size: 14px !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Modal Tab Bar scroll */
+      .modal-tab-bar {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+      }
+      .modal-tab-bar::-webkit-scrollbar {
+        display: none !important;
+      }
+      .modal-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 0.625rem 0.625rem !important;
+      }
+
+      /* Filter Toolbar on mobile */
+      #filterToolbar {
+        padding: 0.375rem 0.5rem !important;
+        border-bottom-width: 3px !important;
+      }
+
+      #filterToolbar select,
+      #filterToolbar button {
+        font-size: 11px !important;
+        padding: 0.25rem 0.5rem !important;
+        min-height: 2rem;
+      }
+
+      /* KPI Stat cards in Metrics View */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.5rem !important;
+      }
+      #view-metrics .metrics-kpi-card {
+        padding: 0.625rem !important;
+        border-width: 3px !important;
+      }
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.5rem !important;
+        line-height: 1.75rem !important;
+      }
+
+      /* Charts in Metrics View */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+      }
+      #view-metrics .metrics-chart-box {
+        height: 15rem !important;
+      }
+
+      /* Toast notifications */
+      #toastContainer {
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+        align-items: center;
+      }
+
+      #toastContainer > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       5. EXTRA SMALL MOBILE VIEWPORT (Viewport < 480px)
+    --------------------------------------------------------- */
+    @media (max-width: 479px) {
+      .kanban-col {
+        flex: 0 0 calc(90vw - 0.5rem) !important;
+        min-width: 255px !important;
+      }
+
+      header {
+        padding-left: 0.375rem !important;
+        padding-right: 0.375rem !important;
+      }
+
+      .header-profile-badge {
+        display: none !important;
+      }
+
+      #backupMenuDropdown {
+        max-width: calc(100vw - 1rem) !important;
+        right: -0.25rem !important;
+      }
+
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.35rem !important;
+      }
+    }
   </style>
 </head>
 <body class="bg-brutal-bgLight dark:bg-brutal-bgDark text-black dark:text-white font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-150">
@@ -133,7 +512,7 @@
           <span class="font-black text-sm tracking-tight flex items-center gap-1.5">
             PWMS <span class="bg-black dark:bg-brutal-yellow text-white dark:text-black text-[10px] px-1.5 py-0.5 border border-black dark:border-white font-mono font-black">CORE V2</span>
           </span>
-          <span class="text-[11px] font-bold text-black/80 dark:text-white/80 uppercase truncate max-w-[210px] sm:max-w-none">Banking Support & Dev</span>
+          <span class="header-subtitle text-[11px] font-bold text-black/80 dark:text-white/80 uppercase truncate hidden sm:inline">Banking Support & Dev</span>
         </div>
       </div>
 
@@ -149,6 +528,15 @@
 
     <!-- Quick Global Actions & Controls -->
     <div class="flex items-center space-x-2">
+      <!-- Mobile Search Toggle Button -->
+      <button 
+        id="mobileSearchToggleBtn" 
+        class="sm:hidden bg-white dark:bg-black text-black dark:text-white p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center justify-center font-bold"
+        title="Search Issues"
+      >
+        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+      </button>
+
       <!-- Search Input in Header -->
       <div class="relative hidden sm:block w-48 md:w-60">
         <input 
@@ -220,7 +608,7 @@
       </div>
 
       <!-- Engineer Profile Badge -->
-      <div class="flex items-center pl-1">
+      <div class="header-profile-badge flex items-center pl-1">
         <div class="w-8 h-8 border-2 border-black dark:border-white bg-brutal-pink text-white font-black flex items-center justify-center text-xs shadow-brutal-sm dark:shadow-brutal-white-sm">
           RA
         </div>
@@ -228,16 +616,31 @@
     </div>
   </header>
 
+  <!-- Mobile Search Bar (Collapsible) -->
+  <div id="mobileSearchBar" class="hidden sm:hidden bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white px-3 py-2 border-b-4 border-black dark:border-white shadow-brutal-sm z-30">
+    <div class="relative w-full">
+      <input id="mobileSearchInput" type="text" placeholder="SEARCH (/)..."
+        class="w-full bg-white dark:bg-black text-black dark:text-white placeholder-black/60 dark:placeholder-white/60 text-xs font-bold px-3 py-2 pl-8 pr-8 border-2 border-black dark:border-white shadow-brutal-sm focus:outline-none transition">
+      <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-xs text-black dark:text-white"></i>
+      <button id="clearMobileSearchBtn" class="hidden absolute right-2.5 top-2.5 text-xs text-black dark:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- ================= MAIN BODY CONTAINER ================= -->
-  <div class="flex flex-1 overflow-hidden">
+  <div class="flex flex-1 overflow-hidden relative">
     
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 hidden transition-opacity duration-150 opacity-0" aria-hidden="true"></div>
+
     <!-- ================= BRUTALIST SIDEBAR ================= -->
     <aside id="sidebar" class="bg-white dark:bg-brutal-surfaceDark text-black dark:text-white w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-150 border-r-4 border-black dark:border-white z-20 overflow-y-auto">
       <div class="p-3">
         <!-- Project Context Header -->
-        <div class="p-2.5 mb-3 bg-brutal-cyan dark:bg-brutal-cardDark border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm">
-          <div class="flex items-center space-x-2">
-            <div class="w-6 h-6 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-center text-xs font-black">
+        <div class="p-2.5 mb-3 bg-brutal-cyan dark:bg-brutal-cardDark border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center justify-between">
+          <div class="flex items-center space-x-2 overflow-hidden">
+            <div class="w-6 h-6 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-center text-xs font-black flex-shrink-0">
               BK
             </div>
             <div class="overflow-hidden leading-none">
@@ -245,6 +648,10 @@
               <div class="text-[10px] font-mono font-bold mt-1 opacity-80">L3 Dev & Support Suite</div>
             </div>
           </div>
+          <!-- Close button for mobile / tablet drawer -->
+          <button id="closeSidebarBtn" class="lg:hidden p-1 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-black" title="Close Sidebar">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
 
         <!-- Primary Navigation Views -->
@@ -357,11 +764,11 @@
     <main class="flex-1 flex flex-col min-w-0 bg-brutal-bgLight dark:bg-brutal-bgDark overflow-hidden">
       
       <!-- FILTER & ACTION TOOLBAR -->
-      <section id="filterToolbar" class="bg-white dark:bg-brutal-surfaceDark border-b-4 border-black dark:border-white px-4 py-2 flex-shrink-0 flex flex-wrap items-center justify-between gap-2 z-10 shadow-brutal-sm">
-        <div class="flex flex-wrap items-center gap-2">
+      <section id="filterToolbar" class="bg-white dark:bg-brutal-surfaceDark border-b-4 border-black dark:border-white px-2.5 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-brutal-sm">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll py-0.5 flex-1 min-w-0">
           
           <!-- Module Filter -->
-          <div class="flex items-center space-x-1">
+          <div class="flex items-center space-x-1 flex-shrink-0">
             <span class="text-[10px] font-black uppercase">MODULE:</span>
             <select id="filterModule" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
               <option value="ALL">ALL MODULES</option>
@@ -439,26 +846,48 @@
           </button>
 
           <!-- Reset Filters -->
-          <button id="clearFiltersBtn" class="text-xs bg-black text-white dark:bg-white dark:text-black font-black px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+          <button id="clearFiltersBtn" class="text-xs bg-black text-white dark:bg-white dark:text-black font-black px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex-shrink-0 whitespace-nowrap">
             RESET
           </button>
         </div>
 
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l-2 border-black dark:border-white sm:border-0">
           <!-- Active Items Counter -->
-          <span class="text-xs font-black uppercase bg-brutal-yellow dark:bg-brutal-cardDark text-black dark:text-white px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm">
-            SHOWING: <strong id="visibleTasksCount" class="font-mono font-black text-brutal-pink">0</strong> TASKS
+          <span class="text-xs font-black uppercase bg-brutal-yellow dark:bg-brutal-cardDark text-black dark:text-white px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm whitespace-nowrap">
+            <span class="hidden sm:inline">SHOWING: </span><strong id="visibleTasksCount" class="font-mono font-black text-brutal-pink">0</strong> <span class="hidden sm:inline">TASKS</span>
           </span>
         </div>
       </section>
 
       <!-- ================= VIEW CONTAINERS ================= -->
-      <div class="flex-1 overflow-auto relative p-4">
+      <div class="flex-1 overflow-auto relative p-2 sm:p-4">
         
         <!-- 1. KANBAN BOARD VIEW -->
         <section id="view-kanban" class="h-full flex flex-col">
-          <div class="flex-1 overflow-x-auto pb-4">
-            <div class="flex gap-4 h-full min-w-[1380px]">
+          <!-- Mobile Column Quick Jump Bar (Visible on mobile/tablet) -->
+          <div id="kanbanColumnPills" class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-scroll pb-2 px-0.5 flex-shrink-0">
+            <button onclick="scrollToKanbanCol('Backlog')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              BACKLOG <span id="pill-count-Backlog" class="bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('In Progress')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-cyan text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              IN PROG <span id="pill-count-InProgress" class="bg-black text-white px-1">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('UAT / Testing')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-purple text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              UAT <span id="pill-count-UAT" class="bg-black text-white px-1">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Ready for Prod')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-yellow text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              PROD <span id="pill-count-Prod" class="bg-black text-white px-1">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Blocked')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-pink text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              BLOCKED <span id="pill-count-Blocked" class="bg-black text-white px-1">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Closed')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-green text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              CLOSED <span id="pill-count-Closed" class="bg-black text-white px-1">0</span>
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-x-auto pb-4 touch-scroll kanban-scroll-wrapper">
+            <div class="kanban-board-container flex gap-4 h-full min-w-max lg:min-w-[1380px]">
               
               <!-- Column: Backlog -->
               <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Backlog">
@@ -557,8 +986,16 @@
           </div>
 
           <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
-            <div class="flex-1 overflow-auto">
-              <table class="w-full text-left text-xs border-collapse">
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="lg:hidden bg-brutal-yellow text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE TABLE HORIZONTALLY (14 COLS)
+              </span>
+              <span class="bg-black text-white px-1.5 py-0.5 text-[9px]">SCROLL ➔</span>
+            </div>
+            
+            <div class="flex-1 overflow-auto touch-scroll">
+              <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
                 <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
                   <tr>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">#</th>
@@ -586,19 +1023,27 @@
         <!-- 3. DETAILED LIST / EXCEL GRID VIEW -->
         <section id="view-list" class="hidden h-full flex flex-col">
           <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
-            <div class="p-3 border-b-2 border-black dark:border-white flex items-center justify-between bg-brutal-yellow text-black">
+            <div class="p-3 border-b-2 border-black dark:border-white flex flex-wrap items-center justify-between gap-2 bg-brutal-yellow text-black">
               <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-table text-black text-sm"></i>
                 <span class="font-black text-xs uppercase tracking-wider">Enterprise Task Master Sheet</span>
-                <span class="text-[11px] font-bold">| (Click row to edit details)</span>
+                <span class="text-[11px] font-bold hidden sm:inline">| (Click row to edit details)</span>
               </div>
               <button onclick="exportToCsv()" class="text-xs bg-black text-white hover:bg-white hover:text-black border-2 border-black px-2.5 py-1 font-black flex items-center gap-1.5 shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
                 <i class="fa-solid fa-file-excel text-emerald-400"></i> EXPORT GRID TO EXCEL
               </button>
             </div>
             
-            <div class="flex-1 overflow-auto">
-              <table class="w-full text-left text-xs border-collapse">
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="lg:hidden bg-brutal-cyan text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE TABLE HORIZONTALLY (12 COLS)
+              </span>
+              <span class="bg-black text-white px-1.5 py-0.5 text-[9px]">CLICK ROW TO EDIT</span>
+            </div>
+            
+            <div class="flex-1 overflow-auto touch-scroll">
+              <table class="w-full text-left text-xs border-collapse min-w-[960px]">
                 <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
                   <tr>
                     <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('id')">ID <i class="fa-solid fa-sort text-[10px]"></i></th>
@@ -641,9 +1086,9 @@
             </div>
           </div>
 
-          <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
+          <div class="meetings-grid flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
             <!-- Left: Scheduled Meetings & KT Sessions -->
-            <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+            <div class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
               <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-purple text-black flex items-center justify-between font-black">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
                   <i class="fa-solid fa-video"></i> Meetings, KT Sessions & BRD Reviews
@@ -654,7 +1099,7 @@
             </div>
 
             <!-- Right: Deployments & Critical P1 Followups -->
-            <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+            <div class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
               <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-pink text-white flex items-center justify-between font-black">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
                   <i class="fa-solid fa-rocket"></i> Deployments & P1 Prod Follow-Ups
@@ -669,51 +1114,51 @@
         <!-- 5. METRICS & BOTTLENECK ANALYSIS VIEW -->
         <section id="view-metrics" class="hidden h-full overflow-y-auto space-y-4">
           <!-- Metric KPI Stat Cards -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div class="bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+          <div class="metrics-kpi-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="metrics-kpi-card bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider text-black/60 dark:text-white/60">Total Tasks</div>
-              <div id="statTotal" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div id="statTotal" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Across all modules</div>
             </div>
 
-            <div class="bg-brutal-pink text-white p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div class="metrics-kpi-card bg-brutal-pink text-white p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider opacity-90">Open P1 Blockers</div>
-              <div id="statP1" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div id="statP1" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Production SLA Critical</div>
             </div>
 
-            <div class="bg-brutal-yellow text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div class="metrics-kpi-card bg-brutal-yellow text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Pending With Teams</div>
-              <div id="statPendingExternal" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div id="statPendingExternal" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Waiting BSG / QA / DBA</div>
             </div>
 
-            <div class="bg-brutal-purple text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div class="metrics-kpi-card bg-brutal-purple text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Prod Releases</div>
-              <div id="statDeployments" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div id="statDeployments" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Ready for release</div>
             </div>
 
-            <div class="bg-brutal-cyan text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div class="metrics-kpi-card bg-brutal-cyan text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Avg Task Ageing</div>
-              <div id="statAvgAgeing" class="text-3xl font-black mt-1 font-mono">0 <span class="text-xs font-normal">d</span></div>
+              <div id="statAvgAgeing" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0 <span class="text-xs font-normal">d</span></div>
               <div class="text-[10px] font-bold mt-0.5">Active backlog items</div>
             </div>
 
-            <div class="bg-brutal-green text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div class="metrics-kpi-card bg-brutal-green text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Closed / Done</div>
-              <div id="statClosed" class="text-3xl font-black mt-1 font-mono">0</div>
+              <div id="statClosed" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Resolved items</div>
             </div>
           </div>
 
           <!-- Charts Row -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="metrics-charts-grid grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-hourglass-half text-amber-500"></i> Bottlenecks (Pending With)
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="pendingWithChart"></canvas>
               </div>
             </div>
@@ -722,7 +1167,7 @@
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-column text-brutal-cyan"></i> Pipeline By Status
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="statusChart"></canvas>
               </div>
             </div>
@@ -731,7 +1176,7 @@
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-cubes-stacked text-brutal-purple"></i> Module Distribution
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="moduleChart"></canvas>
               </div>
             </div>
@@ -742,8 +1187,15 @@
             <h3 class="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5 text-red-600 dark:text-red-400">
               <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
             </h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-xs text-left">
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="lg:hidden bg-brutal-pink text-white text-[10px] font-mono font-black px-3 py-1.5 border-2 border-black mb-2 flex items-center justify-between flex-shrink-0">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE MATRIX HORIZONTALLY (9 COLS)
+              </span>
+              <span class="bg-white text-black px-1.5 py-0.5 text-[9px]">RISK ➔</span>
+            </div>
+            <div class="overflow-x-auto touch-scroll">
+              <table class="w-full text-xs text-left min-w-[780px]">
                 <thead class="bg-black text-white dark:bg-white dark:text-black font-mono font-black border-b-2 border-black dark:border-white uppercase">
                   <tr>
                     <th class="p-2">Task ID</th>
@@ -766,6 +1218,30 @@
       </div>
     </main>
   </div>
+
+  <!-- ================= MOBILE / TABLET BRUTALIST BOTTOM NAV ================= -->
+  <nav id="mobileBottomNav" class="lg:hidden bg-white dark:bg-brutal-surfaceDark border-t-4 border-black dark:border-white flex items-stretch justify-around z-30 flex-shrink-0 shadow-brutal-sm">
+    <button data-view="kanban" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-black bg-brutal-yellow text-black border-r-2 border-black dark:border-white transition active:bg-brutal-yellow">
+      <i class="fa-solid fa-table-columns text-sm"></i>
+      <span>KANBAN</span>
+    </button>
+    <button data-view="timesheet" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-green hover:text-black transition active:bg-brutal-green">
+      <i class="fa-solid fa-business-time text-sm"></i>
+      <span>TIMESHEET</span>
+    </button>
+    <button data-view="list" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-cyan hover:text-black transition active:bg-brutal-cyan">
+      <i class="fa-solid fa-list-check text-sm"></i>
+      <span>LIST</span>
+    </button>
+    <button data-view="meetings" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-purple hover:text-black transition active:bg-brutal-purple">
+      <i class="fa-solid fa-calendar-day text-sm"></i>
+      <span>SYNCS</span>
+    </button>
+    <button data-view="metrics" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white hover:bg-brutal-pink hover:text-white transition active:bg-brutal-pink">
+      <i class="fa-solid fa-chart-pie text-sm"></i>
+      <span>METRICS</span>
+    </button>
+  </nav>
 
   <!-- ================= BRUTALIST MODALS ================= -->
 
@@ -790,14 +1266,14 @@
       </div>
 
       <!-- Modal Tabs Header -->
-      <div class="flex border-b-2 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-xs font-black">
-        <button data-tab="tab-general" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white">
+      <div class="modal-tab-bar flex border-b-2 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-xs font-black overflow-x-auto no-scrollbar touch-scroll flex-nowrap">
+        <button data-tab="tab-general" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-circle-info mr-1"></i> 1. CORE & ASSIGNEE
         </button>
-        <button data-tab="tab-technical" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white">
+        <button data-tab="tab-technical" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-code mr-1"></i> 2. RCA & CODE FIX
         </button>
-        <button data-tab="tab-meeting" class="modal-tab-btn py-2.5 px-4 text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white">
+        <button data-tab="tab-meeting" class="modal-tab-btn py-2.5 px-4 text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-calendar mr-1"></i> 3. MEETING / KT SYNC
         </button>
       </div>
@@ -985,12 +1461,12 @@
         </div>
 
         <!-- Modal Footer Actions -->
-        <div class="pt-3 border-t-2 border-black dark:border-white flex items-center justify-between">
+        <div class="pt-3 border-t-2 border-black dark:border-white flex flex-wrap items-center justify-between gap-2">
           <button type="button" id="deleteTaskBtn" class="hidden text-xs bg-red-600 text-white font-black px-3 py-2 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             <i class="fa-solid fa-trash-can mr-1"></i> DELETE TASK
           </button>
           
-          <div class="flex items-center space-x-2 ml-auto">
+          <div class="flex items-center flex-wrap gap-2 ml-auto">
             <button type="button" id="cancelTaskModalBtn" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
               CANCEL
             </button>
@@ -1081,7 +1557,7 @@
           <input type="text" id="tsEstimateInput" placeholder="2 Hours" class="w-full text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
         </div>
 
-        <div class="pt-3 border-t-2 border-black dark:border-white flex justify-end space-x-2">
+        <div class="pt-3 border-t-2 border-black dark:border-white flex flex-wrap justify-end gap-2">
           <button type="button" onclick="closeTimesheetModal()" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             CANCEL
           </button>
@@ -1599,9 +2075,38 @@
     }
 
     /* --- VIEW 1: KANBAN --- */
+    function scrollToKanbanCol(status) {
+      const col = document.querySelector(`.kanban-col[data-status="${status}"]`);
+      if (col) {
+        col.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+
+    function quickMoveTask(taskId, newStatus) {
+      if (!newStatus) return;
+      const task = tasks.find(t => t.id === taskId);
+      if (task && task.status !== newStatus) {
+        task.status = newStatus;
+        if (newStatus === 'Closed') task.closedDate = new Date().toISOString().split('T')[0];
+        if (newStatus === 'UAT / Testing' && task.pendingWith === 'None (Active)') task.pendingWith = 'Testers / QA';
+        saveTasks();
+        renderApp();
+        showToast(`MOVED ${taskId} TO ${newStatus.toUpperCase()}`, 'success');
+      }
+    }
+
     function renderKanban(filteredTasks) {
       const columns = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
       
+      const pillMap = {
+        'Backlog': 'pill-count-Backlog',
+        'In Progress': 'pill-count-InProgress',
+        'UAT / Testing': 'pill-count-UAT',
+        'Ready for Prod': 'pill-count-Prod',
+        'Blocked': 'pill-count-Blocked',
+        'Closed': 'pill-count-Closed'
+      };
+
       columns.forEach(col => {
         const dropzone = document.querySelector(`.kanban-dropzone[data-status="${col}"]`);
         const countSpan = document.querySelector(`.kanban-col[data-status="${col}"] .col-count`);
@@ -1609,6 +2114,10 @@
 
         const colTasks = filteredTasks.filter(t => t.status === col);
         countSpan.innerText = colTasks.length;
+        if (pillMap[col]) {
+          const pill = document.getElementById(pillMap[col]);
+          if (pill) pill.innerText = colTasks.length;
+        }
         dropzone.innerHTML = '';
 
         if (colTasks.length === 0) {
@@ -1644,6 +2153,15 @@
             <div class="pt-2 border-t-2 border-black dark:border-white flex items-center justify-between text-[11px]">
               ${getModuleBadgeHtml(task.module)}
               <div class="flex items-center space-x-1.5">
+                <select onclick="event.stopPropagation()" onchange="quickMoveTask('${task.id}', this.value)" class="md:hidden text-[9px] font-mono font-bold bg-white dark:bg-black text-black dark:text-white border border-black dark:border-white px-1 py-0.5 shadow-brutal-sm" title="Quick Move Column">
+                  <option value="" disabled selected>MOVE ▾</option>
+                  <option value="Backlog">Backlog</option>
+                  <option value="In Progress">In Prog</option>
+                  <option value="UAT / Testing">UAT</option>
+                  <option value="Ready for Prod">Prod</option>
+                  <option value="Blocked">Blocked</option>
+                  <option value="Closed">Closed</option>
+                </select>
                 ${getAgeingBadgeHtml(ageing, task.status)}
                 <div class="w-6 h-6 border border-black dark:border-white bg-brutal-cyan text-black flex items-center justify-center text-[10px] font-black" title="Assignee: ${escapeHtml(task.assignedTo || 'Unassigned')}">
                   ${(task.assignedTo || 'U').charAt(0).toUpperCase()}
@@ -1980,8 +2498,8 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: 'right',
-              labels: { color: textColor, font: { weight: 'bold', size: 10 } }
+              position: window.innerWidth < 768 ? 'bottom' : 'right',
+              labels: { color: textColor, font: { weight: 'bold', size: window.innerWidth < 640 ? 9 : 10 } }
             }
           }
         }
@@ -2087,9 +2605,9 @@
     function switchModalTab(targetTabId) {
       document.querySelectorAll('.modal-tab-btn').forEach(btn => {
         if (btn.getAttribute('data-tab') === targetTabId) {
-          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white font-black';
+          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white font-black whitespace-nowrap flex-shrink-0';
         } else {
-          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 font-black';
+          btn.className = 'modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 font-black whitespace-nowrap flex-shrink-0';
         }
       });
       document.querySelectorAll('.modal-tab-pane').forEach(pane => {
@@ -2233,25 +2751,55 @@
     /* -------------------------------------------------------------
        10. UI VIEW SWITCHING & FILTERS
     ------------------------------------------------------------- */
+    function toggleSidebar(forceState) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('sidebar-open');
+        sidebar.classList.toggle('sidebar-open', willOpen);
+        if (backdrop) backdrop.classList.toggle('active', willOpen);
+      } else {
+        if (typeof forceState === 'boolean') {
+          sidebar.classList.toggle('-ml-64', !forceState);
+        } else {
+          sidebar.classList.toggle('-ml-64');
+        }
+      }
+    }
+
     function applyQuickModuleFilter(moduleName) {
       document.getElementById('filterModule').value = moduleName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
       else renderApp();
     }
 
     function applyQuickPendingFilter(pendingName) {
       document.getElementById('filterPendingWith').value = pendingName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
       else renderApp();
     }
 
     function switchView(viewName) {
       currentView = viewName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
         if (btn.getAttribute('data-view') === viewName) {
           btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-black bg-brutal-yellow text-black shadow-brutal-sm transition';
         } else {
           btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-cyan hover:text-black transition';
+        }
+      });
+
+      // Update mobile bottom nav active state
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-view') === viewName;
+        if (isCurrent) {
+          btn.className = 'mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-black bg-brutal-yellow text-black border-r-2 last:border-r-0 border-black dark:border-white transition shadow-inner';
+        } else {
+          btn.className = 'mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold bg-white dark:bg-brutal-surfaceDark text-black dark:text-white border-r-2 last:border-r-0 border-black dark:border-white transition';
         }
       });
 
@@ -2282,11 +2830,68 @@
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
         btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
       });
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+      });
 
       // Sidebar Toggle
-      document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('-ml-64');
+      document.getElementById('toggleSidebarBtn').addEventListener('click', () => toggleSidebar());
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+      const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+      if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+          const sidebar = document.getElementById('sidebar');
+          if (sidebar) sidebar.classList.remove('sidebar-open');
+          const backdrop = document.getElementById('sidebarBackdrop');
+          if (backdrop) backdrop.classList.remove('active');
+        }
+        if (currentView === 'metrics') {
+          renderCharts();
+        }
       });
+
+      // Mobile Search
+      const mobileSearchToggleBtn = document.getElementById('mobileSearchToggleBtn');
+      const mobileSearchBar = document.getElementById('mobileSearchBar');
+      const mobileSearchInput = document.getElementById('mobileSearchInput');
+      const globalSearchInput = document.getElementById('globalSearchInput');
+      const clearMobileSearchBtn = document.getElementById('clearMobileSearchBtn');
+
+      if (mobileSearchToggleBtn && mobileSearchBar) {
+        mobileSearchToggleBtn.addEventListener('click', () => {
+          mobileSearchBar.classList.toggle('hidden');
+          if (!mobileSearchBar.classList.contains('hidden')) {
+            if (mobileSearchInput) {
+              mobileSearchInput.value = globalSearchInput ? globalSearchInput.value : '';
+              mobileSearchInput.focus();
+              if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !mobileSearchInput.value);
+            }
+          }
+        });
+      }
+
+      if (clearMobileSearchBtn) {
+        clearMobileSearchBtn.addEventListener('click', () => {
+          if (mobileSearchInput) mobileSearchInput.value = '';
+          if (globalSearchInput) globalSearchInput.value = '';
+          clearMobileSearchBtn.classList.add('hidden');
+          renderApp();
+        });
+      }
+
+      if (mobileSearchInput && globalSearchInput) {
+        mobileSearchInput.addEventListener('input', (e) => {
+          globalSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+          renderApp();
+        });
+        globalSearchInput.addEventListener('input', (e) => {
+          mobileSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+        });
+      }
 
       // Filters
       document.getElementById('globalSearchInput').addEventListener('input', renderApp);
@@ -2310,6 +2915,7 @@
 
       document.getElementById('clearFiltersBtn').addEventListener('click', () => {
         document.getElementById('globalSearchInput').value = '';
+        if (document.getElementById('mobileSearchInput')) document.getElementById('mobileSearchInput').value = '';
         document.getElementById('filterModule').value = 'ALL';
         document.getElementById('filterPendingWith').value = 'ALL';
         document.getElementById('filterAssignee').value = 'ALL';
@@ -2456,12 +3062,21 @@
         }
         if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           e.preventDefault();
-          document.getElementById('globalSearchInput').focus();
+          if (window.innerWidth < 640 && mobileSearchBar && mobileSearchInput) {
+            mobileSearchBar.classList.remove('hidden');
+            mobileSearchInput.focus();
+          } else {
+            document.getElementById('globalSearchInput').focus();
+          }
         }
         if (e.key === 'Escape') {
           closeTaskModal();
           closeTimesheetModal();
           document.getElementById('confirmDialog').classList.add('hidden');
+          if (mobileSearchBar && !mobileSearchBar.classList.contains('hidden')) {
+            mobileSearchBar.classList.add('hidden');
+          }
+          toggleSidebar(false);
         }
       });
     };

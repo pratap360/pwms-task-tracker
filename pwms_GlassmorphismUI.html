@@ -142,6 +142,399 @@
       background: rgba(99, 102, 241, 0.15) !important;
       border-color: rgba(99, 102, 241, 0.5) !important;
     }
+
+    /* =========================================================
+       GLASSMORPHISM RESPONSIVE DESIGN & MEDIA QUERIES
+       (Comprehensive Mobile, Tablet & Desktop Layouts)
+    ========================================================= */
+
+    /* Touch & Smooth Scroll Utilities */
+    html, body {
+      overscroll-behavior-y: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    /* Safe Area Inset Support (Notched phones, iPhone home indicator) */
+    .safe-pb {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Table horizontal touch scroll container styling */
+    .table-responsive-container {
+      position: relative;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ---------------------------------------------------------
+       1. SHARED MOBILE & TABLET RULES (Viewport < 1024px)
+    --------------------------------------------------------- */
+    @media (max-width: 1023px) {
+      /* Off-canvas Glass Drawer Navigation */
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        width: 290px !important;
+        max-width: 85vw !important;
+        z-index: 50 !important;
+        border-radius: 0 1.5rem 1.5rem 0 !important;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      /* Sidebar Backdrop Overlay */
+      #sidebarBackdrop, .sidebar-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 45 !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        opacity: 0;
+        pointer-events: none;
+        display: none;
+        transition: opacity 0.25s ease;
+      }
+
+      #sidebarBackdrop.active, .sidebar-backdrop.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        display: block !important;
+      }
+
+      #closeSidebarBtn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Edge-to-edge layout on mobile/tablet screens */
+      .main-body-container {
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+
+      main.main-content-panel {
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .view-content-wrapper {
+        padding: 0.5rem !important;
+      }
+
+      /* Mobile Bottom Navigation Bar */
+      #mobileBottomNav {
+        display: flex !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+
+      /* Meetings View: Fix height and clipping bug on tablet & mobile */
+      #view-meetings {
+        overflow-y: auto !important;
+        height: 100% !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1.5rem;
+      }
+
+      #view-meetings .meetings-grid {
+        grid-template-columns: 1fr !important;
+        overflow: visible !important;
+        height: auto !important;
+        flex: none !important;
+      }
+
+      #view-meetings .meetings-col {
+        min-height: 340px !important;
+        max-height: 480px !important;
+        overflow: hidden !important;
+      }
+
+      /* Modals: Ensure modals sit above sidebar and backdrop */
+      #taskModal, #timesheetModal, #confirmDialog {
+        z-index: 60 !important;
+      }
+
+      #toastContainer {
+        z-index: 70 !important;
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       2. DESKTOP VIEWPORT (Viewport >= 1024px)
+    --------------------------------------------------------- */
+    @media (min-width: 1024px) {
+      #sidebar {
+        position: relative !important;
+        transform: none !important;
+        transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      #sidebar.-ml-64 {
+        margin-left: -16rem !important;
+      }
+
+      #sidebarBackdrop, .sidebar-backdrop {
+        display: none !important;
+      }
+
+      #closeSidebarBtn {
+        display: none !important;
+      }
+
+      #mobileBottomNav {
+        display: none !important;
+      }
+
+      .kanban-board-container {
+        min-width: 1380px;
+      }
+
+      .kanban-col {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+
+      #view-meetings .meetings-grid {
+        overflow: hidden !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       3. TABLET VIEWPORT SPECIFIC (768px to 1023px)
+    --------------------------------------------------------- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      /* Kanban Columns on Tablet */
+      .kanban-board-container {
+        display: flex !important;
+        gap: 1rem !important;
+        min-width: max-content !important;
+      }
+
+      .kanban-col {
+        flex: 0 0 290px !important;
+        max-width: 290px !important;
+        min-width: 290px !important;
+        scroll-snap-align: start;
+      }
+
+      /* Modals on Tablet */
+      #taskModal > div, #timesheetModal > div {
+        max-width: 700px !important;
+        width: 90vw !important;
+        max-height: 88vh !important;
+      }
+
+      /* Metrics KPI Cards: 3 columns on tablet */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+      /* Charts on tablet */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      #view-metrics .metrics-charts-grid > div:last-child {
+        grid-column: span 2 !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       4. MOBILE VIEWPORT SPECIFIC (Viewport < 768px)
+    --------------------------------------------------------- */
+    @media (max-width: 767px) {
+      /* Header adaptations */
+      header {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        height: 3.5rem !important;
+      }
+
+      header .header-btn-label {
+        display: none !important;
+      }
+
+      /* Kanban mobile snap swiping */
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.5rem;
+      }
+
+      .kanban-board-container {
+        display: flex !important;
+        gap: 0.75rem !important;
+        min-width: max-content !important;
+        padding-right: 1rem;
+      }
+
+      .kanban-col {
+        flex: 0 0 calc(85vw - 1rem) !important;
+        max-width: 325px !important;
+        min-width: 275px !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        border-radius: 1.25rem !important;
+        padding: 0.75rem !important;
+      }
+
+      /* Kanban Cards on mobile */
+      .kanban-card {
+        padding: 0.625rem !important;
+      }
+
+      /* Modals on mobile */
+      #taskModal, #timesheetModal, #confirmDialog {
+        padding: 0.375rem !important;
+      }
+
+      #taskModal > div, #timesheetModal > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 94vh !important;
+        max-height: 94dvh !important;
+        border-radius: 1.25rem !important;
+      }
+
+      #taskForm, #timesheetForm {
+        padding: 0.75rem !important;
+        gap: 0.75rem !important;
+      }
+
+      /* Touch-friendly inputs: prevent iOS auto-zoom (<16px) */
+      #taskForm input, 
+      #taskForm select, 
+      #taskForm textarea,
+      #timesheetForm input, 
+      #timesheetForm select, 
+      #timesheetForm textarea {
+        font-size: 14px !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Modal Tab Bar scroll */
+      .modal-tab-bar {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+      }
+      .modal-tab-bar::-webkit-scrollbar {
+        display: none !important;
+      }
+      .modal-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 0.625rem 0.625rem !important;
+      }
+
+      /* Filter Toolbar on mobile */
+      #filterToolbar {
+        padding: 0.375rem 0.5rem !important;
+      }
+
+      #filterToolbar select,
+      #filterToolbar button {
+        font-size: 11px !important;
+        padding: 0.25rem 0.5rem !important;
+        min-height: 2rem;
+      }
+
+      /* KPI Stat cards in Metrics View */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.5rem !important;
+      }
+      #view-metrics .metrics-kpi-card {
+        padding: 0.625rem !important;
+        border-radius: 1.25rem !important;
+      }
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.5rem !important;
+        line-height: 1.75rem !important;
+      }
+
+      /* Charts in Metrics View */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+      }
+      #view-metrics .metrics-chart-box {
+        height: 15rem !important;
+      }
+
+      /* Toast notifications */
+      #toastContainer {
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+        align-items: center;
+      }
+
+      #toastContainer > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       5. EXTRA SMALL MOBILE VIEWPORT (Viewport < 480px)
+    --------------------------------------------------------- */
+    @media (max-width: 479px) {
+      .kanban-col {
+        flex: 0 0 calc(90vw - 0.5rem) !important;
+        min-width: 255px !important;
+      }
+
+      header {
+        padding-left: 0.375rem !important;
+        padding-right: 0.375rem !important;
+      }
+
+      .header-avatar-badge {
+        display: none !important;
+      }
+
+      #backupMenuDropdown {
+        max-width: calc(100vw - 1rem) !important;
+        right: -0.25rem !important;
+      }
+
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.35rem !important;
+      }
+    }
   </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-200">
@@ -163,7 +556,7 @@
           <span class="font-extrabold text-sm tracking-tight flex items-center gap-1.5 text-slate-900 dark:text-white">
             PWMS <span class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[9px] px-2 py-0.5 rounded-full font-mono font-bold tracking-wider uppercase shadow-xs">GLASS</span>
           </span>
-          <span class="text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate max-w-[210px] sm:max-w-none">Banking Support & Dev Workspace</span>
+          <span class="header-subtitle text-[11px] font-semibold text-slate-500 dark:text-slate-400 truncate hidden sm:inline">Banking Support & Dev Workspace</span>
         </div>
       </div>
 
@@ -178,6 +571,11 @@
 
     <!-- Right Controls -->
     <div class="flex items-center space-x-2.5">
+      <!-- Mobile Search Toggle Button -->
+      <button id="mobileSearchToggleBtn" class="sm:hidden p-2 rounded-xl bg-white/50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-white/60 dark:border-white/10 shadow-xs transition text-xs flex items-center" title="Toggle Search">
+        <i class="fa-solid fa-magnifying-glass text-sm text-indigo-500"></i>
+      </button>
+
       <!-- Search Input -->
       <div class="relative hidden sm:block w-48 md:w-60">
         <input 
@@ -215,6 +613,7 @@
         title="Toggle Theme"
       >
         <i id="themeToggleIcon" class="fa-solid fa-moon text-sm text-indigo-500"></i>
+        <span class="hidden md:inline text-xs font-bold" id="themeLabel">Dark</span>
       </button>
 
       <!-- Backup Dropdown -->
@@ -248,7 +647,7 @@
       </div>
 
       <!-- Avatar Profile -->
-      <div class="flex items-center pl-1">
+      <div class="header-avatar-badge flex items-center pl-1">
         <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-400 text-white font-extrabold flex items-center justify-center text-xs shadow-md shadow-pink-500/25 border border-white/60 dark:border-white/20">
           RA
         </div>
@@ -256,12 +655,35 @@
     </div>
   </header>
 
+  <!-- Mobile Search Bar (Collapsible on mobile < 640px) -->
+  <div id="mobileSearchBar" class="hidden sm:hidden px-4 py-2.5 glass-panel border-b border-white/40 dark:border-white/10 z-30">
+    <div class="relative">
+      <input id="mobileSearchInput" type="text" placeholder="Quick search..."
+        class="glass-input w-full text-xs rounded-xl pl-9 pr-8 py-2 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40">
+      <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-indigo-500"></i>
+      <button id="clearMobileSearchBtn" class="hidden absolute right-3 top-2.5 text-xs text-slate-400 hover:text-slate-700 dark:hover:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
   <!-- ================= MAIN BODY CONTAINER ================= -->
-  <div class="flex flex-1 overflow-hidden p-3 gap-3">
+  <div class="main-body-container flex flex-1 overflow-hidden p-0 lg:p-3 gap-0 lg:gap-3 relative">
     
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
     <!-- ================= GLASS SIDEBAR ================= -->
     <aside id="sidebar" class="glass-panel rounded-3xl w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-300 z-20 overflow-hidden shadow-md">
       <div class="p-3.5 space-y-4 overflow-y-auto">
+        <!-- Close button on mobile -->
+        <div class="lg:hidden flex items-center justify-between pb-2 border-b border-slate-200/60 dark:border-white/10">
+          <span class="text-xs font-bold text-slate-800 dark:text-white">Workspace Menu</span>
+          <button id="closeSidebarBtn" class="p-1 rounded-lg text-slate-400 hover:text-slate-800 dark:hover:text-white" title="Close Sidebar">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
         <!-- Views Nav -->
         <div class="space-y-1">
           <div class="px-2 text-[10px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500">Workspace Views</div>
@@ -375,16 +797,16 @@
     </aside>
 
     <!-- ================= CONTENT AREA ================= -->
-    <main class="flex-1 flex flex-col min-w-0 glass-panel rounded-3xl overflow-hidden shadow-lg">
+    <main class="main-content-panel flex-1 flex flex-col min-w-0 glass-panel rounded-none lg:rounded-3xl border-0 lg:border shadow-none lg:shadow-lg overflow-hidden">
       
       <!-- FILTER & ACTION TOOLBAR -->
-      <section id="filterToolbar" class="px-5 py-3 border-b border-slate-200/60 dark:border-white/5 flex-shrink-0 flex flex-wrap items-center justify-between gap-2.5 bg-white/40 dark:bg-white/5 backdrop-blur-md">
-        <div class="flex flex-wrap items-center gap-2">
+      <section id="filterToolbar" class="px-2.5 sm:px-4 py-2 border-b border-slate-200/60 dark:border-white/10 flex-shrink-0 flex items-center justify-between gap-2 bg-white/40 dark:bg-white/5 backdrop-blur-md z-10">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll py-0.5 flex-1 min-w-0">
           
           <!-- Module Filter -->
-          <div class="flex items-center space-x-1">
+          <div class="flex items-center space-x-1 flex-shrink-0">
             <span class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">Module:</span>
-            <select id="filterModule" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+            <select id="filterModule" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-200 focus:outline-none">
               <option value="ALL">All Modules</option>
               <option value="BCRED">BCRED</option>
               <option value="COLLNDISC">COLLNDISC</option>
@@ -398,11 +820,11 @@
           </div>
 
           <!-- Pending With Filter -->
-          <div class="flex items-center space-x-1">
+          <div class="flex items-center space-x-1 flex-shrink-0">
             <span class="text-[10px] font-bold uppercase text-amber-600 dark:text-amber-400 flex items-center gap-1">
               <i class="fa-solid fa-hourglass-half text-[10px]"></i> Pending:
             </span>
-            <select id="filterPendingWith" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1.5 bg-amber-50/70 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 border-amber-300/50 dark:border-amber-700/40 focus:outline-none">
+            <select id="filterPendingWith" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1 bg-amber-50/70 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300 border border-amber-300/50 dark:border-amber-700/40 focus:outline-none">
               <option value="ALL">All Pending States</option>
               <option value="BSG">BSG (Business Solutions)</option>
               <option value="DEV">DEV (Engineering)</option>
@@ -418,17 +840,17 @@
           </div>
 
           <!-- Assignee Filter -->
-          <div class="flex items-center space-x-1">
+          <div class="flex items-center space-x-1 flex-shrink-0">
             <span class="text-[10px] font-bold uppercase text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
               <i class="fa-solid fa-user-tag text-[10px]"></i> Assignee:
             </span>
-            <select id="filterAssignee" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1.5 bg-indigo-50/70 dark:bg-indigo-950/30 text-indigo-800 dark:text-indigo-300 border-indigo-300/50 dark:border-indigo-700/40 focus:outline-none max-w-[150px]">
+            <select id="filterAssignee" class="glass-input text-xs font-bold rounded-xl px-2.5 py-1 bg-indigo-50/70 dark:bg-indigo-950/30 text-indigo-800 dark:text-indigo-300 border border-indigo-300/50 dark:border-indigo-700/40 focus:outline-none max-w-[140px]">
               <option value="ALL">All Assignees</option>
             </select>
           </div>
 
           <!-- Issue Type Filter -->
-          <select id="filterIssueType" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+          <select id="filterIssueType" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-200 focus:outline-none flex-shrink-0">
             <option value="ALL">All Issue Types</option>
             <option value="Production Issue">Production Issue</option>
             <option value="UAT Defect">UAT Defect</option>
@@ -442,7 +864,7 @@
           </select>
 
           <!-- Priority Filter -->
-          <select id="filterPriority" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1.5 text-slate-700 dark:text-slate-200 focus:outline-none">
+          <select id="filterPriority" class="glass-input text-xs font-semibold rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-200 focus:outline-none flex-shrink-0">
             <option value="ALL">All Priorities</option>
             <option value="P1">P1 - Blocker / Critical</option>
             <option value="P2">P2 - High</option>
@@ -451,34 +873,56 @@
           </select>
 
           <!-- Quick Toggle Pills -->
-          <button id="toggleP1OnlyBtn" class="px-3 py-1 text-xs rounded-xl glass-card font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition flex items-center gap-1">
+          <button id="toggleP1OnlyBtn" class="px-2.5 py-1 text-xs rounded-xl glass-card font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition flex items-center gap-1 flex-shrink-0">
             <i class="fa-solid fa-fire text-rose-500"></i> P1 Only
           </button>
           
-          <button id="toggleHighAgeingBtn" class="px-3 py-1 text-xs rounded-xl glass-card font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition flex items-center gap-1">
+          <button id="toggleHighAgeingBtn" class="px-2.5 py-1 text-xs rounded-xl glass-card font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition flex items-center gap-1 flex-shrink-0">
             <i class="fa-solid fa-clock-rotate-left"></i> Ageing > 5d
           </button>
 
           <!-- Reset Filters -->
-          <button id="clearFiltersBtn" class="text-xs px-2.5 py-1 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white font-semibold transition">
+          <button id="clearFiltersBtn" class="text-xs px-2.5 py-1 rounded-xl glass-card text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-bold transition flex-shrink-0 whitespace-nowrap">
             Reset
           </button>
         </div>
 
-        <div class="flex items-center space-x-2">
-          <span class="text-xs font-bold px-3 py-1 rounded-xl bg-white/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-white/60 dark:border-white/10 shadow-2xs">
-            Showing <strong id="visibleTasksCount" class="font-mono text-indigo-600 dark:text-indigo-400 font-extrabold">0</strong> Tasks
+        <div class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l border-slate-200/60 dark:border-white/10 sm:border-0">
+          <span class="text-xs font-bold px-2.5 py-1 rounded-xl bg-white/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 border border-white/60 dark:border-white/10 shadow-2xs whitespace-nowrap">
+            <span class="hidden sm:inline">Showing </span><strong id="visibleTasksCount" class="font-mono text-indigo-600 dark:text-indigo-400 font-extrabold">0</strong> <span class="hidden sm:inline">Tasks</span>
           </span>
         </div>
       </section>
 
       <!-- ================= VIEW CONTAINERS ================= -->
-      <div class="flex-1 overflow-auto relative p-5">
+      <div class="view-content-wrapper flex-1 overflow-auto relative p-2 sm:p-4 lg:p-5">
         
         <!-- 1. KANBAN BOARD VIEW -->
         <section id="view-kanban" class="h-full flex flex-col">
-          <div class="flex-1 overflow-x-auto pb-4">
-            <div class="flex gap-4 h-full min-w-[1380px]">
+          <!-- Mobile Column Quick Jump Bar (Visible on mobile/tablet) -->
+          <div id="kanbanColumnPills" class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-scroll pb-2.5 px-0.5 flex-shrink-0">
+            <button onclick="scrollToKanbanCol('Backlog')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold glass-card text-slate-700 dark:text-slate-200 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>Backlog</span> <span id="pill-count-Backlog" class="bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-slate-300 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('In Progress')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/40 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>In Prog</span> <span id="pill-count-InProgress" class="bg-indigo-200/70 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('UAT / Testing')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/40 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>UAT</span> <span id="pill-count-UAT" class="bg-purple-200/70 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Ready for Prod')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/40 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>Prod</span> <span id="pill-count-Prod" class="bg-amber-200/70 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Blocked')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200/80 dark:border-rose-800/40 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>Blocked</span> <span id="pill-count-Blocked" class="bg-rose-200/70 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button onclick="scrollToKanbanCol('Closed')" class="kanban-pill-btn px-3 py-1.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/40 shadow-xs flex items-center gap-1.5 whitespace-nowrap active:scale-95 transition">
+              <span>Closed</span> <span id="pill-count-Closed" class="bg-emerald-200/70 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+          </div>
+
+          <div class="kanban-scroll-wrapper flex-1 overflow-x-auto pb-4 touch-scroll">
+            <div class="kanban-board-container flex gap-4 h-full min-w-max lg:min-w-[1380px]">
               
               <!-- Backlog Column -->
               <div class="kanban-col flex-1 flex flex-col rounded-3xl glass-card p-3.5 border border-white/60 dark:border-white/10 transition" data-status="Backlog">
@@ -577,8 +1021,13 @@
           </div>
 
           <div class="glass-card rounded-3xl flex-1 flex flex-col overflow-hidden border border-white/60 dark:border-white/10 shadow-md">
-            <div class="flex-1 overflow-auto">
-              <table class="w-full text-left text-xs border-collapse">
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="lg:hidden bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 border-b border-slate-200/60 dark:border-white/10 px-4 py-2 flex items-center justify-between text-[11px] font-semibold text-indigo-700 dark:text-indigo-300 flex-shrink-0">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-xs"></i> Swipe table horizontally (14 cols)</span>
+              <span class="text-[10px] font-mono bg-white/60 dark:bg-white/10 px-2 py-0.5 rounded-full">Scroll ➔</span>
+            </div>
+            <div class="flex-1 overflow-auto touch-scroll">
+              <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
                 <thead class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-slate-600 dark:text-slate-300 uppercase font-bold text-[11px] sticky top-0 z-10 border-b border-slate-200/80 dark:border-white/10">
                   <tr>
                     <th class="py-3 px-3">#</th>
@@ -606,19 +1055,25 @@
         <!-- 3. DETAILED LIST / EXCEL GRID VIEW -->
         <section id="view-list" class="hidden h-full flex flex-col">
           <div class="glass-card rounded-3xl flex-1 flex flex-col overflow-hidden border border-white/60 dark:border-white/10 shadow-md">
-            <div class="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-white/5">
+            <div class="p-3.5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-white/5 flex-wrap gap-2">
               <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-table text-indigo-500 text-sm"></i>
                 <span class="font-bold text-xs uppercase tracking-wider text-slate-800 dark:text-white">Enterprise Task Master Sheet</span>
-                <span class="text-[11px] text-slate-400 font-medium">| (Click any row to edit)</span>
+                <span class="text-[11px] text-slate-400 font-medium hidden sm:inline">| (Click any row to edit)</span>
               </div>
               <button onclick="exportToCsv()" class="text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 px-3 py-1.5 rounded-xl font-bold flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-file-excel"></i> Export Grid to Excel
               </button>
             </div>
             
-            <div class="flex-1 overflow-auto">
-              <table class="w-full text-left text-xs border-collapse">
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="lg:hidden bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border-b border-slate-200/60 dark:border-white/10 px-4 py-2 flex items-center justify-between text-[11px] font-semibold text-blue-700 dark:text-blue-300 flex-shrink-0">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-xs"></i> Swipe grid horizontally (12 cols)</span>
+              <span class="text-[10px] font-mono bg-white/60 dark:bg-white/10 px-2 py-0.5 rounded-full">Tap row to edit</span>
+            </div>
+
+            <div class="flex-1 overflow-auto touch-scroll">
+              <table class="w-full text-left text-xs border-collapse min-w-[960px]">
                 <thead class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md text-slate-600 dark:text-slate-300 uppercase font-bold text-[11px] sticky top-0 z-10 border-b border-slate-200/80 dark:border-white/10 font-mono">
                   <tr>
                     <th class="py-3 px-3 cursor-pointer" onclick="sortTable('id')">ID <i class="fa-solid fa-sort text-[10px]"></i></th>
@@ -661,9 +1116,9 @@
             </div>
           </div>
 
-          <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
+          <div class="meetings-grid flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
             <!-- Left: Scheduled Meetings -->
-            <div class="glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
+            <div class="meetings-col glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
               <div class="p-3.5 border-b border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-white/5 flex items-center justify-between font-bold">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-2 text-indigo-700 dark:text-indigo-300">
                   <i class="fa-solid fa-video text-indigo-500"></i> Meetings, KT Sessions & BRD Reviews
@@ -674,7 +1129,7 @@
             </div>
 
             <!-- Right: Deployments & P1 Blockers -->
-            <div class="glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
+            <div class="meetings-col glass-card rounded-3xl border border-white/60 dark:border-white/10 flex flex-col overflow-hidden shadow-sm">
               <div class="p-3.5 border-b border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-white/5 flex items-center justify-between font-bold">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-2 text-rose-700 dark:text-rose-300">
                   <i class="fa-solid fa-rocket text-rose-500"></i> Deployments & P1 Prod Follow-Ups
@@ -689,51 +1144,51 @@
         <!-- 5. METRICS & BOTTLENECK ANALYSIS VIEW -->
         <section id="view-metrics" class="hidden h-full overflow-y-auto space-y-4">
           <!-- KPI Stat Cards -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
+          <div class="metrics-kpi-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Tasks</div>
-              <div id="statTotal" class="text-3xl font-extrabold mt-1 font-mono text-slate-800 dark:text-white">0</div>
+              <div id="statTotal" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-slate-800 dark:text-white">0</div>
               <div class="text-[10px] text-slate-400 font-medium mt-0.5">Across modules</div>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-rose-300/40 dark:border-rose-900/40 bg-rose-500/10 shadow-sm">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-rose-300/40 dark:border-rose-900/40 bg-rose-500/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">P1 Blockers</div>
-              <div id="statP1" class="text-3xl font-extrabold mt-1 font-mono text-rose-600 dark:text-rose-400">0</div>
+              <div id="statP1" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-rose-600 dark:text-rose-400">0</div>
               <div class="text-[10px] text-rose-500 font-medium mt-0.5">SLA Critical</div>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-amber-300/40 dark:border-amber-900/40 bg-amber-500/10 shadow-sm">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-amber-300/40 dark:border-amber-900/40 bg-amber-500/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Pending With</div>
-              <div id="statPendingExternal" class="text-3xl font-extrabold mt-1 font-mono text-amber-600 dark:text-amber-400">0</div>
+              <div id="statPendingExternal" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-amber-600 dark:text-amber-400">0</div>
               <div class="text-[10px] text-amber-500 font-medium mt-0.5">Waiting on Teams</div>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-purple-300/40 dark:border-purple-900/40 bg-purple-500/10 shadow-sm">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-purple-300/40 dark:border-purple-900/40 bg-purple-500/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">Prod Releases</div>
-              <div id="statDeployments" class="text-3xl font-extrabold mt-1 font-mono text-purple-600 dark:text-purple-400">0</div>
+              <div id="statDeployments" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-purple-600 dark:text-purple-400">0</div>
               <div class="text-[10px] text-purple-500 font-medium mt-0.5">Ready for release</div>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-indigo-300/40 dark:border-indigo-900/40 bg-indigo-500/10 shadow-sm">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-indigo-300/40 dark:border-indigo-900/40 bg-indigo-500/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">Avg Ageing</div>
-              <div id="statAvgAgeing" class="text-3xl font-extrabold mt-1 font-mono text-indigo-600 dark:text-indigo-400">0 <span class="text-xs font-normal">d</span></div>
+              <div id="statAvgAgeing" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-indigo-600 dark:text-indigo-400">0 <span class="text-xs font-normal">d</span></div>
               <div class="text-[10px] text-indigo-500 font-medium mt-0.5">Active backlog</div>
             </div>
 
-            <div class="glass-card p-4 rounded-3xl border border-emerald-300/40 dark:border-emerald-900/40 bg-emerald-500/10 shadow-sm">
+            <div class="metrics-kpi-card glass-card p-4 rounded-3xl border border-emerald-300/40 dark:border-emerald-900/40 bg-emerald-500/10 shadow-sm">
               <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Closed / Done</div>
-              <div id="statClosed" class="text-3xl font-extrabold mt-1 font-mono text-emerald-600 dark:text-emerald-400">0</div>
+              <div id="statClosed" class="metrics-kpi-val text-3xl font-extrabold mt-1 font-mono text-emerald-600 dark:text-emerald-400">0</div>
               <div class="text-[10px] text-emerald-500 font-medium mt-0.5">Resolved items</div>
             </div>
           </div>
 
           <!-- Charts Row -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="metrics-charts-grid grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
               <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-hourglass-half text-amber-500"></i> Bottlenecks (Pending With)
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="pendingWithChart"></canvas>
               </div>
             </div>
@@ -742,7 +1197,7 @@
               <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-chart-column text-indigo-500"></i> Pipeline By Status
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="statusChart"></canvas>
               </div>
             </div>
@@ -751,19 +1206,26 @@
               <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
                 <i class="fa-solid fa-cubes-stacked text-purple-500"></i> Module Distribution
               </h3>
-              <div class="h-64 relative">
+              <div class="metrics-chart-box h-64 relative">
                 <canvas id="moduleChart"></canvas>
               </div>
             </div>
           </div>
 
           <!-- SLA Ageing Grid -->
-          <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm">
-            <h3 class="text-xs font-bold uppercase tracking-wider mb-3 flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
-              <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
-            </h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-xs text-left">
+          <div class="glass-card p-4 rounded-3xl border border-white/60 dark:border-white/10 shadow-sm overflow-hidden">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-rose-600 dark:text-rose-400">
+                <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
+              </h3>
+            </div>
+            <!-- Mobile Horizontal Swipe Indicator -->
+            <div class="md:hidden bg-rose-500/10 border border-rose-300/30 dark:border-rose-900/30 rounded-xl px-3 py-1.5 mb-2.5 flex items-center justify-between text-[11px] font-semibold text-rose-700 dark:text-rose-300">
+              <span class="flex items-center gap-1.5"><i class="fa-solid fa-arrows-left-right text-xs"></i> Swipe matrix horizontally</span>
+              <span class="text-[10px] font-mono bg-white/60 dark:bg-white/10 px-2 py-0.5 rounded-full">Scroll ➔</span>
+            </div>
+            <div class="overflow-x-auto touch-scroll">
+              <table class="w-full text-xs text-left min-w-[780px]">
                 <thead class="bg-white/40 dark:bg-white/5 font-mono font-bold text-slate-600 dark:text-slate-400 uppercase border-b border-slate-200/60 dark:border-white/5">
                   <tr>
                     <th class="p-2.5">Task ID</th>
@@ -786,6 +1248,30 @@
       </div>
     </main>
   </div>
+
+  <!-- ================= MOBILE FROSTED BOTTOM NAVIGATION ================= -->
+  <nav id="mobileBottomNav" class="lg:hidden glass-panel border-t border-white/60 dark:border-white/10 flex items-stretch justify-around z-30 flex-shrink-0 shadow-lg">
+    <button data-view="kanban" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xs transition">
+      <i class="fa-solid fa-table-columns text-sm mb-0.5"></i>
+      <span class="text-[10px] font-mono tracking-tight uppercase">Board</span>
+    </button>
+    <button data-view="timesheet" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+      <i class="fa-solid fa-business-time text-sm mb-0.5"></i>
+      <span class="text-[10px] font-mono tracking-tight uppercase">Logs</span>
+    </button>
+    <button data-view="list" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+      <i class="fa-solid fa-table-list text-sm mb-0.5"></i>
+      <span class="text-[10px] font-mono tracking-tight uppercase">Grid</span>
+    </button>
+    <button data-view="meetings" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+      <i class="fa-regular fa-calendar-check text-sm mb-0.5"></i>
+      <span class="text-[10px] font-mono tracking-tight uppercase">Syncs</span>
+    </button>
+    <button data-view="metrics" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+      <i class="fa-solid fa-chart-pie text-sm mb-0.5"></i>
+      <span class="text-[10px] font-mono tracking-tight uppercase">Metrics</span>
+    </button>
+  </nav>
 
   <!-- ================= FROSTED GLASS MODALS ================= -->
 
@@ -810,14 +1296,14 @@
       </div>
 
       <!-- Modal Tabs Header -->
-      <div class="flex border-b border-slate-200/60 dark:border-white/10 px-6 bg-white/20 dark:bg-white/5 text-xs font-bold">
-        <button data-tab="tab-general" class="modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400">
+      <div class="modal-tab-bar flex border-b border-slate-200/60 dark:border-white/10 px-4 sm:px-6 bg-white/20 dark:bg-white/5 text-xs font-bold overflow-x-auto no-scrollbar touch-scroll flex-nowrap">
+        <button data-tab="tab-general" class="modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-circle-info mr-1.5"></i> 1. Core & Ownership
         </button>
-        <button data-tab="tab-technical" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+        <button data-tab="tab-technical" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-code mr-1.5"></i> 2. RCA & Solution Fix
         </button>
-        <button data-tab="tab-meeting" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200">
+        <button data-tab="tab-meeting" class="modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-calendar mr-1.5"></i> 3. Meetings / KT Sync
         </button>
       </div>
@@ -879,7 +1365,7 @@
             <input type="text" id="taskSummaryInput" required placeholder="e.g., EOD batch failure in BCRED_INTEREST with ORA-01555" class="glass-input w-full text-xs font-semibold rounded-xl px-3.5 py-2.5 focus:ring-2 focus:ring-indigo-500/40">
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Status *</label>
               <select id="taskStatusInput" required class="glass-input w-full text-xs font-semibold rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500/40">
@@ -974,7 +1460,7 @@
 
         <!-- TAB 3: MEETING, KT & SYNC -->
         <div id="tab-meeting" class="modal-tab-pane hidden space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 font-mono">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono">
             <div>
               <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Meeting Time</label>
               <input type="time" id="taskMeetingTimeInput" class="glass-input w-full text-xs rounded-xl px-3 py-2">
@@ -996,12 +1482,12 @@
         </div>
 
         <!-- Modal Footer Actions -->
-        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between">
+        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
           <button type="button" id="deleteTaskBtn" class="hidden text-xs bg-rose-500/10 text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 border border-rose-500/20 font-bold px-3 py-2 rounded-xl transition">
             <i class="fa-solid fa-trash-can mr-1"></i> Delete Task
           </button>
           
-          <div class="flex items-center space-x-2 ml-auto">
+          <div class="flex items-center flex-wrap gap-2 ml-auto">
             <button type="button" id="cancelTaskModalBtn" class="text-xs px-4 py-2 rounded-xl glass-card font-bold hover:bg-white/80 dark:hover:bg-white/10 transition">
               Cancel
             </button>
@@ -1092,7 +1578,7 @@
           <input type="text" id="tsEstimateInput" placeholder="2 Hours" class="glass-input w-full text-xs font-mono rounded-xl px-3 py-2">
         </div>
 
-        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex justify-end space-x-2">
+        <div class="pt-4 border-t border-slate-200/60 dark:border-white/10 flex flex-wrap justify-end gap-2">
           <button type="button" onclick="closeTimesheetModal()" class="text-xs px-4 py-2 rounded-xl glass-card font-bold hover:bg-white/80 dark:hover:bg-white/10 transition">
             Cancel
           </button>
@@ -1454,6 +1940,8 @@
     function updateThemeControls(isDark) {
       const icon = document.getElementById('themeToggleIcon');
       if (icon) icon.className = isDark ? 'fa-solid fa-sun text-sm text-amber-400' : 'fa-solid fa-moon text-sm text-indigo-500';
+      const label = document.getElementById('themeLabel');
+      if (label) label.innerText = isDark ? 'Light' : 'Dark';
     }
 
     function showToast(message, type = 'info') {
@@ -1606,15 +2094,47 @@
     }
 
     /* --- VIEW 1: KANBAN --- */
+    function scrollToKanbanCol(status) {
+      const colEl = document.querySelector(`.kanban-col[data-status="${status}"]`);
+      if (colEl) {
+        colEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+
+    function quickMoveTask(taskId, newStatus) {
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+      if (task.status === newStatus) return;
+      task.status = newStatus;
+      if (newStatus === 'Closed' && !task.closedDate) {
+        task.closedDate = new Date().toISOString().split('T')[0];
+      }
+      saveTasks();
+      renderApp();
+      showToast(`Task ${taskId} moved to ${newStatus}`, 'success');
+    }
+
     function renderKanban(filteredTasks) {
       const columns = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
+      const pillMap = {
+        'Backlog': 'pill-count-Backlog',
+        'In Progress': 'pill-count-InProgress',
+        'UAT / Testing': 'pill-count-UAT',
+        'Ready for Prod': 'pill-count-ReadyProd',
+        'Blocked': 'pill-count-Blocked',
+        'Closed': 'pill-count-Closed'
+      };
       
       columns.forEach(col => {
         const dropzone = document.querySelector(`.kanban-dropzone[data-status="${col}"]`);
         const countSpan = document.querySelector(`.kanban-col[data-status="${col}"] .col-count`);
+        const colTasks = filteredTasks.filter(t => t.status === col);
+        if (pillMap[col]) {
+          const pillEl = document.getElementById(pillMap[col]);
+          if (pillEl) pillEl.innerText = colTasks.length;
+        }
         if (!dropzone) return;
 
-        const colTasks = filteredTasks.filter(t => t.status === col);
         countSpan.innerText = colTasks.length;
         dropzone.innerHTML = '';
 
@@ -1656,6 +2176,14 @@
                   ${(task.assignedTo || 'U').charAt(0).toUpperCase()}
                 </div>
               </div>
+            </div>
+
+            <!-- Mobile Quick Status Move Dropdown -->
+            <div class="md:hidden pt-2 border-t border-slate-200/50 dark:border-white/5 flex items-center justify-between gap-1 text-[11px]" onclick="event.stopPropagation()">
+              <span class="text-[10px] font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-arrows-turn-right text-[10px] text-indigo-400"></i> Move:</span>
+              <select class="quick-move-select text-[11px] font-bold py-1 px-2 rounded-xl bg-white/70 dark:bg-slate-800/70 border border-slate-200/70 dark:border-white/10 text-slate-700 dark:text-slate-200 focus:outline-none" onchange="quickMoveTask('${escapeHtml(task.id)}', this.value)">
+                ${columns.map(c => `<option value="${c}" ${c === task.status ? 'selected' : ''}>${c}</option>`).join('')}
+              </select>
             </div>
           `;
 
@@ -1984,7 +2512,7 @@
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: 'right',
+              position: window.innerWidth < 768 ? 'bottom' : 'right',
               labels: { color: textColor, font: { weight: '600', size: 10 } }
             }
           }
@@ -2091,9 +2619,9 @@
     function switchModalTab(targetTabId) {
       document.querySelectorAll('.modal-tab-btn').forEach(btn => {
         if (btn.getAttribute('data-tab') === targetTabId) {
-          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold';
+          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-indigo-600 text-indigo-600 dark:text-indigo-400 font-bold whitespace-nowrap flex-shrink-0';
         } else {
-          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium';
+          btn.className = 'modal-tab-btn py-3 px-4 border-b-2 border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 font-medium whitespace-nowrap flex-shrink-0';
         }
       });
       document.querySelectorAll('.modal-tab-pane').forEach(pane => {
@@ -2237,25 +2765,54 @@
     /* -------------------------------------------------------------
        10. UI VIEW SWITCHING & FILTERS
     ------------------------------------------------------------- */
+    function toggleSidebar(forceState) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      const isMobile = window.innerWidth < 1024;
+      if (isMobile) {
+        const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('sidebar-open');
+        sidebar.classList.toggle('sidebar-open', willOpen);
+        if (backdrop) backdrop.classList.toggle('active', willOpen);
+      } else {
+        if (typeof forceState === 'boolean') {
+          sidebar.classList.toggle('-ml-64', !forceState);
+        } else {
+          sidebar.classList.toggle('-ml-64');
+        }
+      }
+    }
+
     function applyQuickModuleFilter(moduleName) {
       document.getElementById('filterModule').value = moduleName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
       else renderApp();
     }
 
     function applyQuickPendingFilter(pendingName) {
       document.getElementById('filterPendingWith').value = pendingName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       if (currentView === 'metrics' || currentView === 'meetings' || currentView === 'timesheet') switchView('kanban');
       else renderApp();
     }
 
     function switchView(viewName) {
       currentView = viewName;
+      if (window.innerWidth < 1024) toggleSidebar(false);
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
         if (btn.getAttribute('data-view') === viewName) {
           btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-md shadow-indigo-500/25 transition';
         } else {
           btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/80 dark:hover:bg-white/5 transition';
+        }
+      });
+
+      // Update mobile bottom navigation buttons
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        if (btn.getAttribute('data-view') === viewName) {
+          btn.className = 'mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-xs transition';
+        } else {
+          btn.className = 'mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition';
         }
       });
 
@@ -2272,7 +2829,7 @@
 
     /* -------------------------------------------------------------
        11. EVENT LISTENERS INITIALIZATION
-    ------------------------------------------------------------- */
+     ------------------------------------------------------------- */
     window.onload = function () {
       loadData();
       setupDragAndDrop();
@@ -2282,15 +2839,76 @@
       // Theme Toggle
       document.getElementById('themeToggleBtn').addEventListener('click', toggleTheme);
 
-      // View Navigation
+      // View Navigation (Sidebar & Mobile Bottom Nav)
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+      });
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
         btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
       });
 
       // Sidebar Toggle
-      document.getElementById('toggleSidebarBtn').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('-ml-64');
+      document.getElementById('toggleSidebarBtn').addEventListener('click', () => toggleSidebar());
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+      const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+      if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
+
+      let prevWidth = window.innerWidth;
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 1024) {
+          const sidebar = document.getElementById('sidebar');
+          if (sidebar) sidebar.classList.remove('sidebar-open');
+          const backdrop = document.getElementById('sidebarBackdrop');
+          if (backdrop) backdrop.classList.remove('active');
+        }
+        if ((prevWidth < 768 && window.innerWidth >= 768) || (prevWidth >= 768 && window.innerWidth < 768)) {
+          if (currentView === 'metrics') renderCharts();
+        }
+        prevWidth = window.innerWidth;
       });
+
+      // Mobile Search
+      const mobileSearchToggleBtn = document.getElementById('mobileSearchToggleBtn');
+      const mobileSearchBar = document.getElementById('mobileSearchBar');
+      const mobileSearchInput = document.getElementById('mobileSearchInput');
+      const globalSearchInput = document.getElementById('globalSearchInput');
+      const clearMobileSearchBtn = document.getElementById('clearMobileSearchBtn');
+
+      if (mobileSearchToggleBtn && mobileSearchBar) {
+        mobileSearchToggleBtn.addEventListener('click', () => {
+          mobileSearchBar.classList.toggle('hidden');
+          if (!mobileSearchBar.classList.contains('hidden')) {
+            if (mobileSearchInput) {
+              mobileSearchInput.value = globalSearchInput ? globalSearchInput.value : '';
+              if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !mobileSearchInput.value);
+              mobileSearchInput.focus();
+            }
+          }
+        });
+      }
+
+      if (mobileSearchInput && globalSearchInput) {
+        mobileSearchInput.addEventListener('input', (e) => {
+          globalSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+          renderApp();
+        });
+        globalSearchInput.addEventListener('input', (e) => {
+          mobileSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+        });
+      }
+
+      if (clearMobileSearchBtn && mobileSearchInput && globalSearchInput) {
+        clearMobileSearchBtn.addEventListener('click', () => {
+          mobileSearchInput.value = '';
+          globalSearchInput.value = '';
+          clearMobileSearchBtn.classList.add('hidden');
+          renderApp();
+          mobileSearchInput.focus();
+        });
+      }
 
       // Filters
       document.getElementById('globalSearchInput').addEventListener('input', renderApp);
@@ -2314,6 +2932,8 @@
 
       document.getElementById('clearFiltersBtn').addEventListener('click', () => {
         document.getElementById('globalSearchInput').value = '';
+        if (document.getElementById('mobileSearchInput')) document.getElementById('mobileSearchInput').value = '';
+        if (clearMobileSearchBtn) clearMobileSearchBtn.classList.add('hidden');
         document.getElementById('filterModule').value = 'ALL';
         document.getElementById('filterPendingWith').value = 'ALL';
         document.getElementById('filterAssignee').value = 'ALL';
@@ -2460,12 +3080,21 @@
         }
         if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           e.preventDefault();
-          document.getElementById('globalSearchInput').focus();
+          if (window.innerWidth < 640 && mobileSearchBar && mobileSearchInput) {
+            mobileSearchBar.classList.remove('hidden');
+            mobileSearchInput.focus();
+          } else {
+            document.getElementById('globalSearchInput').focus();
+          }
         }
         if (e.key === 'Escape') {
           closeTaskModal();
           closeTimesheetModal();
           document.getElementById('confirmDialog').classList.add('hidden');
+          if (mobileSearchBar && !mobileSearchBar.classList.contains('hidden')) {
+            mobileSearchBar.classList.add('hidden');
+          }
+          toggleSidebar(false);
         }
       });
     };

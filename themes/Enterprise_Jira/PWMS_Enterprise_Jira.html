@@ -1,0 +1,2312 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PWMS - Personal Web Management</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Chart.js CDN for Analytics View -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="PWMS_Enterprise_Jira.css" />
+  </head>
+
+  <body
+    class="bg-jira-bg dark:bg-[#1D2125] text-jira-text dark:text-[#B6C2CF] font-sans antialiased h-screen h-[100dvh] flex flex-col overflow-hidden transition-colors duration-200"
+  >
+    <!-- ================= TOP JIRA-STYLE NAVIGATION BAR ================= -->
+    <header
+      class="bg-jira-header dark:bg-[#182A4D] text-white h-14 flex items-center justify-between px-2.5 sm:px-4 shadow-sm z-30 flex-shrink-0 border-b dark:border-[#2C333A]"
+    >
+      <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+        <!-- App Switcher / Sidebar Toggle -->
+        <button
+          id="toggleSidebarBtn"
+          class="p-1.5 hover:bg-white/10 rounded-md transition text-slate-200 hover:text-white flex-shrink-0"
+          title="Toggle Sidebar"
+        >
+          <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+
+        <!-- Logo & System Identifier -->
+        <div class="flex items-center space-x-2 min-w-0">
+          <div
+            class="w-8 h-8 rounded bg-white text-jira-header flex items-center justify-center font-black shadow-inner tracking-tighter text-sm flex-shrink-0"
+          >
+            <i class="fa-solid fa-building-columns"></i>
+          </div>
+          <div class="flex flex-col leading-tight min-w-0">
+            <span
+              class="font-bold text-sm tracking-wide flex items-center gap-1.5"
+            >
+              PWMS
+              <span
+                class="bg-blue-900/60 text-blue-200 text-[10px] px-1.5 py-0.2 rounded font-mono font-medium hidden xs:inline min-[420px]:inline"
+                >BANKING CORE</span
+              >
+            </span>
+            <span
+              class="text-[11px] text-blue-200 truncate max-w-[120px] xs:max-w-[180px] sm:max-w-[210px] md:max-w-none hidden min-[340px]:block"
+              >Retail & Corporate Work Tracker</span
+            >
+          </div>
+        </div>
+
+        <!-- Project Switcher Badge -->
+        <div
+          class="hidden md:flex items-center ml-2 lg:ml-4 pl-2 lg:pl-4 border-l border-white/20 text-xs text-blue-100 flex-shrink-0"
+        >
+          <span
+            class="bg-white/15 px-2.5 py-1 rounded-md flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-layer-group text-blue-200"></i>
+            <span class="font-medium hidden lg:inline">Project:</span>
+            <span class="text-white font-semibold">DEV-BHAI-TASKS</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Global Actions & Controls -->
+      <div class="flex items-center space-x-2.5">
+        <!-- Mobile Search Toggle Button -->
+        <button
+          id="mobileSearchToggleBtn"
+          class="sm:hidden p-1.5 hover:bg-white/10 rounded text-blue-100 hover:text-white transition text-xs flex items-center justify-center"
+          title="Search Issues"
+        >
+          <i class="fa-solid fa-magnifying-glass text-sm"></i>
+        </button>
+
+        <!-- Search Input in Header -->
+        <div class="relative hidden sm:block w-48 md:w-60">
+          <input
+            id="globalSearchInput"
+            type="text"
+            placeholder="Search ID, issue, fix... (/)"
+            class="w-full bg-white/15 text-white placeholder-blue-200 text-xs rounded-md pl-8 pr-3 py-1.5 border border-transparent focus:bg-white focus:text-jira-text focus:placeholder-gray-400 focus:outline-none transition"
+          />
+          <i
+            class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-blue-200"
+          ></i>
+        </div>
+
+        <!-- Quick Create Button (+ Issue) -->
+        <button
+          id="openCreateModalBtn"
+          class="bg-white text-jira-header hover:bg-blue-50 font-semibold text-xs px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+          title="Shortcut: Press 'c'"
+        >
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span class="hidden sm:inline">Create Issue</span>
+        </button>
+
+        <!-- Dark / Light Mode Switcher Button -->
+        <button
+          id="themeToggleBtn"
+          class="p-1.5 hover:bg-white/10 rounded text-blue-100 hover:text-white transition text-xs flex items-center gap-1.5"
+          title="Toggle Dark / Light Mode"
+        >
+          <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
+          <span class="hidden md:inline text-xs font-medium" id="themeLabel"
+            >Dark</span
+          >
+        </button>
+
+        <!-- Excel / Backup Actions Dropdown Menu -->
+        <div class="relative">
+          <button
+            id="backupMenuBtn"
+            class="p-1.5 hover:bg-white/10 rounded text-blue-100 hover:text-white transition text-xs flex items-center gap-1"
+          >
+            <i class="fa-solid fa-database text-sm"></i>
+            <span class="hidden lg:inline text-xs font-medium"
+              >Backup / Excel</span
+            >
+            <i
+              class="fa-solid fa-chevron-down text-[10px] ml-0.5 opacity-80"
+            ></i>
+          </button>
+
+          <div
+            id="backupMenuDropdown"
+            class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-[#22272B] rounded-md shadow-xl border border-gray-200 dark:border-[#2C333A] text-jira-text dark:text-[#B6C2CF] text-xs py-1.5 z-50"
+          >
+            <div
+              class="px-3 py-1 text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider"
+            >
+              Excel & Offline Backup
+            </div>
+            <!-- <button id="exportCsvBtn"
+            class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]">
+            <i class="fa-solid fa-file-excel text-green-600 text-sm w-4"></i> Export to Excel (CSV)
+          </button>
+          <button id="exportJsonBtn"
+            class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]">
+            <i class="fa-solid fa-file-arrow-down text-blue-600 text-sm w-4"></i> Download Full Backup (JSON)
+          </button> -->
+            <!-- Extra update BHAI  -->
+            <button
+              id="exportCsvBtn"
+              class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]"
+            >
+              <i class="fa-solid fa-file-excel text-green-600 text-sm w-4"></i>
+              Export Issues Master (CSV)
+            </button>
+            <button
+              id="exportTimesheetCsvBtn"
+              class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]"
+            >
+              <i
+                class="fa-solid fa-calendar-check text-emerald-600 text-sm w-4"
+              ></i>
+              Export Weekly Timesheet (Excel)
+            </button>
+            <button
+              id="exportJsonBtn"
+              class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]"
+            >
+              <i
+                class="fa-solid fa-file-arrow-down text-blue-600 text-sm w-4"
+              ></i>
+              Download Full Backup (JSON)
+            </button>
+
+            <label
+              class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA] cursor-pointer"
+            >
+              <i
+                class="fa-solid fa-file-arrow-up text-amber-600 text-sm w-4"
+              ></i>
+              Restore from JSON
+              <input
+                type="file"
+                id="importJsonInput"
+                accept=".json"
+                class="hidden"
+              />
+            </label>
+            <div
+              class="border-t border-gray-100 dark:border-[#2C333A] my-1"
+            ></div>
+            <button
+              id="resetSampleDataBtn"
+              class="w-full text-left px-3 py-2 hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-rotate-right text-red-500 text-sm w-4"></i>
+              Reload Sample Banking Data
+            </button>
+          </div>
+        </div>
+
+        <!-- Engineer Profile Badge -->
+        <div class="flex items-center space-x-2 pl-2 border-l border-white/20">
+          <div
+            class="w-7 h-7 rounded-full bg-blue-400 text-white font-bold flex items-center justify-center text-xs shadow-sm ring-1 ring-white/30"
+          >
+            BE
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Search Bar (Collapsible) -->
+    <div
+      id="mobileSearchBar"
+      class="hidden sm:hidden bg-slate-900/95 dark:bg-[#151d28]/95 px-3 py-2 border-b border-white/10 shadow-md z-30"
+    >
+      <div class="relative w-full">
+        <input
+          id="mobileSearchInput"
+          type="text"
+          placeholder="Search ID, issue, fix... (/)"
+          class="w-full bg-white/15 text-white placeholder-blue-200 text-xs rounded-md pl-8 pr-8 py-2 border border-white/20 focus:bg-white focus:text-jira-text focus:placeholder-gray-400 focus:outline-none transition"
+        />
+        <i
+          class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-xs text-blue-200"
+        ></i>
+        <button
+          id="clearMobileSearchBtn"
+          class="hidden absolute right-2.5 top-2.5 text-xs text-gray-300 hover:text-white"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= MAIN BODY CONTAINER ================= -->
+    <div class="flex flex-1 overflow-hidden relative">
+      <!-- Mobile Sidebar Backdrop Overlay -->
+      <div
+        id="sidebarBackdrop"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300 opacity-0"
+        aria-hidden="true"
+      ></div>
+
+      <!-- ================= SIDEBAR ================= -->
+      <aside
+        id="sidebar"
+        class="bg-slate-900 text-slate-300 w-60 flex-shrink-0 flex flex-col justify-between transition-all duration-300 border-r border-slate-800 z-20"
+      >
+        <div class="p-3">
+          <!-- Project Context Header -->
+          <div
+            class="flex items-center justify-between px-2 py-2 mb-3 bg-slate-800/60 rounded-md"
+          >
+            <div class="flex items-center space-x-2.5 overflow-hidden">
+              <div
+                class="w-6 h-6 rounded bg-blue-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0"
+              >
+                BT
+              </div>
+              <div class="overflow-hidden">
+                <div class="text-xs font-bold text-white truncate">
+                  FinTech Core Prod
+                </div>
+                <div class="text-[10px] text-slate-400">
+                  Dev & Support Suite
+                </div>
+              </div>
+            </div>
+            <!-- Close button for mobile / tablet drawer -->
+            <button
+              id="closeSidebarBtn"
+              class="lg:hidden p-1 text-slate-400 hover:text-white rounded hover:bg-slate-700/60 transition"
+              title="Close Sidebar"
+            >
+              <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+          </div>
+
+          <!-- Primary Navigation Views -->
+          <div class="space-y-1">
+            <div
+              class="px-2 py-1 text-[10px] font-semibold tracking-wider text-slate-400 uppercase"
+            >
+              Views
+            </div>
+
+            <button
+              data-view="kanban"
+              class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium bg-blue-600 text-white transition"
+            >
+              <i class="fa-solid fa-table-columns text-sm w-4"></i>
+              <span>Kanban Board</span>
+            </button>
+
+            <button
+              data-view="list"
+              class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition"
+            >
+              <i class="fa-solid fa-list-check text-sm w-4"></i>
+              <span>Detailed List / Excel</span>
+            </button>
+
+            <!-- <button data-view="meetings"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+            <i class="fa-solid fa-calendar-day text-sm w-4"></i>
+            <span>Daily Tracker & Meetings</span>
+          </button> -->
+
+            <button
+              data-view="meetings"
+              class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition"
+            >
+              <i class="fa-solid fa-business-time text-sm w-4"></i>
+              <span>Daily Work Log & Timesheet</span>
+            </button>
+
+            <button
+              data-view="metrics"
+              class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition"
+            >
+              <i class="fa-solid fa-chart-pie text-sm w-4"></i>
+              <span>Metrics & Bottlenecks</span>
+            </button>
+          </div>
+
+          <!-- Module Quick Badges (BCRED, COLL, etc) -->
+          <div class="mt-5 space-y-1">
+            <div
+              class="flex items-center justify-between px-2 py-1 text-[10px] font-semibold tracking-wider text-slate-400 uppercase"
+            >
+              <span>Modules</span>
+              <span
+                id="moduleCountBadge"
+                class="text-[9px] bg-slate-800 px-1.5 py-0.2 rounded text-slate-400"
+                >9</span
+              >
+            </div>
+
+            <div class="grid grid-cols-2 gap-1 px-1">
+              <button
+                onclick="applyQuickModuleFilter('BCRED')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-blue-400 flex items-center justify-between"
+              >
+                <span>BCRED</span>
+                <span
+                  id="badge-BCRED"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickModuleFilter('COLLANDDISC')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-emerald-400 flex items-center justify-between"
+              >
+                <span>COLLANDDISC</span>
+                <span
+                  id="badge-COLLANDDISC"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickModuleFilter('FBFP')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-purple-400 flex items-center justify-between"
+              >
+                <span>FBFP</span>
+                <span
+                  id="badge-FBFP"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickModuleFilter('BULK FIDB REVAMP')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-amber-400 flex items-center justify-between"
+              >
+                <span>BULK FIDB REVAMP</span>
+                <span
+                  id="badge-BULK FIDB REVAMP"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickModuleFilter('FIDB Imports')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-cyan-400 flex items-center justify-between"
+              >
+                <span>FIDB Imports</span>
+                <span
+                  id="badge-FIDB Imports"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickModuleFilter('BULK EXPORT')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] font-mono text-rose-400 flex items-center justify-between"
+              >
+                <span>BULK EXPORT</span>
+                <span
+                  id="badge-BULK EXPORT"
+                  class="text-[9px] text-slate-400 font-sans"
+                  >0</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Bottleneck Counters in Sidebar -->
+          <div class="mt-4 space-y-1">
+            <div
+              class="px-2 py-1 text-[10px] font-semibold tracking-wider text-slate-400 uppercase"
+            >
+              Key Bottlenecks
+            </div>
+            <div class="flex flex-col gap-1 px-1">
+              <button
+                onclick="applyQuickPendingFilter('BSG')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] text-amber-300 flex items-center justify-between"
+              >
+                <span>⏳ Pending BSG</span>
+                <span
+                  id="badge-pending-BSG"
+                  class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.2 rounded text-amber-400"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickPendingFilter('Testers / QA')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] text-purple-300 flex items-center justify-between"
+              >
+                <span>⏳ Pending QA</span>
+                <span
+                  id="badge-pending-QA"
+                  class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.2 rounded text-purple-400"
+                  >0</span
+                >
+              </button>
+              <button
+                onclick="applyQuickPendingFilter('DEV')"
+                class="text-left px-2 py-1 bg-slate-800/40 hover:bg-slate-800 rounded text-[11px] text-blue-300 flex items-center justify-between"
+              >
+                <span>⏳ Pending DEV</span>
+                <span
+                  id="badge-pending-DEV"
+                  class="text-[10px] font-mono bg-slate-800 px-1.5 py-0.2 rounded text-blue-400"
+                  >0</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Shortcuts Info at Bottom of Sidebar -->
+        <div class="p-3 border-t border-slate-800 text-[11px] text-slate-400">
+          <div class="flex items-center justify-between mb-1">
+            <span>Shortcuts:</span>
+            <span class="font-mono bg-slate-800 px-1 rounded text-slate-300"
+              >c: New</span
+            >
+            <span class="font-mono bg-slate-800 px-1 rounded text-slate-300"
+              >/: Find</span
+            >
+          </div>
+          <div class="text-[10px] text-slate-500 text-center mt-2">
+            100% LocalStorage • Zero Server
+          </div>
+        </div>
+      </aside>
+
+      <!-- ================= CONTENT AREA ================= -->
+      <main
+        class="flex-1 flex flex-col min-w-0 bg-jira-bg dark:bg-[#1D2125] overflow-hidden"
+      >
+        <!-- FILTER & ACTION TOOLBAR (Visible across Kanban and List Views) -->
+        <section
+          id="filterToolbar"
+          class="bg-white dark:bg-[#22272B] border-b border-jira-border dark:border-[#2C333A] px-2.5 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-xs"
+        >
+          <div
+            class="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll py-0.5 flex-1 min-w-0"
+          >
+            <!-- Module Filter -->
+            <div class="flex items-center space-x-1 flex-shrink-0">
+              <span
+                class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase whitespace-nowrap"
+                >Module:</span
+              >
+              <select
+                id="filterModule"
+                class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue dark:focus:ring-blue-400 text-jira-text dark:text-[#DEE4EA] focus:outline-none"
+              >
+                <option value="ALL">All Modules</option>
+                <option value="BCRED">BCRED</option>
+                <option value="COLLANDDISC">COLLANDDISC</option>
+                <option value="FBFP">FBFP</option>
+                <option value="BULK EXPORT">BULK EXPORT</option>
+                <option value="FIDB Imports">FIDB Imports</option>
+                <option value="BULK FIDB REVAMP">BULK FIDB REVAMP</option>
+                <option value="ARIMP">ARIMP</option>
+                <option value="TORM">TORM</option>
+                <option value="TIRM">TIRM</option>
+              </select>
+            </div>
+
+            <!-- Pending With Filter -->
+            <div class="flex items-center space-x-1 flex-shrink-0">
+              <span
+                class="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase flex items-center gap-1 whitespace-nowrap"
+              >
+                <i class="fa-solid fa-hourglass-half text-[10px]"></i> Pending:
+              </span>
+              <select
+                id="filterPendingWith"
+                class="bg-amber-50/60 dark:bg-[#282215] border border-amber-300 dark:border-amber-600/50 text-amber-900 dark:text-amber-300 font-medium text-xs rounded px-2 py-1 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+              >
+                <option value="ALL">All Pending States</option>
+                <option value="BSG">BSG (Business Solutions)</option>
+                <option value="DEV">DEV (Engineering)</option>
+                <option value="Testers / QA">Testers / QA</option>
+                <option value="Business Operations">Business Operations</option>
+                <option value="DBA Team">DBA Team</option>
+                <option value="Infra / DevOps">Infra / DevOps</option>
+                <option value="InfoSec / Audit">InfoSec / Audit</option>
+                <option value="Third-Party Vendor">Third-Party Vendor</option>
+                <option value="Client / Branch User">
+                  Client / Branch User
+                </option>
+                <option value="None (Active)">None (Active / With Me)</option>
+              </select>
+            </div>
+
+            <!-- Assignee Filter -->
+            <div class="flex items-center space-x-1 flex-shrink-0">
+              <span
+                class="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase flex items-center gap-1 whitespace-nowrap"
+              >
+                <i class="fa-solid fa-user-tag text-[10px]"></i> Assignee:
+              </span>
+              <select
+                id="filterAssignee"
+                class="bg-blue-50/60 dark:bg-[#182635] border border-blue-300 dark:border-blue-700/50 text-blue-900 dark:text-blue-300 font-medium text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue focus:outline-none max-w-[130px] sm:max-w-[150px]"
+              >
+                <option value="ALL">All Assignees</option>
+              </select>
+            </div>
+
+            <!-- Issue Type Filter -->
+            <select
+              id="filterIssueType"
+              class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none flex-shrink-0"
+            >
+              <option value="ALL">All Issue Types</option>
+              <option value="Production Issue">Production Issue</option>
+              <option value="UAT Defect">UAT Defect</option>
+              <option value="Development Activity">Development Activity</option>
+              <option value="User Query">User Query / Ad-hoc</option>
+              <option value="KT Session">KT Session</option>
+              <option value="BRD Discussion">BRD Discussion</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Deployment">Deployment / Release</option>
+              <option value="Follow-Up">Follow-Up</option>
+            </select>
+
+            <!-- Priority Filter -->
+            <select
+              id="filterPriority"
+              class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none flex-shrink-0"
+            >
+              <option value="ALL">All Priorities</option>
+              <option value="P1">P1 - Blocker / Critical</option>
+              <option value="P2">P2 - High</option>
+              <option value="P3">P3 - Medium</option>
+              <option value="P4">P4 - Low</option>
+            </select>
+
+            <!-- Quick Toggle Pills -->
+            <button
+              id="toggleP1OnlyBtn"
+              class="px-2 py-0.5 text-xs rounded-full border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center gap-1 font-medium transition flex-shrink-0 whitespace-nowrap"
+            >
+              <i class="fa-solid fa-fire text-red-500"></i> P1 Only
+            </button>
+
+            <button
+              id="toggleHighAgeingBtn"
+              class="px-2 py-0.5 text-xs rounded-full border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 flex items-center gap-1 font-medium transition flex-shrink-0 whitespace-nowrap"
+            >
+              <i
+                class="fa-solid fa-clock-rotate-left text-amber-600 dark:text-amber-400"
+              ></i>
+              Ageing > 5d
+            </button>
+
+            <!-- Reset Filters -->
+            <button
+              id="clearFiltersBtn"
+              class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white underline px-1 py-0.5 flex-shrink-0 whitespace-nowrap"
+            >
+              Reset
+            </button>
+          </div>
+
+          <div
+            class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l border-gray-200 dark:border-gray-700 sm:border-0"
+          >
+            <!-- Active Items Counter -->
+            <span
+              id="filteredCountBadge"
+              class="text-xs text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap"
+            >
+              Showing:
+              <strong
+                class="text-jira-text dark:text-white"
+                id="visibleTasksCount"
+                >0</strong
+              >
+            </span>
+          </div>
+        </section>
+
+        <!-- ================= VIEW CONTAINERS ================= -->
+        <div class="flex-1 overflow-auto relative">
+          <!-- 1. KANBAN BOARD VIEW -->
+          <section id="view-kanban" class="p-2 sm:p-4 h-full flex flex-col">
+            <div
+              class="flex-1 overflow-x-auto pb-4 touch-scroll kanban-scroll-wrapper"
+            >
+              <div
+                class="kanban-board-container flex gap-3 h-full min-w-max lg:min-w-[1240px]"
+              >
+                <!-- Column: Backlog -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-gray-100 dark:bg-[#1D2125]/90 rounded-lg p-2.5 border border-gray-200 dark:border-[#2C333A]"
+                  data-status="Backlog"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-gray-200 dark:border-[#2C333A]"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300"
+                      >
+                        Backlog
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-gray-200 dark:bg-[#282E33] text-gray-700 dark:text-gray-300 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="Backlog"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Column: In Analysis / In Progress -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-blue-50/50 dark:bg-[#142334]/50 rounded-lg p-2.5 border border-blue-200 dark:border-blue-900/40"
+                  data-status="In Progress"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-blue-200 dark:border-blue-900/40"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-blue-300"
+                      >
+                        In Progress
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="In Progress"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Column: UAT / Testing -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-amber-50/50 dark:bg-[#292215]/40 rounded-lg p-2.5 border border-amber-200 dark:border-amber-900/40"
+                  data-status="UAT / Testing"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-amber-200 dark:border-amber-900/40"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-amber-500"
+                      ></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300"
+                      >
+                        UAT / Testing
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="UAT / Testing"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Column: Ready for Production -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-purple-50/50 dark:bg-[#241731]/40 rounded-lg p-2.5 border border-purple-200 dark:border-purple-900/40"
+                  data-status="Ready for Prod"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-purple-200 dark:border-purple-900/40"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-purple-500"
+                      ></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-purple-800 dark:text-purple-300"
+                      >
+                        Ready for Prod
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="Ready for Prod"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Column: Blocked -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-rose-50/50 dark:bg-[#2e1419]/40 rounded-lg p-2.5 border border-rose-200 dark:border-rose-900/40"
+                  data-status="Blocked"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-rose-200 dark:border-rose-900/40"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"
+                      ></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-rose-800 dark:text-rose-300"
+                      >
+                        Blocked
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="Blocked"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+
+                <!-- Column: Closed -->
+                <div
+                  class="kanban-col flex-1 flex flex-col bg-emerald-50/40 dark:bg-[#12271d]/40 rounded-lg p-2.5 border border-emerald-200 dark:border-emerald-900/40"
+                  data-status="Closed"
+                >
+                  <div
+                    class="flex items-center justify-between px-1 pb-2 mb-2 border-b border-emerald-200 dark:border-emerald-900/40"
+                  >
+                    <div class="flex items-center space-x-2">
+                      <span
+                        class="w-2.5 h-2.5 rounded-full bg-emerald-500"
+                      ></span>
+                      <h3
+                        class="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300"
+                      >
+                        Closed
+                      </h3>
+                    </div>
+                    <span
+                      class="col-count bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                      >0</span
+                    >
+                  </div>
+                  <div
+                    class="kanban-dropzone flex-1 overflow-y-auto space-y-2.5 pr-1"
+                    data-status="Closed"
+                  >
+                    <!-- Cards rendered by JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. DETAILED LIST / EXCEL GRID VIEW -->
+          <section
+            id="view-list"
+            class="hidden p-2 sm:p-4 h-full flex flex-col"
+          >
+            <div
+              class="bg-white dark:bg-[#22272B] rounded-lg shadow-sm border border-jira-border dark:border-[#2C333A] flex-1 flex flex-col overflow-hidden"
+            >
+              <div
+                class="p-3 border-b border-jira-border dark:border-[#2C333A] flex flex-wrap items-center justify-between gap-2 bg-gray-50 dark:bg-[#1D2125]"
+              >
+                <div class="flex items-center space-x-2">
+                  <i
+                    class="fa-solid fa-table text-jira-blue dark:text-blue-400"
+                  ></i>
+                  <span
+                    class="font-bold text-xs uppercase tracking-wider text-jira-text dark:text-[#DEE4EA]"
+                    >Enterprise Task Master Sheet</span
+                  >
+                  <span
+                    class="text-gray-400 dark:text-gray-500 text-xs hidden sm:inline"
+                    >| (Click any row to view/edit details)</span
+                  >
+                </div>
+                <button
+                  onclick="exportToCsv()"
+                  class="text-xs text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/60 px-2.5 py-1 rounded font-medium flex items-center gap-1.5 transition"
+                >
+                  <i class="fa-solid fa-file-excel"></i> Export Grid to Excel
+                </button>
+              </div>
+
+              <div class="flex-1 overflow-auto touch-scroll">
+                <table
+                  class="w-full text-left text-xs border-collapse min-w-[960px]"
+                >
+                  <thead
+                    class="bg-gray-100 dark:bg-[#182026] text-gray-600 dark:text-[#9FADBC] uppercase font-semibold text-[11px] sticky top-0 z-10 border-b border-gray-200 dark:border-[#2C333A] shadow-xs"
+                  >
+                    <tr>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('id')"
+                      >
+                        ID <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th class="py-2.5 px-3">Type</th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('summary')"
+                      >
+                        Issue / Task Summary
+                        <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('module')"
+                      >
+                        Module <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('pendingWith')"
+                      >
+                        Pending With
+                        <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('priority')"
+                      >
+                        Priority <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('status')"
+                      >
+                        Status <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th class="py-2.5 px-3">Env</th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('startDate')"
+                      >
+                        Start Date <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('ageing')"
+                      >
+                        Ageing <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th
+                        class="py-2.5 px-3 cursor-pointer hover:bg-gray-200 dark:hover:bg-[#282E33]"
+                        onclick="sortTable('assignedTo')"
+                      >
+                        Assignee <i class="fa-solid fa-sort text-[10px]"></i>
+                      </th>
+                      <th class="py-2.5 px-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="listTableBody"
+                    class="divide-y divide-gray-200 dark:divide-[#2C333A]"
+                  >
+                    <!-- Rows populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. DAILY TRACKER & MEETINGS VIEW -->
+          <section
+            id="view-meetings"
+            class="hidden p-2 sm:p-4 h-full flex flex-col space-y-3"
+          >
+            <!-- Timesheet Top Bar: Week Navigation, Resource Config & Action Buttons -->
+            <div
+              class="bg-white dark:bg-[#22272B] p-3 sm:p-3.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs flex flex-wrap items-center justify-between gap-3 flex-shrink-0"
+            >
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-lg font-bold flex-shrink-0"
+                >
+                  <i class="fa-solid fa-user-clock"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h2
+                      class="text-sm font-bold text-jira-text dark:text-[#DEE4EA]"
+                    >
+                      Daily Work Log & Timesheet
+                    </h2>
+                    <span
+                      class="bg-blue-100 dark:bg-blue-900/50 text-jira-blue dark:text-blue-300 text-[10px] px-2 py-0.2 rounded font-mono font-semibold"
+                      >POD EXCEL FORMAT</span
+                    >
+                  </div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    Log hour-by-hour meetings, dev tasks & extra hours in
+                    past-tense for weekly reporting
+                  </p>
+                </div>
+              </div>
+
+              <!-- Resource & POD details header info -->
+              <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-[#1D2125] border border-gray-200 dark:border-[#2C333A] rounded px-2.5 py-1 text-xs"
+                >
+                  <span class="text-gray-400 mr-1.5 font-medium"
+                    >Resource:</span
+                  >
+                  <input
+                    id="resourceNameSetting"
+                    type="text"
+                    value="Tanmay S / Lead-ICM"
+                    class="bg-transparent text-jira-text dark:text-white font-semibold text-xs border-b border-dotted border-gray-400 focus:outline-none w-36"
+                  />
+                </div>
+
+                <div
+                  class="flex items-center bg-gray-50 dark:bg-[#1D2125] border border-gray-200 dark:border-[#2C333A] rounded px-2.5 py-1 text-xs"
+                >
+                  <span class="text-gray-400 mr-1.5 font-medium"
+                    >Default POD:</span
+                  >
+                  <select
+                    id="defaultPodSetting"
+                    class="bg-transparent text-jira-text dark:text-white font-semibold text-xs focus:outline-none"
+                  >
+                    <option value="IBG">IBG</option>
+                    <option value="ILC">ILC</option>
+                    <option value="ARIPM">ARIPM</option>
+                    <option value="BCRED">BCRED</option>
+                    <option value="COLL">COLL</option>
+                    <option value="CORE">CORE</option>
+                  </select>
+                </div>
+
+                <!-- Week Navigator Buttons -->
+                <div
+                  class="flex items-center bg-gray-100 dark:bg-[#1D2125] p-1 rounded-md border border-gray-200 dark:border-[#2C333A] text-xs"
+                >
+                  <button
+                    id="prevWeekBtn"
+                    class="p-1 hover:bg-white dark:hover:bg-[#282E33] rounded text-gray-600 dark:text-gray-300"
+                    title="Previous Week"
+                  >
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <span
+                    id="currentWeekRangeLabel"
+                    class="px-2 font-mono font-bold text-jira-text dark:text-white text-[11px]"
+                    >Loading...</span
+                  >
+                  <button
+                    id="nextWeekBtn"
+                    class="p-1 hover:bg-white dark:hover:bg-[#282E33] rounded text-gray-600 dark:text-gray-300"
+                    title="Next Week"
+                  >
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                  <button
+                    id="currentWeekBtn"
+                    class="ml-1 px-1.5 py-0.5 bg-white dark:bg-[#282E33] rounded text-[10px] font-semibold text-jira-blue dark:text-blue-400 hover:shadow-xs"
+                  >
+                    This Week
+                  </button>
+                </div>
+
+                <!-- Log Activity & Export Buttons -->
+                <button
+                  id="openWorkLogModalBtn"
+                  class="timesheet-action-btn bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                >
+                  <i class="fa-solid fa-plus text-xs"></i> Log Work / Meeting
+                </button>
+
+                <button
+                  onclick="exportWeeklyTimesheet()"
+                  class="timesheet-action-btn bg-green-700 hover:bg-green-800 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                  title="Export matching manager's template"
+                >
+                  <i class="fa-solid fa-file-excel text-xs"></i> Export
+                  Timesheet
+                </button>
+
+                <button
+                  onclick="copyDailyEodEmail()"
+                  class="timesheet-action-btn bg-jira-blue hover:bg-jira-hover text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                  title="Copy bulleted update for Teams / Outlook"
+                >
+                  <i class="fa-solid fa-envelope-open-text text-xs"></i> Copy
+                  EOD Update
+                </button>
+              </div>
+            </div>
+
+            <!-- Weekly Hours Summary & Overtime Meter Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3 flex-shrink-0">
+              <div
+                class="bg-white dark:bg-[#22272B] p-2.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <div
+                  class="text-[10px] font-bold text-gray-400 uppercase tracking-wider"
+                >
+                  Weekly Total Hours
+                </div>
+                <div
+                  id="statWeeklyTotalHours"
+                  class="text-xl font-black text-jira-text dark:text-[#DEE4EA] mt-0.5"
+                >
+                  0.0 <span class="text-xs font-normal text-gray-400">hrs</span>
+                </div>
+                <div class="text-[10px] text-gray-500 dark:text-gray-400">
+                  Total tracked output
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-2.5 rounded-lg border border-emerald-200 dark:border-emerald-900/50 shadow-xs bg-emerald-50/20 dark:bg-emerald-950/20"
+              >
+                <div
+                  class="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider"
+                >
+                  Standard Hours
+                </div>
+                <div
+                  id="statStandardHours"
+                  class="text-xl font-black text-emerald-600 dark:text-emerald-400 mt-0.5"
+                >
+                  0.0 <span class="text-xs font-normal text-gray-400">hrs</span>
+                </div>
+                <div class="text-[10px] text-emerald-600/80">
+                  Regular business capacity
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-2.5 rounded-lg border border-purple-200 dark:border-purple-900/50 shadow-xs bg-purple-50/20 dark:bg-purple-950/20"
+              >
+                <div
+                  class="text-[10px] font-bold text-purple-700 dark:text-purple-400 uppercase tracking-wider"
+                >
+                  Extra / Overtime Hours
+                </div>
+                <div
+                  id="statOvertimeHours"
+                  class="text-xl font-black text-purple-600 dark:text-purple-400 mt-0.5"
+                >
+                  0.0 <span class="text-xs font-normal text-gray-400">hrs</span>
+                </div>
+                <div class="text-[10px] text-purple-600/80 font-medium">
+                  Extra effort captured
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-2.5 rounded-lg border border-blue-200 dark:border-blue-900/50 shadow-xs bg-blue-50/20 dark:bg-blue-950/20"
+              >
+                <div
+                  class="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wider"
+                >
+                  Meeting / Sync Hours
+                </div>
+                <div
+                  id="statMeetingHours"
+                  class="text-xl font-black text-blue-600 dark:text-blue-400 mt-0.5"
+                >
+                  0.0 <span class="text-xs font-normal text-gray-400">hrs</span>
+                </div>
+                <div class="text-[10px] text-blue-600/80">
+                  Discussions, KT & BRD calls
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-2.5 rounded-lg border border-amber-200 dark:border-amber-900/50 shadow-xs bg-amber-50/20 dark:bg-amber-950/20 col-span-2 md:col-span-1"
+              >
+                <div
+                  class="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider"
+                >
+                  Dev & RnD Output
+                </div>
+                <div
+                  id="statDevHours"
+                  class="text-xl font-black text-amber-600 dark:text-amber-400 mt-0.5"
+                >
+                  0.0 <span class="text-xs font-normal text-gray-400">hrs</span>
+                </div>
+                <div class="text-[10px] text-amber-600/80">
+                  Code, fixes & documentation
+                </div>
+              </div>
+            </div>
+
+            <!-- Timesheet Master Table matching the Excel Image Format -->
+            <div
+              class="flex-1 bg-white dark:bg-[#22272B] rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs flex flex-col overflow-hidden"
+            >
+              <div
+                class="px-3.5 py-2.5 border-b border-jira-border dark:border-[#2C333A] bg-gray-50 dark:bg-[#1D2125] flex flex-wrap items-center justify-between text-xs gap-2"
+              >
+                <div class="flex items-center space-x-2">
+                  <i
+                    class="fa-solid fa-table-list text-emerald-600 dark:text-emerald-400"
+                  ></i>
+                  <span
+                    class="font-bold text-gray-700 dark:text-gray-200 uppercase tracking-wider"
+                    >Manager Weekly Timesheet Sheet</span
+                  >
+                  <span class="text-gray-400"
+                    >| Columns exactly aligned to bank standard format</span
+                  >
+                </div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-[11px] text-gray-500">Filter Day:</span>
+                  <select
+                    id="timesheetDayFilter"
+                    onchange="renderTimesheetTable()"
+                    class="text-xs bg-white dark:bg-[#22272B] border border-gray-300 dark:border-[#2C333A] text-jira-text dark:text-white rounded px-2 py-0.5 focus:outline-none"
+                  >
+                    <option value="ALL">Entire Week (Mon - Sun)</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="flex-1 overflow-auto touch-scroll">
+                <table
+                  class="w-full text-left text-xs border-collapse min-w-[1050px]"
+                >
+                  <thead
+                    class="bg-gray-100 dark:bg-[#182026] text-gray-600 dark:text-[#9FADBC] uppercase font-semibold text-[11px] sticky top-0 z-10 border-b border-gray-200 dark:border-[#2C333A] shadow-xs"
+                  >
+                    <tr>
+                      <th class="py-2.5 px-3 w-12 text-center">#</th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">
+                        Resource Name
+                      </th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">POD Name</th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">Day & Date</th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">
+                        Task Category
+                      </th>
+                      <th class="py-2.5 px-3">
+                        Task - Name / Title / Milestone
+                      </th>
+                      <th class="py-2.5 px-3 min-w-[280px]">
+                        Task - Description (Past Tense Log)
+                      </th>
+                      <th class="py-2.5 px-3 whitespace-nowrap text-center">
+                        Time Spent (Hrs)
+                      </th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">Priority</th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">
+                        Effort Estimate
+                      </th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">Start Date</th>
+                      <th class="py-2.5 px-3 whitespace-nowrap">Target Date</th>
+                      <th class="py-2.5 px-3 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="timesheetTableBody"
+                    class="divide-y divide-gray-200 dark:divide-[#2C333A]"
+                  >
+                    <!-- Populated by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. METRICS & BOTTLENECK ANALYSIS VIEW -->
+          <section
+            id="view-metrics"
+            class="hidden p-2 sm:p-4 h-full overflow-y-auto touch-scroll space-y-4"
+          >
+            <!-- Metric KPI Stat Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <div
+                  class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Total Tasks
+                </div>
+                <div
+                  id="statTotal"
+                  class="text-2xl font-black text-jira-text dark:text-[#DEE4EA] mt-1"
+                >
+                  0
+                </div>
+                <div
+                  class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5"
+                >
+                  Across all modules
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-red-200 dark:border-red-900/50 shadow-xs bg-red-50/20 dark:bg-red-950/20"
+              >
+                <div
+                  class="text-[11px] font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider"
+                >
+                  Open P1 Blockers
+                </div>
+                <div
+                  id="statP1"
+                  class="text-2xl font-black text-red-600 dark:text-red-400 mt-1"
+                >
+                  0
+                </div>
+                <div
+                  class="text-[10px] text-red-500 dark:text-red-400/80 font-medium mt-0.5"
+                >
+                  Production SLA Critical
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-amber-200 dark:border-amber-900/50 shadow-xs bg-amber-50/20 dark:bg-amber-950/20"
+              >
+                <div
+                  class="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider"
+                >
+                  Pending With Teams
+                </div>
+                <div
+                  id="statPendingExternal"
+                  class="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1"
+                >
+                  0
+                </div>
+                <div
+                  class="text-[10px] text-amber-600 dark:text-amber-400/80 mt-0.5"
+                >
+                  Stuck on BSG/QA/DBA
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-purple-200 dark:border-purple-900/50 shadow-xs bg-purple-50/20 dark:bg-purple-950/20"
+              >
+                <div
+                  class="text-[11px] font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wider"
+                >
+                  Pending Prod Releases
+                </div>
+                <div
+                  id="statDeployments"
+                  class="text-2xl font-black text-purple-600 dark:text-purple-400 mt-1"
+                >
+                  0
+                </div>
+                <div
+                  class="text-[10px] text-purple-600 dark:text-purple-400/80 mt-0.5"
+                >
+                  Deployment queued
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <div
+                  class="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  Avg Task Ageing
+                </div>
+                <div
+                  id="statAvgAgeing"
+                  class="text-2xl font-black text-jira-blue dark:text-blue-400 mt-1"
+                >
+                  0
+                  <span
+                    class="text-xs font-normal text-gray-500 dark:text-gray-400"
+                    >days</span
+                  >
+                </div>
+                <div
+                  class="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5"
+                >
+                  Active backlog items
+                </div>
+              </div>
+
+              <div
+                class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-emerald-200 dark:border-emerald-900/50 shadow-xs bg-emerald-50/20 dark:bg-emerald-950/20"
+              >
+                <div
+                  class="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider"
+                >
+                  Closed / Resolved
+                </div>
+                <div
+                  id="statClosed"
+                  class="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-1"
+                >
+                  0
+                </div>
+                <div
+                  class="text-[10px] text-emerald-600 dark:text-emerald-400/80 mt-0.5"
+                >
+                  Completed cycle
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <!-- Chart 1: Pending With Bottlenecks -->
+              <div
+                class="bg-white dark:bg-[#22272B] p-4 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <h3
+                  class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-[#DEE4EA] mb-3 flex items-center gap-1.5"
+                >
+                  <i
+                    class="fa-solid fa-hourglass-half text-amber-600 dark:text-amber-400"
+                  ></i>
+                  Bottlenecks (Pending With)
+                </h3>
+                <div class="h-64 relative">
+                  <canvas id="pendingWithChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 2: Status Pipeline -->
+              <div
+                class="bg-white dark:bg-[#22272B] p-4 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <h3
+                  class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-[#DEE4EA] mb-3 flex items-center gap-1.5"
+                >
+                  <i
+                    class="fa-solid fa-chart-column text-jira-blue dark:text-blue-400"
+                  ></i>
+                  Work Pipeline by Status
+                </h3>
+                <div class="h-64 relative">
+                  <canvas id="statusChart"></canvas>
+                </div>
+              </div>
+
+              <!-- Chart 3: Module Workload -->
+              <div
+                class="bg-white dark:bg-[#22272B] p-4 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+              >
+                <h3
+                  class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-[#DEE4EA] mb-3 flex items-center gap-1.5"
+                >
+                  <i
+                    class="fa-solid fa-cubes-stacked text-purple-600 dark:text-purple-400"
+                  ></i>
+                  Module Distribution
+                </h3>
+                <div class="h-64 relative">
+                  <canvas id="moduleChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- SLA Ageing Health Grid -->
+            <div
+              class="bg-white dark:bg-[#22272B] p-4 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs"
+            >
+              <h3
+                class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-[#DEE4EA] mb-2 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-triangle-exclamation text-amber-500"></i>
+                SLA Ageing Risk Matrix (> 7 Days Open)
+              </h3>
+              <div class="overflow-x-auto touch-scroll">
+                <table class="w-full text-xs text-left min-w-[780px]">
+                  <thead
+                    class="bg-gray-50 dark:bg-[#1D2125] text-gray-600 dark:text-[#9FADBC] font-semibold border-b dark:border-[#2C333A]"
+                  >
+                    <tr>
+                      <th class="p-2">Task ID</th>
+                      <th class="p-2">Module</th>
+                      <th class="p-2">Pending With</th>
+                      <th class="p-2">Issue Type</th>
+                      <th class="p-2">Summary</th>
+                      <th class="p-2">Status</th>
+                      <th class="p-2">Priority</th>
+                      <th class="p-2">Ageing</th>
+                      <th class="p-2">Assignee</th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    id="highAgeingTableBody"
+                    class="divide-y divide-gray-100 dark:divide-[#2C333A]"
+                  >
+                    <!-- Injected via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- ================= MODALS & POPUPS ================= -->
+
+    <!-- 1. CREATE / EDIT TASK MODAL -->
+    <div
+      id="taskModal"
+      class="hidden fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-3"
+    >
+      <div
+        class="bg-white dark:bg-[#22272B] rounded-lg shadow-2xl border border-gray-300 dark:border-[#2C333A] w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+      >
+        <!-- Modal Header -->
+        <div
+          class="px-5 py-3.5 bg-jira-bg dark:bg-[#1D2125] border-b border-jira-border dark:border-[#2C333A] flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-2.5">
+            <span
+              class="w-6 h-6 rounded bg-jira-blue dark:bg-blue-600 text-white flex items-center justify-center text-xs font-bold"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+            </span>
+            <div>
+              <h2
+                id="taskModalTitle"
+                class="text-sm font-bold text-jira-text dark:text-[#DEE4EA]"
+              >
+                Create Banking Work Item
+              </h2>
+              <p class="text-[11px] text-gray-500 dark:text-gray-400">
+                Track module, pending dependencies, and technical resolutions
+              </p>
+            </div>
+          </div>
+          <button
+            id="closeTaskModalBtn"
+            class="text-gray-400 hover:text-gray-700 dark:hover:text-white text-lg p-1"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Modal Tabs Header -->
+        <div
+          class="modal-tab-bar flex border-b border-jira-border dark:border-[#2C333A] px-3 sm:px-5 bg-white dark:bg-[#22272B] text-xs font-medium overflow-x-auto no-scrollbar touch-scroll"
+        >
+          <button
+            data-tab="tab-general"
+            class="modal-tab-btn py-2.5 px-3 border-b-2 border-jira-blue text-jira-blue dark:text-blue-400 dark:border-blue-400 font-semibold"
+          >
+            <i class="fa-solid fa-circle-info mr-1"></i> Core Details &
+            Ownership
+          </button>
+          <button
+            data-tab="tab-technical"
+            class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+          >
+            <i class="fa-solid fa-code mr-1"></i> Root Cause & Solution Fix
+          </button>
+          <button
+            data-tab="tab-meeting"
+            class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+          >
+            <i class="fa-solid fa-calendar mr-1"></i> Meeting / KT / Sync
+            Details
+          </button>
+        </div>
+
+        <!-- Modal Body (Tab Content) -->
+        <form id="taskForm" class="flex-1 overflow-y-auto p-5 space-y-4">
+          <input type="hidden" id="editTaskIdHidden" />
+
+          <!-- TAB 1: CORE DETAILS & OWNERSHIP -->
+          <div id="tab-general" class="modal-tab-pane space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Task ID *</label
+                >
+                <input
+                  type="text"
+                  id="taskIdInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none uppercase font-mono font-bold text-jira-blue dark:text-blue-400"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Module *</label
+                >
+                <select
+                  id="taskModuleInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                >
+                  <option value="BCRED">BCRED</option>
+                  <option value="COLLANDDISC">COLLANDDISC</option>
+                  <option value="FBFP">FBFP</option>
+                  <option value="BULK EXPORT">BULK EXPORT</option>
+                  <option value="FIDB Imports">FIDB Imports</option>
+                  <option value="BULK FIDB REVAMP">BULK FIDB REVAMP</option>
+                  <option value="ARIMP">ARIMP</option>
+                  <option value="TORM">TORM</option>
+                  <option value="TIRM">TIRM</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Issue Type *</label
+                >
+                <select
+                  id="taskIssueTypeInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                >
+                  <option value="Production Issue">Production Issue</option>
+                  <option value="UAT Defect">UAT Defect</option>
+                  <option value="Development Activity">
+                    Development Activity
+                  </option>
+                  <option value="User Query">User Query / Ad-hoc</option>
+                  <option value="KT Session">KT Session</option>
+                  <option value="BRD Discussion">BRD Discussion</option>
+                  <option value="Meeting">Meeting</option>
+                  <option value="Deployment">Deployment / Release</option>
+                  <option value="Follow-Up">Follow-Up</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Priority *</label
+                >
+                <select
+                  id="taskPriorityInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none font-semibold"
+                >
+                  <option value="P1" class="text-red-600 dark:text-red-400">
+                    P1 - Blocker / Critical
+                  </option>
+                  <option value="P2" class="text-amber-600 dark:text-amber-400">
+                    P2 - High
+                  </option>
+                  <option
+                    value="P3"
+                    class="text-blue-600 dark:text-blue-400"
+                    selected
+                  >
+                    P3 - Medium
+                  </option>
+                  <option value="P4" class="text-gray-600 dark:text-gray-400">
+                    P4 - Low
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Summary -->
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Issue Summary / Title *</label
+              >
+              <input
+                type="text"
+                id="taskSummaryInput"
+                required
+                placeholder="e.g., EOD batch failure in BCRED_INTEREST_ACCRUAL job with ORA-01555"
+                class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-2 focus:border-jira-blue focus:outline-none font-medium"
+              />
+            </div>
+
+            <!-- Status, Pending With, Environment -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Status *</label
+                >
+                <select
+                  id="taskStatusInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                >
+                  <option value="Backlog">Backlog</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="UAT / Testing">UAT / Testing</option>
+                  <option value="Ready for Prod">Ready for Prod</option>
+                  <option value="Blocked">Blocked</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+
+              <!-- NEW: Pending With Dropdown -->
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase mb-1 flex items-center gap-1"
+                >
+                  <i
+                    class="fa-solid fa-hourglass-half text-amber-600 dark:text-amber-400"
+                  ></i>
+                  Pending With *
+                </label>
+                <select
+                  id="taskPendingWithInput"
+                  required
+                  class="w-full text-xs border border-amber-300 dark:border-amber-600/50 bg-amber-50/40 dark:bg-[#282215] rounded px-2.5 py-1.5 focus:border-amber-500 focus:outline-none font-semibold text-amber-900 dark:text-amber-300"
+                >
+                  <option value="None (Active)">None (Active / With Me)</option>
+                  <option value="BSG">BSG (Business Solutions Group)</option>
+                  <option value="DEV">DEV (Engineering Team)</option>
+                  <option value="Testers / QA">Testers / QA</option>
+                  <option value="Business Operations">
+                    Business Operations
+                  </option>
+                  <option value="DBA Team">DBA Team</option>
+                  <option value="Infra / DevOps">Infra / DevOps</option>
+                  <option value="InfoSec / Audit">InfoSec / Audit</option>
+                  <option value="Third-Party Vendor">Third-Party Vendor</option>
+                  <option value="Client / Branch User">
+                    Client / Branch User
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Environment</label
+                >
+                <select
+                  id="taskEnvInput"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                >
+                  <option value="PROD">PROD (Production)</option>
+                  <option value="UAT">UAT</option>
+                  <option value="SIT">SIT</option>
+                  <option value="DEV">DEV</option>
+                  <option value="DR">DR (Disaster Recovery)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Assignee & Assigned By with datalist options -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1 flex items-center justify-between"
+                >
+                  <span>Assigned To (Assignee)</span>
+                  <span class="text-[9px] text-gray-400 font-normal"
+                    >Type or pick name</span
+                  >
+                </label>
+                <input
+                  type="text"
+                  id="taskAssignedToInput"
+                  list="assigneeDatalist"
+                  placeholder="e.g., Support Engineer, Rahul V., Priya S."
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+                <datalist id="assigneeDatalist">
+                  <!-- Dynamically populated -->
+                </datalist>
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Assigned By / Reported By</label
+                >
+                <input
+                  type="text"
+                  id="taskAssignedByInput"
+                  placeholder="BA / Ops Lead / Tech Lead"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Dates Row -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Start Date *</label
+                >
+                <input
+                  type="date"
+                  id="taskStartDateInput"
+                  required
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Target End Date</label
+                >
+                <input
+                  type="date"
+                  id="taskEndDateInput"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Production Release Date</label
+                >
+                <input
+                  type="date"
+                  id="taskProdDateInput"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <!-- Detailed Description -->
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Task Details / Error Log Excerpt</label
+              >
+              <textarea
+                id="taskDetailsInput"
+                rows="3"
+                placeholder="Provide full context, stack trace, transaction reference number or customer ID impacted..."
+                class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded p-2.5 focus:border-jira-blue focus:outline-none font-mono"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- TAB 2: TECHNICAL SOLUTION & ROOT CAUSE -->
+          <div id="tab-technical" class="modal-tab-pane hidden space-y-4">
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Root Cause Analysis (RCA)</label
+              >
+              <textarea
+                id="taskRcaInput"
+                rows="3"
+                placeholder="What caused the issue? (e.g., Unindexed join condition on ACCT_MASTER, deadlock in Swift parser queue, corrupted payload)..."
+                class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded p-2.5 focus:border-jira-blue focus:outline-none"
+              ></textarea>
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Solution / Code Fix Details / Workaround</label
+              >
+              <textarea
+                id="taskSolutionInput"
+                rows="4"
+                placeholder="Detailed fix, stored procedure changes, patch script, data patch SQL or operational workaround steps taken..."
+                class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded p-2.5 focus:border-jira-blue focus:outline-none font-mono"
+              ></textarea>
+            </div>
+
+            <div
+              class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60 p-3 rounded text-xs text-blue-900 dark:text-blue-300"
+            >
+              <i
+                class="fa-solid fa-lightbulb text-blue-600 dark:text-blue-400 mr-1"
+              ></i>
+              <strong>Banking Support Tip:</strong> When moving tasks to
+              <em>BSG</em> or <em>Testers</em>, summarize the expected
+              verification criteria in the solution box so they can sign off
+              quickly.
+            </div>
+          </div>
+
+          <!-- TAB 3: MEETING, KT & BRD SYNC -->
+          <div id="tab-meeting" class="modal-tab-pane hidden space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Meeting / KT Time</label
+                >
+                <input
+                  type="time"
+                  id="taskMeetingTimeInput"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Duration (Minutes)</label
+                >
+                <input
+                  type="number"
+                  id="taskMeetingDurationInput"
+                  placeholder="30"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                  >Organizer / Attendees</label
+                >
+                <input
+                  type="text"
+                  id="taskMeetingAttendeesInput"
+                  placeholder="e.g., Lead Architect, Ops BA, Product"
+                  class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Meeting Agenda / Discussion Points / KT Notes</label
+              >
+              <textarea
+                id="taskMeetingNotesInput"
+                rows="4"
+                placeholder="Points to discuss or decisions made during the call..."
+                class="w-full text-xs border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded p-2.5 focus:border-jira-blue focus:outline-none"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Modal Footer Actions -->
+          <div
+            class="pt-3 border-t border-gray-200 dark:border-[#2C333A] flex flex-wrap items-center justify-between gap-2"
+          >
+            <button
+              type="button"
+              id="deleteTaskBtn"
+              class="hidden text-xs text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-semibold px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center gap-1 transition"
+            >
+              <i class="fa-solid fa-trash-can"></i> Delete Item
+            </button>
+
+            <div class="flex items-center space-x-2 ml-auto">
+              <button
+                type="button"
+                id="cancelTaskModalBtn"
+                class="text-xs text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3.5 py-2 rounded border border-gray-300 dark:border-[#2C333A] font-medium hover:bg-gray-50 dark:hover:bg-[#282E33] transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="text-xs bg-jira-blue hover:bg-jira-hover text-white px-5 py-2 rounded font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-floppy-disk"></i> Save Task
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 2. SAFE CONFIRMATION DIALOG -->
+    <div
+      id="confirmDialog"
+      class="hidden fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white dark:bg-[#22272B] rounded-lg shadow-xl max-w-sm w-full p-4 border border-gray-200 dark:border-[#2C333A] animate-in fade-in zoom-in-95"
+      >
+        <div
+          class="flex items-center space-x-3 text-red-600 dark:text-red-400 mb-2"
+        >
+          <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+          <h3
+            id="confirmDialogTitle"
+            class="text-sm font-bold text-jira-text dark:text-[#DEE4EA]"
+          >
+            Confirm Action
+          </h3>
+        </div>
+        <p
+          id="confirmDialogMessage"
+          class="text-xs text-gray-600 dark:text-gray-300 mb-4"
+        >
+          Are you sure you want to perform this action?
+        </p>
+        <div class="flex justify-end space-x-2">
+          <button
+            id="confirmDialogCancelBtn"
+            class="px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-[#2C333A] text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#282E33] font-medium"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirmDialogProceedBtn"
+            class="px-3 py-1.5 text-xs rounded bg-red-600 hover:bg-red-700 text-white font-medium"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TOAST NOTIFICATION CONTAINER -->
+    <div
+      id="toastContainer"
+      class="fixed bottom-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none"
+    ></div>
+
+    <!-- 4. WORK LOG & TIMESHEET MODAL (MATCHES EXCEL COLUMNS & PAST TENSE TRACKING) -->
+    <div
+      id="workLogModal"
+      class="hidden fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-3"
+    >
+      <div
+        class="bg-white dark:bg-[#22272B] rounded-lg shadow-2xl border border-gray-300 dark:border-[#2C333A] w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+      >
+        <!-- Modal Header -->
+        <div
+          class="px-5 py-3.5 bg-jira-bg dark:bg-[#1D2125] border-b border-jira-border dark:border-[#2C333A] flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-2.5">
+            <span
+              class="w-6 h-6 rounded bg-emerald-600 text-white flex items-center justify-center text-xs font-bold"
+            >
+              <i class="fa-solid fa-business-time"></i>
+            </span>
+            <div>
+              <h2
+                id="workLogModalTitle"
+                class="text-sm font-bold text-jira-text dark:text-[#DEE4EA]"
+              >
+                Log Past Work / Meeting Activity
+              </h2>
+              <p class="text-[11px] text-gray-500 dark:text-gray-400">
+                Captures exact past effort, meetings, and extra tasks for your
+                weekly manager sheet
+              </p>
+            </div>
+          </div>
+          <button
+            id="closeWorkLogModalBtn"
+            class="text-gray-400 hover:text-gray-700 dark:hover:text-white text-lg p-1"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Modal Form -->
+        <form
+          id="workLogForm"
+          class="flex-1 overflow-y-auto p-5 space-y-4 text-xs"
+        >
+          <input type="hidden" id="editWorkLogIdHidden" />
+
+          <!-- Row 1: POD Name, Resource Name, Task Category -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >POD Name *</label
+              >
+              <input
+                type="text"
+                id="logPodNameInput"
+                required
+                placeholder="e.g. IBG, ILC, ARIPM, BCRED"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none uppercase font-semibold"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Resource Name *</label
+              >
+              <input
+                type="text"
+                id="logResourceNameInput"
+                required
+                placeholder="e.g. Tanmay S / Lead-ICM"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none font-medium"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Task Category *</label
+              >
+              <select
+                id="logCategoryInput"
+                required
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+              >
+                <option value="New Development">New Development</option>
+                <option value="Documentation">Documentation</option>
+                <option value="Production Support">Production Support</option>
+                <option value="Meeting / Discussion">
+                  Meeting / Discussion
+                </option>
+                <option value="KT Session">KT Session</option>
+                <option value="BRD / Requirement">
+                  BRD / Requirement Discussion
+                </option>
+                <option value="CR / Enhancement">CR / Enhancement</option>
+                <option value="RnD / POC">RnD / POC Exploration</option>
+                <option value="UAT Support">UAT Support & Bug Fix</option>
+                <option value="Deployment">Deployment / Cutover</option>
+                <option value="Follow-Up">Follow-Up / Ad-hoc</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Row 2: Date, Day, Time Interval Slot & Hours Spent -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Date *</label
+              >
+              <input
+                type="date"
+                id="logDateInput"
+                required
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Time Slot (Optional)</label
+              >
+              <input
+                type="text"
+                id="logTimeSlotInput"
+                placeholder="09:00 - 10:30"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase mb-1"
+                >Time Spent (Hrs) *</label
+              >
+              <input
+                type="number"
+                step="0.25"
+                min="0.25"
+                id="logHoursInput"
+                required
+                placeholder="1.5"
+                class="w-full border border-emerald-300 dark:border-emerald-600 bg-emerald-50/50 dark:bg-[#142921] rounded px-2.5 py-1.5 focus:border-emerald-500 focus:outline-none font-mono font-bold text-emerald-900 dark:text-emerald-300"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-purple-700 dark:text-purple-400 uppercase mb-1"
+                >Extra / Overtime?</label
+              >
+              <select
+                id="logIsOvertimeInput"
+                class="w-full border border-purple-300 dark:border-purple-700/60 bg-purple-50/50 dark:bg-[#251936] text-purple-900 dark:text-purple-300 font-semibold rounded px-2.5 py-1.5 focus:outline-none"
+              >
+                <option value="no">No (Regular Hour)</option>
+                <option value="yes">Yes (Extra / Overtime)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Hour Presets -->
+          <div class="flex items-center space-x-2 text-[11px] text-gray-500">
+            <span class="font-medium">Quick hours:</span>
+            <button
+              type="button"
+              onclick="setLogHours(0.5, '09:00 - 09:30')"
+              class="px-2 py-0.5 rounded border border-gray-300 dark:border-[#2C333A] hover:bg-gray-100 dark:hover:bg-[#282E33]"
+            >
+              30m
+            </button>
+            <button
+              type="button"
+              onclick="setLogHours(1.0, '09:00 - 10:00')"
+              class="px-2 py-0.5 rounded border border-gray-300 dark:border-[#2C333A] hover:bg-gray-100 dark:hover:bg-[#282E33]"
+            >
+              1 hr
+            </button>
+            <button
+              type="button"
+              onclick="setLogHours(2.0, '11:00 - 13:00')"
+              class="px-2 py-0.5 rounded border border-gray-300 dark:border-[#2C333A] hover:bg-gray-100 dark:hover:bg-[#282E33]"
+            >
+              2 hrs
+            </button>
+            <button
+              type="button"
+              onclick="setLogHours(4.0, '14:00 - 18:00')"
+              class="px-2 py-0.5 rounded border border-gray-300 dark:border-[#2C333A] hover:bg-gray-100 dark:hover:bg-[#282E33]"
+            >
+              4 hrs
+            </button>
+          </div>
+
+          <!-- Row 3: Task - Name / Title / Milestone -->
+          <div>
+            <label
+              class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+              >Task - Name / Title / Milestone *</label
+            >
+            <input
+              type="text"
+              id="logTitleInput"
+              required
+              placeholder="e.g. [BNK-1001] EOD interest accrual batch failure or 'Sprint Daily Standup'"
+              class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:border-jira-blue focus:outline-none font-medium"
+            />
+          </div>
+
+          <!-- Row 4: Task - Description (Past Tense Activity details) -->
+          <div>
+            <label
+              class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1 flex items-center justify-between"
+            >
+              <span>Task - Description (What you did in past tense) *</span>
+              <span class="text-[10px] text-emerald-600 font-normal"
+                >Past tense format for managers</span
+              >
+            </label>
+            <textarea
+              id="logDescInput"
+              rows="3"
+              required
+              placeholder="e.g. Attended daily project sync with BSG and Product Owners from 09:00 to 10:00. Provided status on collateral haircut matrix patch..."
+              class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded p-2.5 focus:border-jira-blue focus:outline-none font-mono"
+            ></textarea>
+          </div>
+
+          <!-- Row 5: Priority, Effort Estimate, Start Date, Target Date -->
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Priority *</label
+              >
+              <select
+                id="logPriorityInput"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] rounded px-2.5 py-1.5 focus:outline-none"
+              >
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Effort Estimate</label
+              >
+              <input
+                type="text"
+                id="logEffortEstimateInput"
+                placeholder="e.g. 2 Days, 4 Hours"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Start Date</label
+              >
+              <input
+                type="date"
+                id="logStartDateInput"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label
+                class="block text-[11px] font-semibold text-gray-700 dark:text-gray-300 uppercase mb-1"
+                >Target Completion Date</label
+              >
+              <input
+                type="date"
+                id="logTargetDateInput"
+                class="w-full border border-gray-300 dark:border-[#2C333A] bg-white dark:bg-[#1D2125] dark:text-white rounded px-2.5 py-1.5 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div
+            class="pt-3 border-t border-gray-200 dark:border-[#2C333A] flex flex-wrap items-center justify-between gap-2"
+          >
+            <button
+              type="button"
+              id="deleteWorkLogBtn"
+              class="hidden text-xs text-red-600 dark:text-red-400 hover:text-red-800 font-semibold px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center gap-1"
+            >
+              <i class="fa-solid fa-trash-can"></i> Delete Entry
+            </button>
+
+            <div class="flex items-center space-x-2 ml-auto">
+              <button
+                type="button"
+                id="cancelWorkLogModalBtn"
+                class="text-xs text-gray-600 dark:text-gray-300 px-3.5 py-2 rounded border border-gray-300 dark:border-[#2C333A] font-medium hover:bg-gray-50 dark:hover:bg-[#282E33]"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded font-semibold shadow-sm transition active:scale-95 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-floppy-disk"></i> Save Log Entry
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="PWMS_Enterprise_Jira.js"></script>
+  </body>
+</html>

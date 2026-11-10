@@ -1,0 +1,538 @@
+/* =========================================
+       GLASSMORPHISM UI STYLING & BACKDROP
+    ========================================= */
+:root {
+  --glass-bg-light: rgba(255, 255, 255, 0.52);
+  --glass-border-light: rgba(255, 255, 255, 0.65);
+  --glass-shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+  --glass-inner-light: inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+  --glass-bg-dark: rgba(18, 26, 43, 0.62);
+  --glass-border-dark: rgba(255, 255, 255, 0.12);
+  --glass-shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+  --glass-inner-dark: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+/* Ambient Mesh Gradient Background */
+body {
+  background:
+    radial-gradient(at 0% 0%, rgba(224, 231, 255, 0.8) 0, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(254, 243, 199, 0.6) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(224, 242, 254, 0.9) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(252, 231, 243, 0.8) 0, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(209, 250, 229, 0.7) 0, transparent 50%),
+    #f1f5f9 !important;
+  background-attachment: fixed !important;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif !important;
+}
+
+html.dark body {
+  background:
+    radial-gradient(at 0% 0%, rgba(30, 27, 75, 0.9) 0, transparent 55%),
+    radial-gradient(at 50% 10%, rgba(15, 23, 42, 0.95) 0, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(17, 24, 39, 0.95) 0, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(30, 58, 138, 0.7) 0, transparent 55%),
+    radial-gradient(at 100% 100%, rgba(6, 78, 59, 0.6) 0, transparent 50%),
+    #0b0f17 !important;
+  background-attachment: fixed !important;
+}
+
+/* Custom Glass Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.7);
+}
+
+/* Frosted Glass Base Layers */
+header {
+  background: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+#sidebar {
+  background: rgba(15, 23, 42, 0.82) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+main {
+  background: transparent !important;
+}
+
+#filterToolbar {
+  background: var(--glass-bg-light) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid var(--glass-border-light) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+html.dark #filterToolbar {
+  background: var(--glass-bg-dark) !important;
+  border-bottom: 1px solid var(--glass-border-dark) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Glass Cards & Containers */
+.kanban-col {
+  background: rgba(255, 255, 255, 0.42) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--glass-shadow-light), var(--glass-inner-light) !important;
+}
+html.dark .kanban-col {
+  background: rgba(23, 32, 54, 0.48) !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: var(--glass-shadow-dark), var(--glass-inner-dark) !important;
+}
+
+.kanban-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  border-radius: 12px !important;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.kanban-card:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow:
+    0 12px 28px rgba(37, 99, 235, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+}
+html.dark .kanban-card {
+  background: rgba(30, 41, 67, 0.68) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.08) !important;
+}
+html.dark .kanban-card:hover {
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(99, 102, 241, 0.5) !important;
+}
+
+.kanban-card.dragging {
+  opacity: 0.4 !important;
+  transform: scale(0.96) !important;
+  border: 2px dashed #3b82f6 !important;
+}
+
+.kanban-col.drag-over {
+  background: rgba(191, 219, 254, 0.5) !important;
+  outline: 2px dashed #2563eb !important;
+  outline-offset: -2px !important;
+}
+html.dark .kanban-col.drag-over {
+  background: rgba(30, 58, 138, 0.4) !important;
+  outline-color: #60a5fa !important;
+}
+
+/* Content Cards, Tables & Panels */
+#view-list > div,
+#view-meetings > div,
+#view-metrics > div {
+  background: var(--glass-bg-light) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border: 1px solid var(--glass-border-light) !important;
+  border-radius: 16px !important;
+  box-shadow: var(--glass-shadow-light), var(--glass-inner-light) !important;
+}
+html.dark #view-list > div,
+html.dark #view-meetings > div,
+html.dark #view-metrics > div {
+  background: var(--glass-bg-dark) !important;
+  border: 1px solid var(--glass-border-dark) !important;
+  box-shadow: var(--glass-shadow-dark), var(--glass-inner-dark) !important;
+}
+
+table thead {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+html.dark table thead {
+  background: rgba(15, 23, 42, 0.8) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Inputs, Buttons & Selects */
+input,
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.8) !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+html.dark input,
+html.dark select,
+html.dark textarea {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+}
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border-color: #60a5fa !important;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+}
+
+button {
+  border-radius: 8px !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Frosted Glass Modals */
+#taskModal > div,
+#workLogModal > div,
+#confirmDialog > div {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95) !important;
+}
+html.dark #taskModal > div,
+html.dark #workLogModal > div,
+html.dark #confirmDialog > div {
+  background: rgba(15, 23, 42, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow:
+    0 25px 60px -15px rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px rgba(255, 255, 255, 0.15) !important;
+}
+
+#taskModal header,
+#workLogModal header,
+#taskModal .bg-jira-bg,
+#workLogModal .bg-jira-bg {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6) !important;
+}
+html.dark #taskModal header,
+html.dark #workLogModal header,
+html.dark #taskModal .bg-jira-bg,
+html.dark #workLogModal .bg-jira-bg {
+  background: rgba(30, 41, 59, 0.4) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Frosted Dropdowns */
+#backupMenuDropdown {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15) !important;
+}
+html.dark #backupMenuDropdown {
+  background: rgba(15, 23, 42, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Badges with Smooth Glass Treatment */
+span[class*="rounded"] {
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* =========================================
+       RESPONSIVE DESIGN & MEDIA QUERIES
+       (Mobile, Tablet & Desktop Adaptations)
+    ========================================= */
+
+/* Touch & Smooth Scroll Utilities */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* -----------------------------------------
+       TABLET & MOBILE SHARED (< 1024px)
+    ----------------------------------------- */
+@media (max-width: 1023px) {
+  /* Off-canvas mobile/tablet drawer */
+  #sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    width: 280px !important;
+    max-width: 85vw !important;
+    z-index: 50 !important;
+    transform: translateX(-100%);
+    transition:
+      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.3s ease !important;
+    box-shadow: none !important;
+  }
+
+  #sidebar.sidebar-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  #sidebarBackdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(15, 23, 42, 0.68);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  #sidebarBackdrop.active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: block !important;
+  }
+
+  #closeSidebarBtn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* -----------------------------------------
+       DESKTOP SCREENS (>= 1024px)
+    ----------------------------------------- */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: relative !important;
+    transform: none !important;
+    transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  #sidebarBackdrop {
+    display: none !important;
+  }
+
+  #closeSidebarBtn {
+    display: none !important;
+  }
+
+  .kanban-board-container {
+    min-width: 1240px;
+  }
+
+  .kanban-col {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+  }
+}
+
+/* -----------------------------------------
+       TABLET SPECIFIC (768px to 1023px)
+    ----------------------------------------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .kanban-board-container {
+    display: flex;
+    gap: 0.875rem;
+    min-width: max-content !important;
+  }
+
+  .kanban-col {
+    flex: 0 0 290px !important;
+    min-width: 290px !important;
+  }
+
+  /* Modal adjustments for tablets */
+  #taskModal > div,
+  #workLogModal > div {
+    max-width: 720px !important;
+    width: 92vw !important;
+    max-height: 90vh !important;
+  }
+}
+
+/* -----------------------------------------
+       MOBILE SPECIFIC (< 768px)
+    ----------------------------------------- */
+@media (max-width: 767px) {
+  /* Kanban horizontal snap swiping */
+  .kanban-scroll-wrapper {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.75rem;
+  }
+
+  .kanban-board-container {
+    display: flex;
+    gap: 0.75rem;
+    min-width: max-content !important;
+    padding-right: 1rem;
+  }
+
+  .kanban-col {
+    flex: 0 0 calc(85vw - 1rem) !important;
+    min-width: 275px !important;
+    max-width: 325px !important;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+
+  /* Modals on small screens */
+  #taskModal,
+  #workLogModal,
+  #confirmDialog {
+    padding: 0.5rem !important;
+  }
+
+  #taskModal > div,
+  #workLogModal > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 95vh !important;
+    max-height: 95dvh !important;
+    border-radius: 14px !important;
+  }
+
+  #taskForm,
+  #workLogForm {
+    padding: 0.875rem !important;
+  }
+
+  /* Modal Tab Bar scroll */
+  .modal-tab-bar {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-left: 0.875rem !important;
+    padding-right: 0.875rem !important;
+  }
+  .modal-tab-bar::-webkit-scrollbar {
+    display: none !important;
+  }
+  .modal-tab-btn {
+    flex-shrink: 0 !important;
+    font-size: 11px !important;
+    padding: 0.625rem 0.625rem !important;
+  }
+
+  /* Toolbar on mobile */
+  #filterToolbar {
+    padding: 0.5rem 0.625rem !important;
+  }
+
+  #filterToolbar select,
+  #filterToolbar button {
+    font-size: 11px !important;
+  }
+
+  /* Timesheet & Meeting buttons wrap */
+  .timesheet-action-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  /* Ensure toast notifications fit neatly */
+  #toastContainer {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: 1rem !important;
+    align-items: center;
+  }
+
+  #toastContainer > div {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* -----------------------------------------
+       EXTRA SMALL MOBILE (< 420px)
+    ----------------------------------------- */
+@media (max-width: 419px) {
+  .kanban-col {
+    flex: 0 0 calc(90vw - 0.5rem) !important;
+    min-width: 260px !important;
+  }
+
+  header {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+}

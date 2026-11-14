@@ -62,474 +62,538 @@
   </script>
 
   
-  
-  
-  
   <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; border: 1px solid #000; }
+    ::-webkit-scrollbar-track { background: #fff; }
+    .dark ::-webkit-scrollbar-track { background: #000; border: 1px solid #00ff00; }
+    ::-webkit-scrollbar-thumb { background: #000; border-radius: 0; }
+    .dark ::-webkit-scrollbar-thumb { background: #00ff00; }
+
+    /* Kanban Drag & Drop ghost styles */
+    .kanban-card.dragging { opacity: 0.45; transform: scale(0.98); border: 4px dashed #000 !important; }
+    .kanban-col.drag-over { background-color: #ffff00 !important; outline: 4px dashed #000 !important; outline-offset: -2px; }
+    .dark .kanban-card.dragging { border: 4px dashed #00ff00 !important; }
+    .dark .kanban-col.drag-over { background-color: #003300 !important; outline-color: #00ff00 !important; }
+
     /* =========================================
-       LIQUID GLASS UI (Fluid, Molten, Caustic Glass Design)
+       BRUTALISM UI OVERRIDES
     ========================================= */
-    :root {
-      --liquid-font: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
-      --liquid-radius-xs: 12px;
-      --liquid-radius-sm: 16px;
-      --liquid-radius-md: 22px;
-      --liquid-radius-lg: 28px;
-      --liquid-radius-xl: 36px;
-      --liquid-pill: 9999px;
+    body { font-family: 'Courier New', Courier, monospace !important; }
+    * { border-radius: 0 !important; }
 
-      /* Liquid Glass Light Palette */
-      --liquid-bg-light: radial-gradient(at 10% 20%, rgba(147, 197, 253, 0.45) 0px, transparent 50%),
-                         radial-gradient(at 90% 10%, rgba(216, 180, 254, 0.45) 0px, transparent 50%),
-                         radial-gradient(at 50% 50%, rgba(167, 243, 208, 0.35) 0px, transparent 50%),
-                         radial-gradient(at 80% 85%, rgba(199, 210, 254, 0.4) 0px, transparent 50%),
-                         radial-gradient(at 20% 90%, rgba(254, 205, 211, 0.4) 0px, transparent 50%),
-                         linear-gradient(135deg, #e0f2fe 0%, #fdf4ff 50%, #f0fdf4 100%);
-      --liquid-glass-light: rgba(255, 255, 255, 0.62);
-      --liquid-glass-subtle: rgba(255, 255, 255, 0.38);
-      --liquid-glass-card: rgba(255, 255, 255, 0.76);
-      --liquid-bevel-light: inset 0 2px 3px rgba(255, 255, 255, 0.95), 
-                            inset 2px 0 3px rgba(255, 255, 255, 0.7), 
-                            inset -2px -2px 3px rgba(0, 0, 0, 0.04),
-                            inset 0 -2px 4px rgba(147, 197, 253, 0.2);
-      --liquid-shadow-light: 0 16px 36px -8px rgba(14, 165, 233, 0.12), 
-                             0 8px 16px -4px rgba(99, 102, 241, 0.08);
-      --liquid-hover-shadow-light: 0 24px 48px -10px rgba(56, 189, 248, 0.28), 
-                                   0 12px 24px -4px rgba(168, 85, 247, 0.18);
-
-      /* Liquid Glass Dark Palette (Deep Bioluminescent Abyss) */
-      --liquid-bg-dark: radial-gradient(at 0% 0%, rgba(14, 116, 144, 0.5) 0px, transparent 55%),
-                        radial-gradient(at 100% 0%, rgba(109, 40, 217, 0.45) 0px, transparent 50%),
-                        radial-gradient(at 50% 60%, rgba(2, 44, 34, 0.6) 0px, transparent 55%),
-                        radial-gradient(at 85% 90%, rgba(30, 58, 138, 0.55) 0px, transparent 50%),
-                        radial-gradient(at 10% 90%, rgba(88, 28, 135, 0.45) 0px, transparent 50%),
-                        linear-gradient(135deg, #030712 0%, #081120 50%, #030712 100%);
-      --liquid-glass-dark: rgba(15, 23, 42, 0.65);
-      --liquid-glass-dark-subtle: rgba(15, 23, 42, 0.48);
-      --liquid-glass-dark-card: rgba(24, 34, 58, 0.72);
-      --liquid-bevel-dark: inset 0 1.5px 2px rgba(255, 255, 255, 0.45), 
-                           inset 1.5px 0 2px rgba(255, 255, 255, 0.25), 
-                           inset -1.5px -1.5px 2px rgba(0, 0, 0, 0.6),
-                           inset 0 -2px 4px rgba(56, 189, 248, 0.18);
-      --liquid-shadow-dark: 0 20px 45px -8px rgba(0, 0, 0, 0.75), 
-                            0 0 20px rgba(14, 165, 233, 0.15);
-      --liquid-hover-shadow-dark: 0 28px 55px -10px rgba(0, 0, 0, 0.9), 
-                                  0 0 35px rgba(56, 189, 248, 0.35);
+    /* Light Mode Brutalism */
+    .kanban-card, .bg-white, .modal-tab-pane, #sidebar, header, .kanban-col, #filterToolbar {
+        background-color: #ffffff !important;
+        border: 3px solid #000000 !important;
+        box-shadow: 4px 4px 0px #000000 !important;
+        color: #000000 !important;
     }
-
-    /* Ambient Fluid Liquid Mesh Backdrop */
-    body {
-      background: var(--liquid-bg-light) !important;
-      background-attachment: fixed !important;
-      font-family: var(--liquid-font) !important;
-      -webkit-font-smoothing: antialiased;
-      letter-spacing: -0.015em;
-    }
-
-    html.dark body {
-      background: var(--liquid-bg-dark) !important;
-      background-attachment: fixed !important;
-    }
-
-    /* Smooth Water-Droplet Scrollbars */
-    ::-webkit-scrollbar { width: 7px; height: 7px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(125, 211, 252, 0.45);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: var(--liquid-pill);
-      border: 1.5px solid rgba(255, 255, 255, 0.5);
-    }
-    html.dark ::-webkit-scrollbar-thumb {
-      background: rgba(56, 189, 248, 0.28);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    ::-webkit-scrollbar-thumb:hover { 
-      background: rgba(14, 165, 233, 0.75); 
-    }
-
-    /* Top Fluid Liquid Header */
-    header {
-      background: rgba(15, 23, 42, 0.72) !important;
-      backdrop-filter: blur(30px) saturate(210%) !important;
-      -webkit-backdrop-filter: blur(30px) saturate(210%) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.2) !important;
-      border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
-      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
-    }
-
-    /* Fluid Translucent Sidebar */
-    #sidebar {
-      background: rgba(15, 23, 42, 0.78) !important;
-      backdrop-filter: blur(34px) saturate(220%) !important;
-      -webkit-backdrop-filter: blur(34px) saturate(220%) !important;
-      border-right: 1.5px solid rgba(255, 255, 255, 0.16) !important;
-      box-shadow: 12px 0 40px rgba(0, 0, 0, 0.25), inset -1px 0 2px rgba(255, 255, 255, 0.12) !important;
-    }
-
-    /* Floating Filter Toolbar with Liquid Membrane */
-    #filterToolbar {
-      background: var(--liquid-glass-light) !important;
-      backdrop-filter: blur(28px) saturate(200%) !important;
-      -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.8) !important;
-      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.06), var(--liquid-bevel-light) !important;
-    }
-    html.dark #filterToolbar {
-      background: var(--liquid-glass-dark) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), var(--liquid-bevel-dark) !important;
-    }
-
-    main {
-      background: transparent !important;
-    }
-
-    /* Liquid Glass Kanban Columns (Fluid Basins) */
-    .kanban-col {
-      background: var(--liquid-glass-subtle) !important;
-      backdrop-filter: blur(28px) saturate(200%) !important;
-      -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-      border-top: 2px solid rgba(255, 255, 255, 0.95) !important;
-      border-left: 2px solid rgba(255, 255, 255, 0.75) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: var(--liquid-radius-lg) !important;
-      box-shadow: var(--liquid-shadow-light), var(--liquid-bevel-light) !important;
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    html.dark .kanban-col {
-      background: var(--liquid-glass-dark-subtle) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
-      box-shadow: var(--liquid-shadow-dark), var(--liquid-bevel-dark) !important;
-    }
-
-    /* Molten Liquid Cards */
-    .kanban-card {
-      background: var(--liquid-glass-card) !important;
-      backdrop-filter: blur(22px) saturate(210%) !important;
-      -webkit-backdrop-filter: blur(22px) saturate(210%) !important;
-      border-top: 2px solid rgba(255, 255, 255, 1) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.85) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
-      border-radius: var(--liquid-radius-md) !important;
-      box-shadow: 0 10px 24px -5px rgba(14, 165, 233, 0.1), var(--liquid-bevel-light) !important;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      cursor: pointer;
-    }
-    .kanban-card:hover {
-      transform: translateY(-5px) scale(1.018) !important;
-      box-shadow: var(--liquid-hover-shadow-light), var(--liquid-bevel-light) !important;
-      border-color: rgba(56, 189, 248, 0.7) !important;
-    }
-    html.dark .kanban-card {
-      background: var(--liquid-glass-dark-card) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.65), var(--liquid-bevel-dark) !important;
-    }
-    html.dark .kanban-card:hover {
-      transform: translateY(-5px) scale(1.018) !important;
-      box-shadow: var(--liquid-hover-shadow-dark), var(--liquid-bevel-dark) !important;
-      border-color: rgba(56, 189, 248, 0.6) !important;
-    }
-
-    /* Dragging & Fluid Dropzones */
-    .kanban-card.dragging {
-      opacity: 0.35 !important;
-      transform: scale(0.95) rotate(-1deg) !important;
-      border: 2px dashed #0284c7 !important;
-      box-shadow: 0 0 40px rgba(14, 165, 233, 0.5) !important;
-    }
-    .kanban-col.drag-over {
-      background: rgba(186, 230, 253, 0.55) !important;
-      outline: 2.5px dashed #0284c7 !important;
-      outline-offset: -3px !important;
-      transform: scale(1.01) !important;
-    }
-    html.dark .kanban-col.drag-over {
-      background: rgba(8, 47, 73, 0.55) !important;
-      outline-color: #38bdf8 !important;
-    }
-
-    /* Fluid View Containers (List, Timesheet, Metrics) */
-    #view-list > div,
-    #view-meetings > div,
-    #view-metrics > div {
-      background: var(--liquid-glass-light) !important;
-      backdrop-filter: blur(32px) saturate(210%) !important;
-      -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
-      border-top: 2px solid rgba(255, 255, 255, 0.95) !important;
-      border-left: 2px solid rgba(255, 255, 255, 0.75) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-      border-radius: var(--liquid-radius-xl) !important;
-      box-shadow: var(--liquid-shadow-light), var(--liquid-bevel-light) !important;
-    }
-    html.dark #view-list > div,
-    html.dark #view-meetings > div,
-    html.dark #view-metrics > div {
-      background: var(--liquid-glass-dark) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.15) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
-      box-shadow: var(--liquid-shadow-dark), var(--liquid-bevel-dark) !important;
-    }
-
-    /* Fluid Metric & KPI Bubbles */
-    #view-metrics .grid > div,
-    #view-meetings .grid > div {
-      border-radius: var(--liquid-radius-lg) !important;
-      backdrop-filter: blur(24px) !important;
-      -webkit-backdrop-filter: blur(24px) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.8) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.6) !important;
-      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.08), var(--liquid-bevel-light) !important;
-      transition: all 0.25s ease !important;
-    }
-    #view-metrics .grid > div:hover,
-    #view-meetings .grid > div:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 16px 32px rgba(14, 165, 233, 0.18), var(--liquid-bevel-light) !important;
-    }
-    html.dark #view-metrics .grid > div,
-    html.dark #view-meetings .grid > div {
-      border-top: 1.5px solid rgba(255, 255, 255, 0.2) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), var(--liquid-bevel-dark) !important;
-    }
-    html.dark #view-metrics .grid > div:hover,
-    html.dark #view-meetings .grid > div:hover {
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.3) !important;
-    }
-
-    /* Fluid Glass Table Styling */
-    table thead {
-      background: rgba(255, 255, 255, 0.8) !important;
-      backdrop-filter: blur(18px) !important;
-      -webkit-backdrop-filter: blur(18px) !important;
-      border-bottom: 1.5px solid rgba(226, 232, 240, 0.8) !important;
-    }
-    html.dark table thead {
-      background: rgba(15, 23, 42, 0.9) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-    }
-
-    /* Water-Droplet Inputs & Controls */
-    input, select, textarea {
-      background: rgba(255, 255, 255, 0.78) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 1) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.8) !important;
-      border-right: 1px solid rgba(203, 213, 225, 0.7) !important;
-      border-bottom: 1px solid rgba(203, 213, 225, 0.6) !important;
-      border-radius: var(--liquid-radius-sm) !important;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    input:focus, select:focus, textarea:focus {
-      background: rgba(255, 255, 255, 0.98) !important;
-      border-color: #0284c7 !important;
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25), 0 8px 20px rgba(14, 165, 233, 0.15) !important;
-      outline: none !important;
-    }
-    html.dark input, html.dark select, html.dark textarea {
-      background: rgba(15, 23, 42, 0.7) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
-      color: #f1f5f9 !important;
-    }
-    html.dark input:focus, html.dark select:focus, html.dark textarea:focus {
-      background: rgba(15, 23, 42, 0.95) !important;
-      border-color: #38bdf8 !important;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3), 0 8px 22px rgba(56, 189, 248, 0.2) !important;
-    }
-
-    button {
-      border-radius: var(--liquid-radius-sm) !important;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-    }
-    button:hover {
-      filter: brightness(1.08) saturate(110%);
-      transform: translateY(-2px);
+    header { background-color: #ffcc00 !important; }
+    #sidebar { background-color: #e0e0e0 !important; }
+    
+    button, select, input, textarea {
+        border: 2px solid #000 !important;
+        box-shadow: 3px 3px 0px #000 !important;
+        border-radius: 0 !important;
+        transition: transform 0.1s, box-shadow 0.1s !important;
     }
     button:active {
-      transform: translateY(0) scale(0.96);
+        transform: translate(3px, 3px) !important;
+        box-shadow: none !important;
+    }
+    
+    /* Badges & Pills Brutalism Fix */
+    span[class*="bg-"], div[class*="bg-blue-"], div[class*="bg-emerald-"] {
+        border: 2px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: 2px 2px 0px #000 !important;
     }
 
-    /* Molten Glass Modals */
-    #taskModal > div, #workLogModal > div, #confirmDialog > div {
-      background: rgba(255, 255, 255, 0.88) !important;
-      backdrop-filter: blur(42px) saturate(220%) !important;
-      -webkit-backdrop-filter: blur(42px) saturate(220%) !important;
-      border-top: 2.5px solid rgba(255, 255, 255, 1) !important;
-      border-left: 2px solid rgba(255, 255, 255, 0.9) !important;
-      border-right: 1.5px solid rgba(255, 255, 255, 0.4) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.3) !important;
-      border-radius: var(--liquid-radius-xl) !important;
-      box-shadow: 0 35px 90px -15px rgba(14, 165, 233, 0.35), var(--liquid-bevel-light) !important;
+    /* Dark Mode Brutalism (Terminal Hacker Vibe) */
+    html.dark body, html.dark .bg-jira-bg {
+        background-color: #000000 !important;
+        color: #00ff00 !important;
     }
-    html.dark #taskModal > div, html.dark #workLogModal > div, html.dark #confirmDialog > div {
-      background: rgba(15, 23, 42, 0.9) !important;
-      border-top: 2px solid rgba(255, 255, 255, 0.32) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-      border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-      box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.2), var(--liquid-bevel-dark) !important;
+    html.dark .kanban-card, html.dark .bg-white, html.dark .modal-tab-pane, html.dark #sidebar, html.dark header, html.dark .kanban-col, html.dark #filterToolbar {
+        background-color: #000000 !important;
+        border: 3px solid #00ff00 !important;
+        box-shadow: 4px 4px 0px #00ff00 !important;
+        color: #00ff00 !important;
     }
-
-    #taskModal header, #workLogModal header, #taskModal .bg-jira-bg, #workLogModal .bg-jira-bg {
-      background: rgba(255, 255, 255, 0.45) !important;
-      border-bottom: 1.5px solid rgba(226, 232, 240, 0.7) !important;
+    html.dark button, html.dark select, html.dark input, html.dark textarea {
+        background-color: #000 !important;
+        border: 2px solid #00ff00 !important;
+        box-shadow: 3px 3px 0px #00ff00 !important;
+        color: #00ff00 !important;
     }
-    html.dark #taskModal header, html.dark #workLogModal header, html.dark #taskModal .bg-jira-bg, html.dark #workLogModal .bg-jira-bg {
-      background: rgba(30, 41, 59, 0.6) !important;
-      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    html.dark button:active {
+        transform: translate(3px, 3px) !important;
+        box-shadow: none !important;
     }
-
-    /* Fluid Caustic Dropdown Menu */
-    #backupMenuDropdown {
-      background: rgba(255, 255, 255, 0.94) !important;
-      backdrop-filter: blur(32px) !important;
-      -webkit-backdrop-filter: blur(32px) !important;
-      border-top: 2px solid rgba(255, 255, 255, 1) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.85) !important;
-      border-radius: var(--liquid-radius-md) !important;
-      box-shadow: 0 20px 50px rgba(14, 165, 233, 0.2), var(--liquid-bevel-light) !important;
+    html.dark span[class*="bg-"], html.dark div[class*="bg-"] {
+        background-color: #000 !important;
+        border: 1px solid #00ff00 !important;
+        box-shadow: 2px 2px 0px #00ff00 !important;
+        color: #00ff00 !important;
     }
-    html.dark #backupMenuDropdown {
-      background: rgba(15, 23, 42, 0.94) !important;
-      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
-      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), var(--liquid-bevel-dark) !important;
+    /* Ensure text contrasts in dark mode */
+    html.dark .text-gray-500, html.dark .text-gray-400, html.dark .text-jira-text, html.dark .text-blue-800, html.dark .text-xs, html.dark .text-sm, html.dark p, html.dark span, html.dark div, html.dark h2, html.dark h3 {
+        color: #00ff00 !important;
     }
-
-    /* Liquid Pill Badges with Fluid Bevel Highlights */
-    span[class*="rounded"] {
-      border-radius: var(--liquid-pill) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.05);
+    html.dark i.fa-solid, html.dark i.fa-regular, html.dark i.fa-brands {
+        color: #00ff00 !important;
     }
 
     /* =========================================
-       RESPONSIVE & MOBILE / TABLET OPTIMIZATIONS (LIQUID GLASS)
+       RESPONSIVE DESIGN & MEDIA QUERIES
+       (Mobile, Tablet & Desktop Adaptations)
     ========================================= */
+
+    /* Touch & Smooth Scroll Utilities */
     .touch-scroll {
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+      scroll-behavior: smooth;
     }
 
-    /* Off-canvas sidebar for tablet and mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    /* Safe-area inset support for notched devices */
+    @supports (padding: env(safe-area-inset-bottom)) {
+      body { padding-bottom: env(safe-area-inset-bottom); }
+      header { padding-left: max(0.5rem, env(safe-area-inset-left)); padding-right: max(0.5rem, env(safe-area-inset-right)); }
+    }
+
+    /* -----------------------------------------
+       TABLET & MOBILE SHARED (< 1024px)
+    ----------------------------------------- */
     @media (max-width: 1023px) {
+      /* Off-canvas brutalist mobile/tablet drawer */
       #sidebar {
         position: fixed !important;
         top: 0 !important;
         bottom: 0 !important;
         left: 0 !important;
-        z-index: 50 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
         width: 280px !important;
         max-width: 85vw !important;
-        height: 100vh !important;
+        z-index: 50 !important;
         transform: translateX(-100%);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-        background: rgba(15, 23, 42, 0.94) !important;
-        backdrop-filter: blur(28px) !important;
-        -webkit-backdrop-filter: blur(28px) !important;
-        border-right: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        border-right: 3px solid #000 !important;
+        overflow-y: auto !important;
       }
+
       #sidebar.sidebar-open {
         transform: translateX(0) !important;
+        box-shadow: 6px 6px 0px #000000 !important;
       }
-      .sidebar-backdrop {
+      html.dark #sidebar.sidebar-open {
+        box-shadow: 6px 6px 0px #00ff00 !important;
+        border-right: 3px solid #00ff00 !important;
+      }
+
+      #sidebarBackdrop {
         position: fixed;
         inset: 0;
-        background: rgba(3, 7, 18, 0.6);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
         z-index: 45;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.2s ease;
       }
-      .sidebar-backdrop.active {
-        opacity: 1;
-        pointer-events: auto;
+
+      #sidebarBackdrop.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        display: block !important;
+      }
+
+      #closeSidebarBtn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Filter toolbar: wrap filters and make them scrollable */
+      #filterToolbar {
+        flex-wrap: wrap !important;
+      }
+      #filterToolbar > div:first-child {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+      }
+
+      /* Header: allow all items to fit */
+      header {
+        height: auto !important;
+        min-height: 3.5rem !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Backup dropdown: position it within viewport */
+      #backupMenuDropdown {
+        right: 0 !important;
+        max-width: calc(100vw - 2rem) !important;
+      }
+
+      /* Metrics KPI stat cards - 2 columns on tablet */
+      #view-metrics .grid-cols-2.md\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      /* Metrics charts: stack vertically */
+      #view-metrics .lg\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Timesheet top bar: stack resource/pod/week/buttons */
+      #view-meetings > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+      #view-meetings > div:first-child > div:last-child {
+        width: 100% !important;
+        justify-content: flex-start !important;
       }
     }
 
-    /* Kanban mobile swipe with scroll snap */
+    /* -----------------------------------------
+       DESKTOP SCREENS (>= 1024px)
+    ----------------------------------------- */
+    @media (min-width: 1024px) {
+      #sidebar {
+        position: relative !important;
+        transform: none !important;
+        transition: margin-left 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      #sidebarBackdrop {
+        display: none !important;
+      }
+
+      #closeSidebarBtn {
+        display: none !important;
+      }
+
+      .kanban-board-container {
+        min-width: 1240px;
+      }
+
+      .kanban-col {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+    }
+
+    /* -----------------------------------------
+       TABLET SPECIFIC (768px to 1023px)
+    ----------------------------------------- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .kanban-board-container {
+        display: flex;
+        gap: 0.875rem;
+        min-width: max-content !important;
+      }
+
+      .kanban-col {
+        flex: 0 0 290px !important;
+        min-width: 290px !important;
+      }
+
+      /* Modal adjustments for tablets */
+      #taskModal > div, #workLogModal > div {
+        max-width: 720px !important;
+        width: 92vw !important;
+        max-height: 90vh !important;
+      }
+
+      /* Timesheet hours cards: 3 cols on tablet */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+    }
+
+    /* -----------------------------------------
+       MOBILE SPECIFIC (< 768px)
+    ----------------------------------------- */
     @media (max-width: 767px) {
+      /* Kanban horizontal snap swiping */
       .kanban-scroll-wrapper {
         scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
         padding-bottom: 0.75rem;
       }
+
       .kanban-board-container {
-        display: flex !important;
-        gap: 0.75rem !important;
-        min-width: 0 !important;
-        width: max-content;
+        display: flex;
+        gap: 0.75rem;
+        min-width: max-content !important;
+        padding-right: 1rem;
       }
+
       .kanban-col {
-        scroll-snap-align: center;
         flex: 0 0 calc(85vw - 1rem) !important;
-        max-width: calc(85vw - 1rem) !important;
-        min-width: 260px !important;
-      }
-    }
-
-    @media (min-width: 768px) and (max-width: 1023px) {
-      .kanban-scroll-wrapper {
-        scroll-snap-type: x proximity;
-      }
-      .kanban-board-container {
-        display: flex !important;
-        min-width: 0 !important;
-        width: max-content;
-      }
-      .kanban-col {
+        min-width: 275px !important;
+        max-width: 325px !important;
         scroll-snap-align: start;
-        flex: 0 0 290px !important;
-        max-width: 290px !important;
+        scroll-snap-stop: normal;
+      }
+
+      /* Modals on small screens */
+      #taskModal, #workLogModal, #confirmDialog {
+        padding: 0.5rem !important;
+      }
+
+      #taskModal > div, #workLogModal > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 95vh !important;
+        max-height: 95dvh !important;
+      }
+
+      #taskForm, #workLogForm {
+        padding: 0.875rem !important;
+      }
+
+      /* Modal Tab Bar scroll */
+      .modal-tab-bar {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        padding-left: 0.875rem !important;
+        padding-right: 0.875rem !important;
+      }
+      .modal-tab-bar::-webkit-scrollbar {
+        display: none !important;
+      }
+      .modal-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 0.625rem 0.625rem !important;
+      }
+
+      /* Toolbar on mobile: vertical stack for filter groups */
+      #filterToolbar {
+        padding: 0.5rem 0.625rem !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+      }
+      #filterToolbar > div:first-child {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.375rem !important;
+        overflow-x: visible !important;
+      }
+      #filterToolbar > div:first-child > div {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+      #filterToolbar > div:first-child > div > span {
+        display: none !important;
+      }
+      #filterToolbar select {
+        font-size: 11px !important;
+        padding: 0.375rem 0.5rem !important;
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      #filterToolbar button {
+        font-size: 11px !important;
+      }
+
+      /* Timesheet & Meeting buttons wrap */
+      .timesheet-action-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-width: 0;
+      }
+
+      /* Timesheet hours summary: 2 cols on mobile */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      /* Timesheet top bar: fully stacked */
+      #view-meetings > div:first-child .flex.items-center.space-x-3:first-child {
+        width: 100%;
+      }
+      #view-meetings > div:first-child > div:last-child {
+        flex-wrap: wrap !important;
+      }
+
+      /* Header compact on mobile */
+      header {
+        height: auto !important;
+        min-height: 3rem !important;
+        padding: 0.375rem 0.5rem !important;
+      }
+      header .flex.items-center.space-x-3 > .flex.items-center.space-x-2 .flex.flex-col span.font-bold {
+        font-size: 12px !important;
+      }
+      header .flex.items-center.space-x-3 > .flex.items-center.space-x-2 .flex.flex-col span.text-\[11px\] {
+        display: none !important;
+      }
+
+      /* View containers: tighter padding */
+      #view-kanban, #view-list, #view-meetings, #view-metrics {
+        padding: 0.5rem !important;
+      }
+
+      /* Modal form grids: single column on mobile */
+      #taskForm .grid.grid-cols-1.md\:grid-cols-4,
+      #taskForm .grid.grid-cols-1.md\:grid-cols-3,
+      #taskForm .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+      }
+      #workLogForm .grid.grid-cols-1.sm\:grid-cols-3,
+      #workLogForm .grid.grid-cols-1.sm\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Metrics KPI stat cards: 2 columns on mobile */
+      #view-metrics .grid {
+        gap: 0.5rem !important;
+      }
+
+      /* SLA table: scrollable */
+      #view-metrics .overflow-x-auto table {
+        min-width: 600px !important;
+      }
+
+      /* Ensure toast notifications fit neatly */
+      #toastContainer {
+        left: 1rem !important;
+        right: 1rem !important;
+        bottom: 1rem !important;
+        align-items: center;
+      }
+
+      #toastContainer > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      /* Brutalism overrides: reduce box-shadow on mobile for less clutter */
+      .kanban-card, .bg-white, .modal-tab-pane, #sidebar, header, .kanban-col, #filterToolbar {
+        box-shadow: 2px 2px 0px #000000 !important;
+      }
+      html.dark .kanban-card, html.dark .bg-white, html.dark .modal-tab-pane, html.dark #sidebar, html.dark header, html.dark .kanban-col, html.dark #filterToolbar {
+        box-shadow: 2px 2px 0px #00ff00 !important;
+      }
+      button, select, input, textarea {
+        box-shadow: 2px 2px 0px #000 !important;
+      }
+      html.dark button, html.dark select, html.dark input, html.dark textarea {
+        box-shadow: 2px 2px 0px #00ff00 !important;
       }
     }
 
-    /* Modal responsiveness */
-    @media (max-width: 640px) {
-      #taskModal > div, #workLogModal > div {
-        max-height: 95vh !important;
-        width: 96% !important;
-        border-radius: var(--liquid-radius-md) !important;
+    /* -----------------------------------------
+       EXTRA SMALL MOBILE (< 420px)
+    ----------------------------------------- */
+    @media (max-width: 419px) {
+      .kanban-col {
+        flex: 0 0 calc(92vw - 0.5rem) !important;
+        min-width: 260px !important;
+        max-width: none !important;
       }
-      .modal-tab-bar {
-        overflow-x: auto;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
+
+      header {
+        padding-left: 0.375rem !important;
+        padding-right: 0.375rem !important;
+      }
+
+      /* Reduce logo icon size */
+      header .w-8.h-8 {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+        font-size: 0.625rem !important;
+      }
+
+      /* Header action buttons: tighter spacing */
+      header > div > div:last-child {
+        gap: 0.25rem !important;
+      }
+      header > div > div:last-child > * {
+        padding: 0.25rem !important;
+      }
+
+      /* Filter toolbar: even more compact */
+      #filterToolbar select {
+        font-size: 10px !important;
+        padding: 0.25rem 0.375rem !important;
+      }
+
+      /* Modal form: remove excessive padding */
+      #taskForm, #workLogForm {
+        padding: 0.625rem !important;
+      }
+
+      /* Modal header: compact */
+      #taskModal .px-5,
+      #workLogModal .px-5 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+
+      /* Timesheet hours stat cards: single column */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Timesheet action buttons: stack vertically */
+      .timesheet-action-btn {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+      }
+
+      /* Metrics KPI stat cards: single column on very small */
+      #view-metrics .grid-cols-2.md\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* -----------------------------------------
+       SMALL MOBILE LANDSCAPE (short height)
+    ----------------------------------------- */
+    @media (max-height: 500px) and (orientation: landscape) {
+      header {
+        height: 2.5rem !important;
+        min-height: 2.5rem !important;
+      }
+
+      #view-kanban, #view-list, #view-meetings, #view-metrics {
+        padding: 0.375rem !important;
+      }
+
+      #taskModal > div, #workLogModal > div {
+        max-height: 98vh !important;
+        max-height: 98dvh !important;
+      }
+
+      /* Kanban cols shorter in landscape */
+      .kanban-col {
+        max-height: calc(100vh - 7rem) !important;
+        max-height: calc(100dvh - 7rem) !important;
       }
     }
   </style>
-
-
-
 
 </head>
 
@@ -577,13 +641,13 @@
     <div class="flex items-center space-x-2.5">
       <!-- Mobile Search Toggle Button -->
       <button id="mobileSearchToggleBtn"
-        class="sm:hidden p-1.5 hover:bg-white/10 rounded text-blue-100 hover:text-white transition text-xs flex items-center"
-        title="Toggle Search">
+        class="sm:hidden p-1.5 hover:bg-white/10 rounded text-blue-100 hover:text-white transition text-xs flex items-center justify-center"
+        title="Search Issues">
         <i class="fa-solid fa-magnifying-glass text-sm"></i>
       </button>
 
-      <!-- Search Input in Header (Tablet / Desktop) -->
-      <div class="relative hidden sm:block w-36 md:w-56 lg:w-60">
+      <!-- Search Input in Header -->
+      <div class="relative hidden sm:block w-48 md:w-60">
         <input id="globalSearchInput" type="text" placeholder="Search ID, issue, fix... (/)"
           class="w-full bg-white/15 text-white placeholder-blue-200 text-xs rounded-md pl-8 pr-3 py-1.5 border border-transparent focus:bg-white focus:text-jira-text focus:placeholder-gray-400 focus:outline-none transition">
         <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-blue-200"></i>
@@ -618,6 +682,15 @@
           class="hidden absolute right-0 mt-2 w-56 bg-white dark:bg-[#22272B] rounded-md shadow-xl border border-gray-200 dark:border-[#2C333A] text-jira-text dark:text-[#B6C2CF] text-xs py-1.5 z-50">
           <div class="px-3 py-1 text-[11px] font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">
             Excel & Offline Backup</div>
+          <!-- <button id="exportCsvBtn"
+            class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]">
+            <i class="fa-solid fa-file-excel text-green-600 text-sm w-4"></i> Export to Excel (CSV)
+          </button>
+          <button id="exportJsonBtn"
+            class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]">
+            <i class="fa-solid fa-file-arrow-down text-blue-600 text-sm w-4"></i> Download Full Backup (JSON)
+          </button> -->
+          <!-- Extra update bhai  -->
           <button id="exportCsvBtn"
             class="w-full text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-[#282E33] flex items-center gap-2 text-jira-text dark:text-[#DEE4EA]">
             <i class="fa-solid fa-file-excel text-green-600 text-sm w-4"></i> Export Issues Master (CSV)
@@ -654,12 +727,15 @@
     </div>
   </header>
 
-  <!-- Mobile Search Bar (Collapsible on mobile < 640px) -->
-  <div id="mobileSearchBar" class="hidden sm:hidden px-3 py-2 bg-white/40 dark:bg-slate-900/80 backdrop-blur-md border-b border-white/20 dark:border-white/10 z-30">
-    <div class="relative">
-      <input id="mobileSearchInput" type="text" placeholder="Search ID, issue, fix..."
-        class="w-full bg-white/70 dark:bg-slate-800/80 text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-slate-400 text-xs rounded-xl pl-8 pr-3 py-2 border border-white/40 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-sky-400">
-      <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-sky-500"></i>
+  <!-- Mobile Search Bar (Collapsible) -->
+  <div id="mobileSearchBar" class="hidden sm:hidden bg-black text-white px-3 py-2 border-b-2 border-black dark:border-[#00ff00] shadow-md z-30">
+    <div class="relative w-full">
+      <input id="mobileSearchInput" type="text" placeholder="Search ID, issue, fix... (/)"
+        class="w-full bg-white dark:bg-black text-black dark:text-[#00ff00] placeholder-gray-500 text-xs pl-8 pr-8 py-2 border-2 border-black dark:border-[#00ff00] focus:outline-none transition">
+      <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-3 text-xs text-gray-500 dark:text-[#00ff00]"></i>
+      <button id="clearMobileSearchBtn" class="hidden absolute right-2.5 top-2.5 text-xs text-gray-500 dark:text-[#00ff00] hover:text-white">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
   </div>
 
@@ -667,7 +743,7 @@
   <div class="flex flex-1 overflow-hidden relative">
 
     <!-- Mobile Sidebar Backdrop Overlay -->
-    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-xs z-40 hidden transition-opacity duration-300 opacity-0" aria-hidden="true"></div>
 
     <!-- ================= SIDEBAR ================= -->
     <aside id="sidebar"
@@ -684,7 +760,8 @@
               <div class="text-[10px] text-slate-400">Dev & Support Suite</div>
             </div>
           </div>
-          <button id="closeSidebarBtn" class="lg:hidden p-1 text-slate-400 hover:text-white rounded hover:bg-slate-700/50" title="Close Sidebar">
+          <!-- Close button for mobile / tablet drawer -->
+          <button id="closeSidebarBtn" class="lg:hidden p-1 text-slate-400 hover:text-white rounded hover:bg-slate-700/60 transition" title="Close Sidebar">
             <i class="fa-solid fa-xmark text-sm"></i>
           </button>
         </div>
@@ -810,12 +887,12 @@
 
       <!-- FILTER & ACTION TOOLBAR (Visible across Kanban and List Views) -->
       <section id="filterToolbar"
-        class="bg-white dark:bg-[#22272B] border-b border-jira-border dark:border-[#2C333A] px-3 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-xs overflow-x-auto no-scrollbar touch-scroll">
-        <div class="flex items-center flex-nowrap md:flex-wrap gap-2 flex-shrink-0">
+        class="bg-white dark:bg-[#22272B] border-b border-jira-border dark:border-[#2C333A] px-2.5 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-xs">
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll py-0.5 flex-1 min-w-0">
 
           <!-- Module Filter -->
           <div class="flex items-center space-x-1 flex-shrink-0">
-            <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase">Module:</span>
+            <span class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase whitespace-nowrap">Module:</span>
             <select id="filterModule"
               class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue dark:focus:ring-blue-400 text-jira-text dark:text-[#DEE4EA] focus:outline-none">
               <option value="ALL">All Modules</option>
@@ -832,7 +909,7 @@
           </div>
 
           <!-- Pending With Filter -->
-          <div class="flex items-center space-x-1 flex-shrink-0">
+          <div class="flex items-center space-x-1">
             <span class="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase flex items-center gap-1">
               <i class="fa-solid fa-hourglass-half text-[10px]"></i> Pending:
             </span>
@@ -853,7 +930,7 @@
           </div>
 
           <!-- Assignee Filter -->
-          <div class="flex items-center space-x-1 flex-shrink-0">
+          <div class="flex items-center space-x-1">
             <span class="text-[10px] font-bold text-blue-700 dark:text-blue-400 uppercase flex items-center gap-1">
               <i class="fa-solid fa-user-tag text-[10px]"></i> Assignee:
             </span>
@@ -865,7 +942,7 @@
 
           <!-- Issue Type Filter -->
           <select id="filterIssueType"
-            class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none flex-shrink-0">
+            class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none">
             <option value="ALL">All Issue Types</option>
             <option value="Production Issue">Production Issue</option>
             <option value="UAT Defect">UAT Defect</option>
@@ -880,7 +957,7 @@
 
           <!-- Priority Filter -->
           <select id="filterPriority"
-            class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none flex-shrink-0">
+            class="bg-gray-50 dark:bg-[#1D2125] border border-gray-300 dark:border-[#2C333A] text-xs rounded px-2 py-1 focus:ring-1 focus:ring-jira-blue text-jira-text dark:text-[#DEE4EA] focus:outline-none">
             <option value="ALL">All Priorities</option>
             <option value="P1">P1 - Blocker / Critical</option>
             <option value="P2">P2 - High</option>
@@ -890,26 +967,26 @@
 
           <!-- Quick Toggle Pills -->
           <button id="toggleP1OnlyBtn"
-            class="px-2 py-0.5 text-xs rounded-full border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center gap-1 font-medium transition flex-shrink-0">
+            class="px-2 py-0.5 text-xs rounded-full border border-red-300 dark:border-red-800 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 flex items-center gap-1 font-medium transition">
             <i class="fa-solid fa-fire text-red-500"></i> P1 Only
           </button>
 
           <button id="toggleHighAgeingBtn"
-            class="px-2 py-0.5 text-xs rounded-full border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 flex items-center gap-1 font-medium transition flex-shrink-0">
+            class="px-2 py-0.5 text-xs rounded-full border border-amber-300 dark:border-amber-700 text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40 flex items-center gap-1 font-medium transition">
             <i class="fa-solid fa-clock-rotate-left text-amber-600 dark:text-amber-400"></i> Ageing > 5d
           </button>
 
           <!-- Reset Filters -->
           <button id="clearFiltersBtn"
-            class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white underline px-1 py-0.5 flex-shrink-0">
+            class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white underline px-1 py-0.5 flex-shrink-0 whitespace-nowrap">
             Reset
           </button>
         </div>
 
-        <div class="flex items-center space-x-2 flex-shrink-0">
+        <div class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l border-gray-200 dark:border-gray-700 sm:border-0">
           <!-- Active Items Counter -->
-          <span id="filteredCountBadge" class="text-xs text-gray-500 dark:text-gray-400 font-medium">
-            Showing: <strong class="text-jira-text dark:text-white" id="visibleTasksCount">0</strong> tasks
+          <span id="filteredCountBadge" class="text-xs text-gray-500 dark:text-gray-400 font-medium whitespace-nowrap">
+            Showing: <strong class="text-jira-text dark:text-white" id="visibleTasksCount">0</strong>
           </span>
         </div>
       </section>
@@ -919,7 +996,7 @@
 
         <!-- 1. KANBAN BOARD VIEW -->
         <section id="view-kanban" class="p-2 sm:p-4 h-full flex flex-col">
-          <div class="kanban-scroll-wrapper flex-1 overflow-x-auto pb-2 sm:pb-4 touch-scroll">
+          <div class="flex-1 overflow-x-auto pb-4 touch-scroll kanban-scroll-wrapper">
             <div class="kanban-board-container flex gap-3 h-full min-w-max lg:min-w-[1240px]">
 
               <!-- Column: Backlog -->
@@ -1043,12 +1120,12 @@
           <div
             class="bg-white dark:bg-[#22272B] rounded-lg shadow-sm border border-jira-border dark:border-[#2C333A] flex-1 flex flex-col overflow-hidden">
             <div
-              class="p-3 border-b border-jira-border dark:border-[#2C333A] flex items-center justify-between bg-gray-50 dark:bg-[#1D2125]">
+              class="p-3 border-b border-jira-border dark:border-[#2C333A] flex flex-wrap items-center justify-between gap-2 bg-gray-50 dark:bg-[#1D2125]">
               <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-table text-jira-blue dark:text-blue-400"></i>
                 <span class="font-bold text-xs uppercase tracking-wider text-jira-text dark:text-[#DEE4EA]">Enterprise
                   Task Master Sheet</span>
-                <span class="text-gray-400 dark:text-gray-500 text-xs">| (Click any row to view/edit details)</span>
+                <span class="text-gray-400 dark:text-gray-500 text-xs hidden sm:inline">| (Click any row to view/edit details)</span>
               </div>
               <button onclick="exportToCsv()"
                 class="text-xs text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/60 px-2.5 py-1 rounded font-medium flex items-center gap-1.5 transition">
@@ -1097,14 +1174,14 @@
         <section id="view-meetings" class="hidden p-2 sm:p-4 h-full flex flex-col space-y-3">
           <!-- Timesheet Top Bar: Week Navigation, Resource Config & Action Buttons -->
           <div
-            class="bg-white dark:bg-[#22272B] p-3.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
+            class="bg-white dark:bg-[#22272B] p-3 sm:p-3.5 rounded-lg border border-jira-border dark:border-[#2C333A] shadow-xs flex flex-wrap items-center justify-between gap-3 flex-shrink-0">
             <div class="flex items-center space-x-3">
               <div
-                class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-lg font-bold">
+                class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center text-lg font-bold flex-shrink-0">
                 <i class="fa-solid fa-user-clock"></i>
               </div>
-              <div>
-                <div class="flex items-center gap-2">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
                   <h2 class="text-sm font-bold text-jira-text dark:text-[#DEE4EA]">Daily Work Log & Timesheet</h2>
                   <span
                     class="bg-blue-100 dark:bg-blue-900/50 text-jira-blue dark:text-blue-300 text-[10px] px-2 py-0.2 rounded font-mono font-semibold">POD
@@ -1116,7 +1193,7 @@
             </div>
 
             <!-- Resource & POD details header info -->
-            <div class="flex flex-wrap items-center gap-2.5">
+            <div class="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
               <div
                 class="flex items-center bg-gray-50 dark:bg-[#1D2125] border border-gray-200 dark:border-[#2C333A] rounded px-2.5 py-1 text-xs">
                 <span class="text-gray-400 mr-1.5 font-medium">Resource:</span>
@@ -1160,18 +1237,18 @@
 
               <!-- Log Activity & Export Buttons -->
               <button id="openWorkLogModalBtn"
-                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95">
+                class="timesheet-action-btn bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95">
                 <i class="fa-solid fa-plus text-xs"></i> Log Work / Meeting
               </button>
 
               <button onclick="exportWeeklyTimesheet()"
-                class="bg-green-700 hover:bg-green-800 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                class="timesheet-action-btn bg-green-700 hover:bg-green-800 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
                 title="Export matching manager's template">
-                <i class="fa-solid fa-file-excel text-xs"></i> Export Weekly Timesheet
+                <i class="fa-solid fa-file-excel text-xs"></i> Export Timesheet
               </button>
 
               <button onclick="copyDailyEodEmail()"
-                class="bg-jira-blue hover:bg-jira-hover text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
+                class="timesheet-action-btn bg-jira-blue hover:bg-jira-hover text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 shadow-sm transition active:scale-95"
                 title="Copy bulleted update for Teams / Outlook">
                 <i class="fa-solid fa-envelope-open-text text-xs"></i> Copy EOD Update
               </button>
@@ -1281,7 +1358,7 @@
         </section>
 
         <!-- 4. METRICS & BOTTLENECK ANALYSIS VIEW -->
-        <section id="view-metrics" class="hidden p-2 sm:p-4 h-full overflow-y-auto space-y-4">
+        <section id="view-metrics" class="hidden p-2 sm:p-4 h-full overflow-y-auto touch-scroll space-y-4">
           <!-- Metric KPI Stat Cards -->
           <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             <div
@@ -1439,17 +1516,17 @@
 
       <!-- Modal Tabs Header -->
       <div
-        class="modal-tab-bar flex border-b border-jira-border dark:border-[#2C333A] px-3 sm:px-5 bg-white dark:bg-[#22272B] text-xs font-medium overflow-x-auto no-scrollbar touch-scroll flex-nowrap">
+        class="modal-tab-bar flex border-b border-jira-border dark:border-[#2C333A] px-3 sm:px-5 bg-white dark:bg-[#22272B] text-xs font-medium overflow-x-auto no-scrollbar touch-scroll">
         <button data-tab="tab-general"
-          class="modal-tab-btn py-2.5 px-3 border-b-2 border-jira-blue text-jira-blue dark:text-blue-400 dark:border-blue-400 font-semibold whitespace-nowrap flex-shrink-0">
+          class="modal-tab-btn py-2.5 px-3 border-b-2 border-jira-blue text-jira-blue dark:text-blue-400 dark:border-blue-400 font-semibold">
           <i class="fa-solid fa-circle-info mr-1"></i> Core Details & Ownership
         </button>
         <button data-tab="tab-technical"
-          class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 whitespace-nowrap flex-shrink-0">
+          class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
           <i class="fa-solid fa-code mr-1"></i> Root Cause & Solution Fix
         </button>
         <button data-tab="tab-meeting"
-          class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 whitespace-nowrap flex-shrink-0">
+          class="modal-tab-btn py-2.5 px-3 border-b-2 border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
           <i class="fa-solid fa-calendar mr-1"></i> Meeting / KT / Sync Details
         </button>
       </div>
@@ -1698,7 +1775,7 @@
             <i class="fa-solid fa-trash-can"></i> Delete Item
           </button>
 
-          <div class="flex items-center flex-wrap gap-2 ml-auto">
+          <div class="flex items-center space-x-2 ml-auto">
             <button type="button" id="cancelTaskModalBtn"
               class="text-xs text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3.5 py-2 rounded border border-gray-300 dark:border-[#2C333A] font-medium hover:bg-gray-50 dark:hover:bg-[#282E33] transition">
               Cancel
@@ -1914,7 +1991,7 @@
             <i class="fa-solid fa-trash-can"></i> Delete Entry
           </button>
 
-          <div class="flex items-center flex-wrap gap-2 ml-auto">
+          <div class="flex items-center space-x-2 ml-auto">
             <button type="button" id="cancelWorkLogModalBtn"
               class="text-xs text-gray-600 dark:text-gray-300 px-3.5 py-2 rounded border border-gray-300 dark:border-[#2C333A] font-medium hover:bg-gray-50 dark:hover:bg-[#282E33]">
               Cancel
@@ -3612,23 +3689,40 @@
     function toggleSidebar(forceState) {
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
-      const isMobile = window.innerWidth < 1024;
-      if (isMobile) {
-        const willOpen = (typeof forceState === 'boolean') ? forceState : !sidebar.classList.contains('sidebar-open');
-        sidebar.classList.toggle('sidebar-open', willOpen);
-        if (backdrop) backdrop.classList.toggle('active', willOpen);
-      } else {
-        if (typeof forceState === 'boolean') {
-          sidebar.classList.toggle('-ml-60', !forceState);
+      if (!sidebar) return;
+
+      const isMobileOrTablet = window.innerWidth < 1024;
+      if (isMobileOrTablet) {
+        const willOpen = forceState !== undefined ? forceState : !sidebar.classList.contains('sidebar-open');
+        if (willOpen) {
+          sidebar.classList.add('sidebar-open');
+          if (backdrop) {
+            backdrop.classList.remove('hidden');
+            requestAnimationFrame(() => {
+              backdrop.classList.add('active');
+            });
+          }
         } else {
-          sidebar.classList.toggle('-ml-60');
+          sidebar.classList.remove('sidebar-open');
+          if (backdrop) {
+            backdrop.classList.remove('active');
+            setTimeout(() => {
+              if (!sidebar.classList.contains('sidebar-open')) {
+                backdrop.classList.add('hidden');
+              }
+            }, 200);
+          }
         }
+      } else {
+        sidebar.classList.toggle('-ml-60');
       }
     }
 
     function applyQuickModuleFilter(moduleName) {
       document.getElementById('filterModule').value = moduleName;
-      if (window.innerWidth < 1024) toggleSidebar(false);
+      if (window.innerWidth < 1024) {
+        toggleSidebar(false);
+      }
       if (currentView === 'metrics' || currentView === 'meetings') {
         switchView('kanban');
       } else {
@@ -3638,7 +3732,9 @@
 
     function applyQuickPendingFilter(pendingName) {
       document.getElementById('filterPendingWith').value = pendingName;
-      if (window.innerWidth < 1024) toggleSidebar(false);
+      if (window.innerWidth < 1024) {
+        toggleSidebar(false);
+      }
       if (currentView === 'metrics' || currentView === 'meetings') {
         switchView('kanban');
       } else {
@@ -3648,7 +3744,10 @@
 
     function switchView(viewName) {
       currentView = viewName;
-      if (window.innerWidth < 1024) toggleSidebar(false);
+      if (window.innerWidth < 1024) {
+        toggleSidebar(false);
+      }
+
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
         if (btn.getAttribute('data-view') === viewName) {
           btn.className = 'nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 rounded-md text-xs font-medium bg-blue-600 text-white transition';
@@ -3684,51 +3783,73 @@
         btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
       });
 
-      // Sidebar Toggle
+      // Sidebar Controls (Responsive Drawer + Desktop Collapse)
       document.getElementById('toggleSidebarBtn').addEventListener('click', () => toggleSidebar());
       const closeSidebarBtn = document.getElementById('closeSidebarBtn');
       if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
       const sidebarBackdrop = document.getElementById('sidebarBackdrop');
       if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
+
+      // Sync sidebar state on screen resize
       window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
           const sidebar = document.getElementById('sidebar');
-          if (sidebar) sidebar.classList.remove('sidebar-open');
           const backdrop = document.getElementById('sidebarBackdrop');
-          if (backdrop) backdrop.classList.remove('active');
+          if (sidebar) sidebar.classList.remove('sidebar-open');
+          if (backdrop) {
+            backdrop.classList.remove('active');
+            backdrop.classList.add('hidden');
+          }
         }
       });
 
-      // Mobile Search
+      // Mobile Search Toggle & Input Synchronization
       const mobileSearchToggleBtn = document.getElementById('mobileSearchToggleBtn');
       const mobileSearchBar = document.getElementById('mobileSearchBar');
       const mobileSearchInput = document.getElementById('mobileSearchInput');
+      const clearMobileSearchBtn = document.getElementById('clearMobileSearchBtn');
       const globalSearchInput = document.getElementById('globalSearchInput');
 
-      if (mobileSearchToggleBtn && mobileSearchBar) {
+      if (mobileSearchToggleBtn && mobileSearchBar && mobileSearchInput) {
         mobileSearchToggleBtn.addEventListener('click', () => {
           mobileSearchBar.classList.toggle('hidden');
           if (!mobileSearchBar.classList.contains('hidden')) {
-            if (mobileSearchInput) {
-              mobileSearchInput.value = globalSearchInput ? globalSearchInput.value : '';
-              mobileSearchInput.focus();
+            mobileSearchInput.value = globalSearchInput.value;
+            mobileSearchInput.focus();
+            if (clearMobileSearchBtn) {
+              clearMobileSearchBtn.classList.toggle('hidden', !mobileSearchInput.value);
             }
           }
         });
-      }
 
-      if (mobileSearchInput && globalSearchInput) {
         mobileSearchInput.addEventListener('input', (e) => {
           globalSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) {
+            clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+          }
           renderApp();
         });
+
         globalSearchInput.addEventListener('input', (e) => {
           mobileSearchInput.value = e.target.value;
+          if (clearMobileSearchBtn) {
+            clearMobileSearchBtn.classList.toggle('hidden', !e.target.value);
+          }
         });
+
+        if (clearMobileSearchBtn) {
+          clearMobileSearchBtn.addEventListener('click', () => {
+            mobileSearchInput.value = '';
+            globalSearchInput.value = '';
+            clearMobileSearchBtn.classList.add('hidden');
+            renderApp();
+            mobileSearchInput.focus();
+          });
+        }
       }
 
       // Search and Filter Listeners
-      document.getElementById('globalSearchInput').addEventListener('input', renderApp);
+      globalSearchInput.addEventListener('input', renderApp);
       document.getElementById('filterModule').addEventListener('change', renderApp);
       document.getElementById('filterPendingWith').addEventListener('change', renderApp);
       document.getElementById('filterAssignee').addEventListener('change', renderApp);
@@ -3748,8 +3869,9 @@
       });
 
       document.getElementById('clearFiltersBtn').addEventListener('click', () => {
-        document.getElementById('globalSearchInput').value = '';
-        if (document.getElementById('mobileSearchInput')) document.getElementById('mobileSearchInput').value = '';
+        globalSearchInput.value = '';
+        if (mobileSearchInput) mobileSearchInput.value = '';
+        if (clearMobileSearchBtn) clearMobileSearchBtn.classList.add('hidden');
         document.getElementById('filterModule').value = 'ALL';
         document.getElementById('filterPendingWith').value = 'ALL';
         document.getElementById('filterAssignee').value = 'ALL';
@@ -3943,21 +4065,22 @@
         }
         if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
           e.preventDefault();
-          if (window.innerWidth < 640 && mobileSearchBar && mobileSearchInput) {
+          if (window.innerWidth < 640 && mobileSearchBar) {
             mobileSearchBar.classList.remove('hidden');
             mobileSearchInput.focus();
           } else {
-            document.getElementById('globalSearchInput').focus();
+            globalSearchInput.focus();
           }
         }
         if (e.key === 'Escape') {
           closeTaskModal();
-          closeWorkLogModal();
           document.getElementById('confirmDialog').classList.add('hidden');
           if (mobileSearchBar && !mobileSearchBar.classList.contains('hidden')) {
             mobileSearchBar.classList.add('hidden');
           }
-          toggleSidebar(false);
+          if (window.innerWidth < 1024) {
+            toggleSidebar(false);
+          }
         }
       });
     };

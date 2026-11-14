@@ -368,8 +368,61 @@
       scrollbar-width: none;
     }
 
+    #mobileBottomNav {
+      align-items: stretch;
+      justify-content: space-around;
+      background: var(--spatial-glass-light);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-top: 1px solid var(--spatial-border-light);
+      box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.1), var(--spatial-specular-light);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html.dark #mobileBottomNav {
+      background: var(--spatial-glass-dark);
+      border-top-color: var(--spatial-border-dark);
+      box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.32), var(--spatial-specular-dark);
+    }
+    .mobile-nav-btn {
+      min-width: 0;
+      min-height: 3.5rem;
+      border-right: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 0 !important;
+      color: #475569;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-nav-btn:last-child {
+      border-right: 0;
+    }
+    html.dark .mobile-nav-btn {
+      color: #cbd5e1;
+      border-right-color: rgba(255, 255, 255, 0.1);
+    }
+    .mobile-nav-btn:hover {
+      filter: none;
+      transform: none;
+    }
+    .mobile-nav-btn.is-active {
+      color: #075985;
+      background: rgba(191, 219, 254, 0.3);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+    html.dark .mobile-nav-btn.is-active {
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .mobile-nav-btn:focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: -3px;
+    }
+
     /* Off-canvas sidebar for tablet and mobile */
     @media (max-width: 1023px) {
+      #toastContainer {
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
       #sidebar {
         position: fixed !important;
         top: 0 !important;
@@ -1337,6 +1390,32 @@
       </div>
     </main>
   </div>
+
+  <!-- ================= MOBILE / TABLET BOTTOM NAVIGATION ================= -->
+  <nav id="mobileBottomNav"
+    class="flex lg:hidden flex-shrink-0 z-30"
+    aria-label="Primary navigation">
+    <button type="button" data-view="kanban" aria-current="page"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold tracking-wide transition is-active">
+      <i class="fa-solid fa-table-columns text-sm" aria-hidden="true"></i>
+      <span>BOARD</span>
+    </button>
+    <button type="button" data-view="list"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold tracking-wide transition">
+      <i class="fa-solid fa-list-check text-sm" aria-hidden="true"></i>
+      <span>LIST</span>
+    </button>
+    <button type="button" data-view="meetings"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold tracking-wide transition">
+      <i class="fa-solid fa-business-time text-sm" aria-hidden="true"></i>
+      <span>WORK LOG</span>
+    </button>
+    <button type="button" data-view="metrics"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-semibold tracking-wide transition">
+      <i class="fa-solid fa-chart-pie text-sm" aria-hidden="true"></i>
+      <span>METRICS</span>
+    </button>
+  </nav>
 
   <!-- ================= MODALS & POPUPS ================= -->
 
@@ -3586,6 +3665,16 @@
         }
       });
 
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-view') === viewName;
+        btn.classList.toggle('is-active', isCurrent);
+        if (isCurrent) {
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
+      });
+
       document.getElementById('view-kanban').classList.toggle('hidden', viewName !== 'kanban');
       document.getElementById('view-list').classList.toggle('hidden', viewName !== 'list');
       document.getElementById('view-meetings').classList.toggle('hidden', viewName !== 'meetings');
@@ -3610,6 +3699,9 @@
 
       // Navigation View Buttons
       document.querySelectorAll('.nav-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
+      });
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
         btn.addEventListener('click', () => switchView(btn.getAttribute('data-view')));
       });
 

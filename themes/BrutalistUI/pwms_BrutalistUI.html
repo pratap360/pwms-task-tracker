@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PWMS - Banking Engineering & Support Workspace [Brutalist Edition]</title>
-  
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome 6 CDN -->
@@ -14,7 +15,7 @@
 
   <script>
     // Immediate theme initialization to prevent flash
-    (function() {
+    (function () {
       const savedTheme = localStorage.getItem('pwms_theme');
       const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
@@ -68,8 +69,10 @@
     * {
       font-family: 'Space Grotesk', sans-serif;
     }
-    
-    code, pre, .font-mono {
+
+    code,
+    pre,
+    .font-mono {
       font-family: 'JetBrains Mono', monospace !important;
     }
 
@@ -78,17 +81,21 @@
       width: 8px;
       height: 8px;
     }
+
     ::-webkit-scrollbar-track {
       background: #E5E7EB;
       border-left: 2px solid #000000;
     }
+
     .dark ::-webkit-scrollbar-track {
       background: #1A1C23;
       border-left: 2px solid #FFFFFF;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #000000;
     }
+
     .dark ::-webkit-scrollbar-thumb {
       background: #FFE600;
     }
@@ -99,17 +106,21 @@
       transform: scale(0.97) rotate(-1deg);
       border: 3px dashed #FF3366 !important;
     }
+
     .kanban-col.drag-over {
       background-color: #FFE600 !important;
       outline: 3px solid #000000;
     }
+
     .dark .kanban-col.drag-over {
       background-color: #2D2700 !important;
       outline: 3px solid #FFE600;
     }
 
     /* Brutalist form controls */
-    select, input, textarea {
+    select,
+    input,
+    textarea {
       outline: none;
     }
 
@@ -119,7 +130,8 @@
     ========================================================= */
 
     /* Touch & Smooth Scroll Utilities */
-    html, body {
+    html,
+    body {
       overscroll-behavior-y: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -134,6 +146,7 @@
       width: 0 !important;
       height: 0 !important;
     }
+
     .no-scrollbar {
       -ms-overflow-style: none !important;
       scrollbar-width: none !important;
@@ -156,6 +169,7 @@
        1. SHARED MOBILE & TABLET RULES (Viewport < 1024px)
     --------------------------------------------------------- */
     @media (max-width: 1023px) {
+
       /* Off-canvas Brutalist Drawer Navigation */
       #sidebar {
         position: fixed !important;
@@ -179,6 +193,7 @@
         transform: translateX(0) !important;
         box-shadow: 8px 0px 0px #000000 !important;
       }
+
       .dark #sidebar.sidebar-open {
         box-shadow: 8px 0px 0px #FFE600 !important;
         border-right: 4px solid #FFFFFF !important;
@@ -238,7 +253,9 @@
       }
 
       /* Modals: Ensure modals sit above sidebar and backdrop */
-      #taskModal, #timesheetModal, #confirmDialog {
+      #taskModal,
+      #timesheetModal,
+      #confirmDialog {
         z-index: 60 !important;
       }
 
@@ -292,6 +309,7 @@
        3. TABLET VIEWPORT SPECIFIC (768px to 1023px)
     --------------------------------------------------------- */
     @media (min-width: 768px) and (max-width: 1023px) {
+
       /* Kanban Columns on Tablet */
       .kanban-board-container {
         display: flex;
@@ -305,7 +323,8 @@
       }
 
       /* Modals on Tablet */
-      #taskModal > div, #timesheetModal > div {
+      #taskModal>div,
+      #timesheetModal>div {
         max-width: 700px !important;
         width: 90vw !important;
         max-height: 88vh !important;
@@ -320,7 +339,8 @@
       #view-metrics .metrics-charts-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
       }
-      #view-metrics .metrics-charts-grid > div:last-child {
+
+      #view-metrics .metrics-charts-grid>div:last-child {
         grid-column: span 2 !important;
       }
     }
@@ -329,6 +349,7 @@
        4. MOBILE VIEWPORT SPECIFIC (Viewport < 768px)
     --------------------------------------------------------- */
     @media (max-width: 767px) {
+
       /* Header adaptations */
       header {
         padding-left: 0.5rem !important;
@@ -369,11 +390,14 @@
       }
 
       /* Modals on mobile */
-      #taskModal, #timesheetModal, #confirmDialog {
+      #taskModal,
+      #timesheetModal,
+      #confirmDialog {
         padding: 0.375rem !important;
       }
 
-      #taskModal > div, #timesheetModal > div {
+      #taskModal>div,
+      #timesheetModal>div {
         width: 100% !important;
         max-width: 100% !important;
         max-height: 94vh !important;
@@ -381,17 +405,18 @@
         border-width: 3px !important;
       }
 
-      #taskForm, #timesheetForm {
+      #taskForm,
+      #timesheetForm {
         padding: 0.75rem !important;
         gap: 0.75rem !important;
       }
 
       /* Touch-friendly inputs: prevent iOS auto-zoom (<16px) */
-      #taskForm input, 
-      #taskForm select, 
+      #taskForm input,
+      #taskForm select,
       #taskForm textarea,
-      #timesheetForm input, 
-      #timesheetForm select, 
+      #timesheetForm input,
+      #timesheetForm select,
       #timesheetForm textarea {
         font-size: 14px !important;
         padding-top: 0.5rem !important;
@@ -405,9 +430,11 @@
         -webkit-overflow-scrolling: touch !important;
         scrollbar-width: none !important;
       }
+
       .modal-tab-bar::-webkit-scrollbar {
         display: none !important;
       }
+
       .modal-tab-btn {
         flex-shrink: 0 !important;
         font-size: 11px !important;
@@ -432,10 +459,12 @@
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         gap: 0.5rem !important;
       }
+
       #view-metrics .metrics-kpi-card {
         padding: 0.625rem !important;
         border-width: 3px !important;
       }
+
       #view-metrics .metrics-kpi-val {
         font-size: 1.5rem !important;
         line-height: 1.75rem !important;
@@ -446,6 +475,7 @@
         grid-template-columns: 1fr !important;
         gap: 0.75rem !important;
       }
+
       #view-metrics .metrics-chart-box {
         height: 15rem !important;
       }
@@ -458,7 +488,7 @@
         align-items: center;
       }
 
-      #toastContainer > div {
+      #toastContainer>div {
         max-width: 100% !important;
         width: 100% !important;
       }
@@ -493,32 +523,43 @@
     }
   </style>
 </head>
-<body class="bg-brutal-bgLight dark:bg-brutal-bgDark text-black dark:text-white font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-150">
+
+<body
+  class="bg-brutal-bgLight dark:bg-brutal-bgDark text-black dark:text-white font-sans antialiased h-screen flex flex-col overflow-hidden transition-colors duration-150">
 
   <!-- ================= BRUTALIST TOP NAVIGATION BAR ================= -->
-  <header class="bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white h-14 flex items-center justify-between px-4 z-30 flex-shrink-0 border-b-4 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-dark-sm">
+  <header
+    class="bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white h-14 flex items-center justify-between px-4 z-30 flex-shrink-0 border-b-4 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-dark-sm">
     <div class="flex items-center space-x-3">
       <!-- App Switcher / Sidebar Toggle -->
-      <button id="toggleSidebarBtn" class="bg-white dark:bg-black p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-black dark:text-white" title="Toggle Sidebar">
+      <button id="toggleSidebarBtn"
+        class="bg-white dark:bg-black p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-black dark:text-white"
+        title="Toggle Sidebar">
         <i class="fa-solid fa-bars text-base"></i>
       </button>
-      
+
       <!-- Logo & System Identifier -->
       <div class="flex items-center space-x-2">
-        <div class="w-9 h-9 border-2 border-black dark:border-white bg-black dark:bg-white text-brutal-yellow dark:text-black flex items-center justify-center font-black shadow-brutal-sm dark:shadow-brutal-dark-sm text-base">
+        <div
+          class="w-9 h-9 border-2 border-black dark:border-white bg-black dark:bg-white text-brutal-yellow dark:text-black flex items-center justify-center font-black shadow-brutal-sm dark:shadow-brutal-dark-sm text-base">
           <i class="fa-solid fa-building-columns"></i>
         </div>
         <div class="flex flex-col leading-tight">
           <span class="font-black text-sm tracking-tight flex items-center gap-1.5">
-            PWMS <span class="bg-black dark:bg-brutal-yellow text-white dark:text-black text-[10px] px-1.5 py-0.5 border border-black dark:border-white font-mono font-black">CORE V2</span>
+            PWMS <span
+              class="bg-black dark:bg-brutal-yellow text-white dark:text-black text-[10px] px-1.5 py-0.5 border border-black dark:border-white font-mono font-black">CORE
+              V2</span>
           </span>
-          <span class="header-subtitle text-[11px] font-bold text-black/80 dark:text-white/80 uppercase truncate hidden sm:inline">Banking Support & Dev</span>
+          <span
+            class="header-subtitle text-[11px] font-bold text-black/80 dark:text-white/80 uppercase truncate hidden sm:inline">Banking
+            Support & Dev</span>
         </div>
       </div>
 
       <!-- Project Switcher Badge -->
       <div class="hidden md:flex items-center ml-4 pl-4 border-l-2 border-black dark:border-white text-xs">
-        <span class="bg-white dark:bg-black px-2.5 py-1 border-2 border-black dark:border-white font-bold shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center gap-1.5">
+        <span
+          class="bg-white dark:bg-black px-2.5 py-1 border-2 border-black dark:border-white font-bold shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center gap-1.5">
           <i class="fa-solid fa-layer-group text-brutal-pink"></i>
           <span>PROJECT:</span>
           <span class="font-mono text-brutal-pink">BNK-ENTERPRISE</span>
@@ -529,79 +570,76 @@
     <!-- Quick Global Actions & Controls -->
     <div class="flex items-center space-x-2">
       <!-- Mobile Search Toggle Button -->
-      <button 
-        id="mobileSearchToggleBtn" 
+      <button id="mobileSearchToggleBtn"
         class="sm:hidden bg-white dark:bg-black text-black dark:text-white p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center justify-center font-bold"
-        title="Search Issues"
-      >
+        title="Search Issues">
         <i class="fa-solid fa-magnifying-glass text-sm"></i>
       </button>
 
       <!-- Search Input in Header -->
       <div class="relative hidden sm:block w-48 md:w-60">
-        <input 
-          id="globalSearchInput" 
-          type="text" 
-          placeholder="SEARCH (/)..." 
-          class="w-full bg-white dark:bg-black text-black dark:text-white placeholder-black/60 dark:placeholder-white/60 text-xs font-bold px-3 py-1.5 pl-8 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm focus:bg-brutal-cyan dark:focus:bg-brutal-cardDark transition"
-        >
+        <input id="globalSearchInput" type="text" placeholder="SEARCH (/)..."
+          class="w-full bg-white dark:bg-black text-black dark:text-white placeholder-black/60 dark:placeholder-white/60 text-xs font-bold px-3 py-1.5 pl-8 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm focus:bg-brutal-cyan dark:focus:bg-brutal-cardDark transition">
         <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-xs text-black dark:text-white"></i>
       </div>
 
       <!-- Quick Create Button (+ Task) -->
-      <button 
-        id="openCreateModalBtn" 
+      <button id="openCreateModalBtn"
         class="bg-brutal-cyan dark:bg-brutal-yellow text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition flex items-center gap-1.5"
-        title="Shortcut: Press 'c'"
-      >
+        title="Shortcut: Press 'c'">
         <i class="fa-solid fa-plus text-xs"></i>
         <span class="hidden sm:inline">CREATE TASK</span>
       </button>
 
       <!-- Quick Log Work Button -->
-      <button 
-        id="openCreateTimesheetModalBtn" 
-        class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition flex items-center gap-1.5"
-      >
+      <button id="openCreateTimesheetModalBtn"
+        class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition flex items-center gap-1.5">
         <i class="fa-solid fa-stopwatch text-xs"></i>
         <span class="hidden sm:inline">LOG WORK</span>
       </button>
 
       <!-- Dark / Light Mode Switcher Button -->
-      <button 
-        id="themeToggleBtn" 
+      <button id="themeToggleBtn"
         class="bg-white dark:bg-black text-black dark:text-white p-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center gap-1.5 font-bold"
-        title="Toggle Dark / Light Mode"
-      >
+        title="Toggle Dark / Light Mode">
         <i id="themeToggleIcon" class="fa-solid fa-moon text-sm"></i>
         <span class="hidden md:inline text-xs font-black" id="themeLabel">DARK</span>
       </button>
 
       <!-- Excel / Backup Actions Dropdown Menu -->
       <div class="relative">
-        <button id="backupMenuBtn" class="bg-white dark:bg-black text-black dark:text-white px-2.5 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center gap-1 font-black">
+        <button id="backupMenuBtn"
+          class="bg-white dark:bg-black text-black dark:text-white px-2.5 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:translate-x-1 active:translate-y-1 transition text-xs flex items-center gap-1 font-black">
           <i class="fa-solid fa-database text-sm"></i>
           <span class="hidden lg:inline text-xs">BACKUP</span>
           <i class="fa-solid fa-chevron-down text-[10px] ml-0.5"></i>
         </button>
 
-        <div id="backupMenuDropdown" class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark text-xs py-2 z-50">
-          <div class="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-black text-white dark:bg-white dark:text-black mb-1">Backup & Excel Hub</div>
-          <button id="exportCsvBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-green hover:text-black font-bold flex items-center gap-2">
+        <div id="backupMenuDropdown"
+          class="hidden absolute right-0 mt-2 w-64 bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark text-xs py-2 z-50">
+          <div
+            class="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-black text-white dark:bg-white dark:text-black mb-1">
+            Backup & Excel Hub</div>
+          <button id="exportCsvBtn"
+            class="w-full text-left px-3 py-2 hover:bg-brutal-green hover:text-black font-bold flex items-center gap-2">
             <i class="fa-solid fa-file-excel text-emerald-600 text-sm w-4"></i> Export Tasks to Excel (CSV)
           </button>
-          <button id="exportTimesheetCsvBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-cyan hover:text-black font-bold flex items-center gap-2">
+          <button id="exportTimesheetCsvBtn"
+            class="w-full text-left px-3 py-2 hover:bg-brutal-cyan hover:text-black font-bold flex items-center gap-2">
             <i class="fa-solid fa-file-invoice text-blue-600 text-sm w-4"></i> Export Weekly Timesheet (CSV)
           </button>
-          <button id="exportJsonBtn" class="w-full text-left px-3 py-2 hover:bg-brutal-yellow hover:text-black font-bold flex items-center gap-2">
+          <button id="exportJsonBtn"
+            class="w-full text-left px-3 py-2 hover:bg-brutal-yellow hover:text-black font-bold flex items-center gap-2">
             <i class="fa-solid fa-file-arrow-down text-purple-600 text-sm w-4"></i> Download Full JSON State
           </button>
-          <label class="w-full text-left px-3 py-2 hover:bg-brutal-pink hover:text-white font-bold flex items-center gap-2 cursor-pointer">
+          <label
+            class="w-full text-left px-3 py-2 hover:bg-brutal-pink hover:text-white font-bold flex items-center gap-2 cursor-pointer">
             <i class="fa-solid fa-file-arrow-up text-amber-500 text-sm w-4"></i> Restore JSON Backup
             <input type="file" id="importJsonInput" accept=".json" class="hidden">
           </label>
           <div class="border-t-2 border-black dark:border-white my-1"></div>
-          <button id="resetSampleDataBtn" class="w-full text-left px-3 py-2 hover:bg-red-500 hover:text-white text-red-600 dark:text-red-400 font-black flex items-center gap-2">
+          <button id="resetSampleDataBtn"
+            class="w-full text-left px-3 py-2 hover:bg-red-500 hover:text-white text-red-600 dark:text-red-400 font-black flex items-center gap-2">
             <i class="fa-solid fa-rotate-right text-sm w-4"></i> Reload Sample Banking Tasks
           </button>
         </div>
@@ -609,7 +647,8 @@
 
       <!-- Engineer Profile Badge -->
       <div class="header-profile-badge flex items-center pl-1">
-        <div class="w-8 h-8 border-2 border-black dark:border-white bg-brutal-pink text-white font-black flex items-center justify-center text-xs shadow-brutal-sm dark:shadow-brutal-white-sm">
+        <div
+          class="w-8 h-8 border-2 border-black dark:border-white bg-brutal-pink text-white font-black flex items-center justify-center text-xs shadow-brutal-sm dark:shadow-brutal-white-sm">
           RA
         </div>
       </div>
@@ -617,7 +656,8 @@
   </header>
 
   <!-- Mobile Search Bar (Collapsible) -->
-  <div id="mobileSearchBar" class="hidden sm:hidden bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white px-3 py-2 border-b-4 border-black dark:border-white shadow-brutal-sm z-30">
+  <div id="mobileSearchBar"
+    class="hidden sm:hidden bg-brutal-yellow dark:bg-brutal-surfaceDark text-black dark:text-white px-3 py-2 border-b-4 border-black dark:border-white shadow-brutal-sm z-30">
     <div class="relative w-full">
       <input id="mobileSearchInput" type="text" placeholder="SEARCH (/)..."
         class="w-full bg-white dark:bg-black text-black dark:text-white placeholder-black/60 dark:placeholder-white/60 text-xs font-bold px-3 py-2 pl-8 pr-8 border-2 border-black dark:border-white shadow-brutal-sm focus:outline-none transition">
@@ -630,17 +670,22 @@
 
   <!-- ================= MAIN BODY CONTAINER ================= -->
   <div class="flex flex-1 overflow-hidden relative">
-    
+
     <!-- Mobile Sidebar Backdrop Overlay -->
-    <div id="sidebarBackdrop" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 hidden transition-opacity duration-150 opacity-0" aria-hidden="true"></div>
+    <div id="sidebarBackdrop"
+      class="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 hidden transition-opacity duration-150 opacity-0"
+      aria-hidden="true"></div>
 
     <!-- ================= BRUTALIST SIDEBAR ================= -->
-    <aside id="sidebar" class="bg-white dark:bg-brutal-surfaceDark text-black dark:text-white w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-150 border-r-4 border-black dark:border-white z-20 overflow-y-auto">
+    <aside id="sidebar"
+      class="bg-white dark:bg-brutal-surfaceDark text-black dark:text-white w-64 flex-shrink-0 flex flex-col justify-between transition-all duration-150 border-r-4 border-black dark:border-white z-20 overflow-y-auto">
       <div class="p-3">
         <!-- Project Context Header -->
-        <div class="p-2.5 mb-3 bg-brutal-cyan dark:bg-brutal-cardDark border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center justify-between">
+        <div
+          class="p-2.5 mb-3 bg-brutal-cyan dark:bg-brutal-cardDark border-2 border-black dark:border-white shadow-brutal-sm dark:shadow-brutal-white-sm flex items-center justify-between">
           <div class="flex items-center space-x-2 overflow-hidden">
-            <div class="w-6 h-6 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-center text-xs font-black flex-shrink-0">
+            <div
+              class="w-6 h-6 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white flex items-center justify-center text-xs font-black flex-shrink-0">
               BK
             </div>
             <div class="overflow-hidden leading-none">
@@ -649,36 +694,44 @@
             </div>
           </div>
           <!-- Close button for mobile / tablet drawer -->
-          <button id="closeSidebarBtn" class="lg:hidden p-1 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-black" title="Close Sidebar">
+          <button id="closeSidebarBtn"
+            class="lg:hidden p-1 bg-black text-white dark:bg-white dark:text-black border border-black dark:border-white text-xs font-black"
+            title="Close Sidebar">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
 
         <!-- Primary Navigation Views -->
         <div class="space-y-1.5">
-          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">System Views</div>
-          
-          <button data-view="kanban" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-black bg-brutal-yellow text-black shadow-brutal-sm transition">
+          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">System
+            Views</div>
+
+          <button data-view="kanban"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-black bg-brutal-yellow text-black shadow-brutal-sm transition">
             <i class="fa-solid fa-table-columns text-sm w-4"></i>
             <span>Kanban Board</span>
           </button>
 
-          <button data-view="timesheet" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-green hover:text-black transition">
+          <button data-view="timesheet"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-green hover:text-black transition">
             <i class="fa-solid fa-business-time text-sm w-4"></i>
             <span>Daily Work Timesheet</span>
           </button>
 
-          <button data-view="list" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-cyan hover:text-black transition">
+          <button data-view="list"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-cyan hover:text-black transition">
             <i class="fa-solid fa-list-check text-sm w-4"></i>
             <span>Detailed List / Excel</span>
           </button>
 
-          <button data-view="meetings" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-purple hover:text-black transition">
+          <button data-view="meetings"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-purple hover:text-black transition">
             <i class="fa-solid fa-calendar-day text-sm w-4"></i>
             <span>Syncs & Deployments</span>
           </button>
 
-          <button data-view="metrics" class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-pink hover:text-white transition">
+          <button data-view="metrics"
+            class="nav-view-btn w-full flex items-center space-x-2.5 px-3 py-2 border-2 border-black dark:border-white text-xs font-bold bg-white dark:bg-brutal-cardDark text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm hover:bg-brutal-pink hover:text-white transition">
             <i class="fa-solid fa-chart-pie text-sm w-4"></i>
             <span>Metrics & Bottlenecks</span>
           </button>
@@ -686,60 +739,78 @@
 
         <!-- Module Quick Badges (BCRED, COLLNDISC, ARIMP, TORM, FIDB REVAMP, BULK EXPORT, FBFP, FIDB IMPORT) -->
         <div class="mt-4 space-y-1">
-          <div class="flex items-center justify-between px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">
+          <div
+            class="flex items-center justify-between px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">
             <span>Modules</span>
-            <span class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1.5 font-mono font-bold">8 APPS</span>
+            <span class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1.5 font-mono font-bold">8
+              APPS</span>
           </div>
 
           <div class="grid grid-cols-2 gap-1.5 pt-1">
-            <button onclick="applyQuickModuleFilter('BCRED')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('BCRED')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span>BCRED</span>
               <span id="badge-BCRED" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('COLLNDISC')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-green hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('COLLNDISC')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-green hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span class="truncate">COLLNDISC</span>
-              <span id="badge-COLLNDISC" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+              <span id="badge-COLLNDISC"
+                class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('ARIMP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('ARIMP')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span>ARIMP</span>
               <span id="badge-ARIMP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('TORM')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-purple hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('TORM')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-purple hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span>TORM</span>
               <span id="badge-TORM" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('FIDB REVAMP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-pink hover:text-white border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('FIDB REVAMP')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-pink hover:text-white border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span class="truncate">FIDB REV</span>
-              <span id="badge-FIDBREVAMP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+              <span id="badge-FIDBREVAMP"
+                class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('BULK EXPORT')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-orange hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('BULK EXPORT')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-orange hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span class="truncate">BULK EXP</span>
-              <span id="badge-BULKEXPORT" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+              <span id="badge-BULKEXPORT"
+                class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('FBFP')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('FBFP')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-yellow hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span>FBFP</span>
               <span id="badge-FBFP" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="applyQuickModuleFilter('FIDB IMPORT')" class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <button onclick="applyQuickModuleFilter('FIDB IMPORT')"
+              class="text-left px-2 py-1 bg-white dark:bg-brutal-cardDark hover:bg-brutal-cyan hover:text-black border-2 border-black dark:border-white text-[10px] font-mono font-bold flex items-center justify-between shadow-brutal-sm dark:shadow-brutal-white-sm">
               <span class="truncate">FIDB IMP</span>
-              <span id="badge-FIDBIMPORT" class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+              <span id="badge-FIDBIMPORT"
+                class="text-[9px] bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
           </div>
         </div>
 
         <!-- Quick Bottleneck Counters in Sidebar -->
         <div class="mt-4 space-y-1">
-          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">Live Bottlenecks</div>
+          <div class="px-1 text-[10px] font-black tracking-wider uppercase text-black/60 dark:text-white/60">Live
+            Bottlenecks</div>
           <div class="flex flex-col gap-1.5 pt-1">
-            <button onclick="applyQuickPendingFilter('BSG')" class="text-left px-2.5 py-1.5 bg-brutal-yellow text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+            <button onclick="applyQuickPendingFilter('BSG')"
+              class="text-left px-2.5 py-1.5 bg-brutal-yellow text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
               <span>⏳ PENDING BSG</span>
               <span id="badge-pending-BSG" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
             </button>
-            <button onclick="applyQuickPendingFilter('Testers / QA')" class="text-left px-2.5 py-1.5 bg-brutal-purple text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+            <button onclick="applyQuickPendingFilter('Testers / QA')"
+              class="text-left px-2.5 py-1.5 bg-brutal-purple text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
               <span>⏳ PENDING QA</span>
               <span id="badge-pending-QA" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
             </button>
-            <button onclick="applyQuickPendingFilter('DEV')" class="text-left px-2.5 py-1.5 bg-brutal-cyan text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
+            <button onclick="applyQuickPendingFilter('DEV')"
+              class="text-left px-2.5 py-1.5 bg-brutal-cyan text-black border-2 border-black dark:border-white text-xs font-black flex items-center justify-between shadow-brutal-sm">
               <span>⏳ PENDING DEV</span>
               <span id="badge-pending-DEV" class="font-mono bg-black text-white px-1.5 py-0.2">0</span>
             </button>
@@ -748,7 +819,8 @@
       </div>
 
       <!-- Quick Shortcuts Info at Bottom of Sidebar -->
-      <div class="p-3 border-t-4 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-[11px] font-mono font-bold">
+      <div
+        class="p-3 border-t-4 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-[11px] font-mono font-bold">
         <div class="flex items-center justify-between mb-1">
           <span>SHORTCUTS:</span>
           <span class="bg-black text-white dark:bg-white dark:text-black px-1">c: NEW</span>
@@ -762,15 +834,17 @@
 
     <!-- ================= CONTENT AREA ================= -->
     <main class="flex-1 flex flex-col min-w-0 bg-brutal-bgLight dark:bg-brutal-bgDark overflow-hidden">
-      
+
       <!-- FILTER & ACTION TOOLBAR -->
-      <section id="filterToolbar" class="bg-white dark:bg-brutal-surfaceDark border-b-4 border-black dark:border-white px-2.5 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-brutal-sm">
+      <section id="filterToolbar"
+        class="bg-white dark:bg-brutal-surfaceDark border-b-4 border-black dark:border-white px-2.5 sm:px-4 py-2 flex-shrink-0 flex items-center justify-between gap-2 z-10 shadow-brutal-sm">
         <div class="flex items-center gap-2 overflow-x-auto no-scrollbar touch-scroll py-0.5 flex-1 min-w-0">
-          
+
           <!-- Module Filter -->
           <div class="flex items-center space-x-1 flex-shrink-0">
             <span class="text-[10px] font-black uppercase">MODULE:</span>
-            <select id="filterModule" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+            <select id="filterModule"
+              class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
               <option value="ALL">ALL MODULES</option>
               <option value="BCRED">BCRED</option>
               <option value="COLLNDISC">COLLNDISC</option>
@@ -785,10 +859,12 @@
 
           <!-- Pending With Filter -->
           <div class="flex items-center space-x-1">
-            <span class="text-[10px] font-black uppercase text-amber-600 dark:text-brutal-yellow flex items-center gap-1">
+            <span
+              class="text-[10px] font-black uppercase text-amber-600 dark:text-brutal-yellow flex items-center gap-1">
               <i class="fa-solid fa-hourglass-half text-[10px]"></i> PENDING:
             </span>
-            <select id="filterPendingWith" class="bg-brutal-yellow text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm">
+            <select id="filterPendingWith"
+              class="bg-brutal-yellow text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm">
               <option value="ALL">ALL PENDING STATES</option>
               <option value="BSG">BSG (Business Solutions)</option>
               <option value="DEV">DEV (Engineering)</option>
@@ -808,13 +884,15 @@
             <span class="text-[10px] font-black uppercase text-blue-600 dark:text-brutal-cyan flex items-center gap-1">
               <i class="fa-solid fa-user-tag text-[10px]"></i> ASSIGNEE:
             </span>
-            <select id="filterAssignee" class="bg-brutal-cyan text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm max-w-[150px]">
+            <select id="filterAssignee"
+              class="bg-brutal-cyan text-black border-2 border-black dark:border-white font-black text-xs px-2 py-1 shadow-brutal-sm max-w-[150px]">
               <option value="ALL">ALL ASSIGNEES</option>
             </select>
           </div>
 
           <!-- Issue Type Filter -->
-          <select id="filterIssueType" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+          <select id="filterIssueType"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
             <option value="ALL">ALL ISSUE TYPES</option>
             <option value="Production Issue">Production Issue</option>
             <option value="UAT Defect">UAT Defect</option>
@@ -828,7 +906,8 @@
           </select>
 
           <!-- Priority Filter -->
-          <select id="filterPriority" class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
+          <select id="filterPriority"
+            class="bg-white dark:bg-black border-2 border-black dark:border-white text-xs font-bold px-2 py-1 text-black dark:text-white shadow-brutal-sm dark:shadow-brutal-white-sm">
             <option value="ALL">ALL PRIORITIES</option>
             <option value="P1">P1 - BLOCKER / CRITICAL</option>
             <option value="P2">P2 - HIGH</option>
@@ -837,126 +916,165 @@
           </select>
 
           <!-- Quick Toggle Pills -->
-          <button id="toggleP1OnlyBtn" class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-red-600 dark:text-red-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+          <button id="toggleP1OnlyBtn"
+            class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-red-600 dark:text-red-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             <i class="fa-solid fa-fire text-red-500"></i> P1 ONLY
           </button>
-          
-          <button id="toggleHighAgeingBtn" class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-amber-600 dark:text-amber-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+
+          <button id="toggleHighAgeingBtn"
+            class="px-2.5 py-1 text-xs border-2 border-black dark:border-white bg-white dark:bg-black text-amber-600 dark:text-amber-400 font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             <i class="fa-solid fa-clock-rotate-left"></i> AGEING > 5D
           </button>
 
           <!-- Reset Filters -->
-          <button id="clearFiltersBtn" class="text-xs bg-black text-white dark:bg-white dark:text-black font-black px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex-shrink-0 whitespace-nowrap">
+          <button id="clearFiltersBtn"
+            class="text-xs bg-black text-white dark:bg-white dark:text-black font-black px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex-shrink-0 whitespace-nowrap">
             RESET
           </button>
         </div>
 
-        <div class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l-2 border-black dark:border-white sm:border-0">
+        <div
+          class="flex items-center space-x-2 flex-shrink-0 pl-1 border-l-2 border-black dark:border-white sm:border-0">
           <!-- Active Items Counter -->
-          <span class="text-xs font-black uppercase bg-brutal-yellow dark:bg-brutal-cardDark text-black dark:text-white px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm whitespace-nowrap">
-            <span class="hidden sm:inline">SHOWING: </span><strong id="visibleTasksCount" class="font-mono font-black text-brutal-pink">0</strong> <span class="hidden sm:inline">TASKS</span>
+          <span
+            class="text-xs font-black uppercase bg-brutal-yellow dark:bg-brutal-cardDark text-black dark:text-white px-2 py-1 border-2 border-black dark:border-white shadow-brutal-sm whitespace-nowrap">
+            <span class="hidden sm:inline">SHOWING: </span><strong id="visibleTasksCount"
+              class="font-mono font-black text-brutal-pink">0</strong> <span class="hidden sm:inline">TASKS</span>
           </span>
         </div>
       </section>
 
       <!-- ================= VIEW CONTAINERS ================= -->
       <div class="flex-1 overflow-auto relative p-2 sm:p-4">
-        
+
         <!-- 1. KANBAN BOARD VIEW -->
         <section id="view-kanban" class="h-full flex flex-col">
           <!-- Mobile Column Quick Jump Bar (Visible on mobile/tablet) -->
-          <div id="kanbanColumnPills" class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-scroll pb-2 px-0.5 flex-shrink-0">
-            <button onclick="scrollToKanbanCol('Backlog')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
-              BACKLOG <span id="pill-count-Backlog" class="bg-black text-white dark:bg-white dark:text-black px-1">0</span>
+          <div id="kanbanColumnPills"
+            class="md:hidden flex items-center gap-1.5 overflow-x-auto no-scrollbar touch-scroll pb-2 px-0.5 flex-shrink-0">
+            <button onclick="scrollToKanbanCol('Backlog')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+              BACKLOG <span id="pill-count-Backlog"
+                class="bg-black text-white dark:bg-white dark:text-black px-1">0</span>
             </button>
-            <button onclick="scrollToKanbanCol('In Progress')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-cyan text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+            <button onclick="scrollToKanbanCol('In Progress')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-cyan text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
               IN PROG <span id="pill-count-InProgress" class="bg-black text-white px-1">0</span>
             </button>
-            <button onclick="scrollToKanbanCol('UAT / Testing')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-purple text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+            <button onclick="scrollToKanbanCol('UAT / Testing')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-purple text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
               UAT <span id="pill-count-UAT" class="bg-black text-white px-1">0</span>
             </button>
-            <button onclick="scrollToKanbanCol('Ready for Prod')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-yellow text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+            <button onclick="scrollToKanbanCol('Ready for Prod')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-yellow text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
               PROD <span id="pill-count-Prod" class="bg-black text-white px-1">0</span>
             </button>
-            <button onclick="scrollToKanbanCol('Blocked')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-pink text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+            <button onclick="scrollToKanbanCol('Blocked')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-pink text-white shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
               BLOCKED <span id="pill-count-Blocked" class="bg-black text-white px-1">0</span>
             </button>
-            <button onclick="scrollToKanbanCol('Closed')" class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-green text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
+            <button onclick="scrollToKanbanCol('Closed')"
+              class="kanban-pill-btn px-2.5 py-1 text-[10px] font-mono font-black border-2 border-black dark:border-white bg-brutal-green text-black shadow-brutal-sm flex items-center gap-1 whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5">
               CLOSED <span id="pill-count-Closed" class="bg-black text-white px-1">0</span>
             </button>
           </div>
 
           <div class="flex-1 overflow-x-auto pb-4 touch-scroll kanban-scroll-wrapper">
             <div class="kanban-board-container flex gap-4 h-full min-w-max lg:min-w-[1380px]">
-              
+
               <!-- Column: Backlog -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Backlog">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="Backlog">
                 <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-gray-400 border border-black dark:border-white"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">Backlog</h3>
                   </div>
-                  <span class="col-count bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-black px-2 py-0.5 border border-black dark:border-white">0</span>
+                  <span
+                    class="col-count bg-black text-white dark:bg-white dark:text-black text-xs font-mono font-black px-2 py-0.5 border border-black dark:border-white">0</span>
                 </div>
                 <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1" data-status="Backlog"></div>
               </div>
 
               <!-- Column: In Progress -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="In Progress">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-cyan text-black px-1.5 py-0.5 -mx-1 -mt-1">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="In Progress">
+                <div
+                  class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-cyan text-black px-1.5 py-0.5 -mx-1 -mt-1">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-blue-600 border border-black"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">In Progress</h3>
                   </div>
-                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                  <span
+                    class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
                 </div>
                 <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="In Progress"></div>
               </div>
 
               <!-- Column: UAT / Testing -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="UAT / Testing">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-purple text-black px-1.5 py-0.5 -mx-1 -mt-1">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="UAT / Testing">
+                <div
+                  class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-purple text-black px-1.5 py-0.5 -mx-1 -mt-1">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-purple-600 border border-black"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">UAT / Testing</h3>
                   </div>
-                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                  <span
+                    class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
                 </div>
-                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="UAT / Testing"></div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="UAT / Testing">
+                </div>
               </div>
 
               <!-- Column: Ready for Prod -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Ready for Prod">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-yellow text-black px-1.5 py-0.5 -mx-1 -mt-1">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="Ready for Prod">
+                <div
+                  class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-yellow text-black px-1.5 py-0.5 -mx-1 -mt-1">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-amber-500 border border-black"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">Ready for Prod</h3>
                   </div>
-                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                  <span
+                    class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
                 </div>
-                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Ready for Prod"></div>
+                <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Ready for Prod">
+                </div>
               </div>
 
               <!-- Column: Blocked -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Blocked">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-pink text-white px-1.5 py-0.5 -mx-1 -mt-1">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="Blocked">
+                <div
+                  class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-pink text-white px-1.5 py-0.5 -mx-1 -mt-1">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-red-600 border border-white animate-pulse"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">Blocked</h3>
                   </div>
-                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-white">0</span>
+                  <span
+                    class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-white">0</span>
                 </div>
                 <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Blocked"></div>
               </div>
 
               <!-- Column: Closed -->
-              <div class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark" data-status="Closed">
-                <div class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-green text-black px-1.5 py-0.5 -mx-1 -mt-1">
+              <div
+                class="kanban-col flex-1 flex flex-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-3 shadow-brutal dark:shadow-brutal-dark"
+                data-status="Closed">
+                <div
+                  class="flex items-center justify-between pb-2 mb-2 border-b-2 border-black dark:border-white bg-brutal-green text-black px-1.5 py-0.5 -mx-1 -mt-1">
                   <div class="flex items-center space-x-2">
                     <span class="w-3 h-3 bg-emerald-600 border border-black"></span>
                     <h3 class="text-xs font-black uppercase tracking-wider">Closed / Done</h3>
                   </div>
-                  <span class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
+                  <span
+                    class="col-count bg-black text-white text-xs font-mono font-black px-2 py-0.5 border border-black">0</span>
                 </div>
                 <div class="kanban-dropzone flex-1 overflow-y-auto space-y-3 pr-1 mt-2" data-status="Closed"></div>
               </div>
@@ -967,36 +1085,43 @@
 
         <!-- 2. DAILY WORK LOG & TIMESHEET VIEW (Matching Corporate Banking Layout)[cite: 1] -->
         <section id="view-timesheet" class="hidden h-full flex flex-col space-y-4">
-          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-4 shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
+          <div
+            class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white p-4 shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 class="text-base font-black uppercase tracking-tight flex items-center gap-2">
                 <i class="fa-solid fa-business-time text-brutal-pink"></i> Corporate Daily Activity & Weekly Timesheet
               </h2>
-              <p class="text-xs font-bold text-black/70 dark:text-white/70">Formatted to match managerial submission template: track past-tense tasks, hours, and extra shift work[cite: 1].</p>
+              <p class="text-xs font-bold text-black/70 dark:text-white/70">Formatted to match managerial submission
+                template: track past-tense tasks, hours, and extra shift work[cite: 1].</p>
             </div>
-            
+
             <div class="flex items-center gap-3">
-              <span id="timesheetTotalHrsBadge" class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm font-mono">
+              <span id="timesheetTotalHrsBadge"
+                class="bg-brutal-green text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm font-mono">
                 TOTAL LOGGED: 0.0 HRS
               </span>
-              <button onclick="exportTimesheetCsv()" class="bg-brutal-yellow text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+              <button onclick="exportTimesheetCsv()"
+                class="bg-brutal-yellow text-black font-black text-xs px-3 py-1.5 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
                 <i class="fa-solid fa-file-excel"></i> Export Timesheet to Excel
               </button>
             </div>
           </div>
 
-          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
+          <div
+            class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
             <!-- Mobile Horizontal Swipe Indicator -->
-            <div class="lg:hidden bg-brutal-yellow text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
+            <div
+              class="lg:hidden bg-brutal-yellow text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
               <span class="flex items-center gap-1.5">
                 <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE TABLE HORIZONTALLY (14 COLS)
               </span>
               <span class="bg-black text-white px-1.5 py-0.5 text-[9px]">SCROLL ➔</span>
             </div>
-            
+
             <div class="flex-1 overflow-auto touch-scroll">
               <table class="w-full text-left text-xs border-collapse min-w-[1050px]">
-                <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
+                <thead
+                  class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
                   <tr>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">#</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Resource Name</th>
@@ -1004,7 +1129,8 @@
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Day</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Date</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task Category</th>
-                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task - Name / Title / Milestone</th>
+                    <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task - Name / Title /
+                      Milestone</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Task - Description</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Time Spent</th>
                     <th class="py-2.5 px-3 border-r border-gray-700 dark:border-gray-300">Priority</th>
@@ -1022,41 +1148,55 @@
 
         <!-- 3. DETAILED LIST / EXCEL GRID VIEW -->
         <section id="view-list" class="hidden h-full flex flex-col">
-          <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
-            <div class="p-3 border-b-2 border-black dark:border-white flex flex-wrap items-center justify-between gap-2 bg-brutal-yellow text-black">
+          <div
+            class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex-1 flex flex-col overflow-hidden">
+            <div
+              class="p-3 border-b-2 border-black dark:border-white flex flex-wrap items-center justify-between gap-2 bg-brutal-yellow text-black">
               <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-table text-black text-sm"></i>
                 <span class="font-black text-xs uppercase tracking-wider">Enterprise Task Master Sheet</span>
                 <span class="text-[11px] font-bold hidden sm:inline">| (Click row to edit details)</span>
               </div>
-              <button onclick="exportToCsv()" class="text-xs bg-black text-white hover:bg-white hover:text-black border-2 border-black px-2.5 py-1 font-black flex items-center gap-1.5 shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+              <button onclick="exportToCsv()"
+                class="text-xs bg-black text-white hover:bg-white hover:text-black border-2 border-black px-2.5 py-1 font-black flex items-center gap-1.5 shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
                 <i class="fa-solid fa-file-excel text-emerald-400"></i> EXPORT GRID TO EXCEL
               </button>
             </div>
-            
+
             <!-- Mobile Horizontal Swipe Indicator -->
-            <div class="lg:hidden bg-brutal-cyan text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
+            <div
+              class="lg:hidden bg-brutal-cyan text-black text-[10px] font-mono font-black px-3 py-1.5 border-b-2 border-black flex items-center justify-between flex-shrink-0">
               <span class="flex items-center gap-1.5">
                 <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE TABLE HORIZONTALLY (12 COLS)
               </span>
               <span class="bg-black text-white px-1.5 py-0.5 text-[9px]">CLICK ROW TO EDIT</span>
             </div>
-            
+
             <div class="flex-1 overflow-auto touch-scroll">
               <table class="w-full text-left text-xs border-collapse min-w-[960px]">
-                <thead class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
+                <thead
+                  class="bg-black text-white dark:bg-white dark:text-black uppercase font-black text-[11px] sticky top-0 z-10 border-b-2 border-black dark:border-white font-mono">
                   <tr>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('id')">ID <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('id')">ID <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
                     <th class="py-2.5 px-3">Type</th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('summary')">Issue / Task Summary <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('module')">Module <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('pendingWith')">Pending With <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('priority')">Priority <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('status')">Status <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('summary')">Issue / Task Summary <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('module')">Module <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('pendingWith')">Pending With <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('priority')">Priority <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('status')">Status <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
                     <th class="py-2.5 px-3">Env</th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('startDate')">Start Date <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('ageing')">Ageing <i class="fa-solid fa-sort text-[10px]"></i></th>
-                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('assignedTo')">Assignee <i class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('startDate')">Start Date <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('ageing')">Ageing <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
+                    <th class="py-2.5 px-3 cursor-pointer" onclick="sortTable('assignedTo')">Assignee <i
+                        class="fa-solid fa-sort text-[10px]"></i></th>
                     <th class="py-2.5 px-3 text-center">Actions</th>
                   </tr>
                 </thead>
@@ -1068,43 +1208,55 @@
 
         <!-- 4. MEETINGS & DEPLOYMENTS VIEW -->
         <section id="view-meetings" class="hidden h-full flex flex-col space-y-4">
-          <div class="bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
+          <div
+            class="bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 bg-brutal-cyan text-black border-2 border-black flex items-center justify-center text-lg font-black shadow-brutal-sm">
+              <div
+                class="w-10 h-10 bg-brutal-cyan text-black border-2 border-black flex items-center justify-center text-lg font-black shadow-brutal-sm">
                 <i class="fa-regular fa-calendar-check"></i>
               </div>
               <div>
                 <h2 class="text-sm font-black uppercase">Banking Support Daily Standup & Release Schedule</h2>
-                <p class="text-xs font-bold text-black/70 dark:text-white/70">Track KT sessions, BRD reviews, CAB calls and release deployment windows</p>
+                <p class="text-xs font-bold text-black/70 dark:text-white/70">Track KT sessions, BRD reviews, CAB calls
+                  and release deployment windows</p>
               </div>
             </div>
-            
+
             <div class="flex items-center space-x-2 font-mono">
               <span class="text-xs font-black uppercase">Scope:</span>
-              <button onclick="setMeetingsScope('today')" id="scopeTodayBtn" class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-brutal-yellow text-black shadow-brutal-sm">TODAY</button>
-              <button onclick="setMeetingsScope('all')" id="scopeAllBtn" class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm">ALL SCHEDULED</button>
+              <button onclick="setMeetingsScope('today')" id="scopeTodayBtn"
+                class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-brutal-yellow text-black shadow-brutal-sm">TODAY</button>
+              <button onclick="setMeetingsScope('all')" id="scopeAllBtn"
+                class="px-3 py-1 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm">ALL
+                SCHEDULED</button>
             </div>
           </div>
 
           <div class="meetings-grid flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 overflow-hidden">
             <!-- Left: Scheduled Meetings & KT Sessions -->
-            <div class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
-              <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-purple text-black flex items-center justify-between font-black">
+            <div
+              class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+              <div
+                class="p-3 border-b-2 border-black dark:border-white bg-brutal-purple text-black flex items-center justify-between font-black">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
                   <i class="fa-solid fa-video"></i> Meetings, KT Sessions & BRD Reviews
                 </span>
-                <span id="meetingsCountBadge" class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-black">0</span>
+                <span id="meetingsCountBadge"
+                  class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-black">0</span>
               </div>
               <div id="meetingsListContainer" class="flex-1 p-3 overflow-y-auto space-y-3"></div>
             </div>
 
             <!-- Right: Deployments & Critical P1 Followups -->
-            <div class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
-              <div class="p-3 border-b-2 border-black dark:border-white bg-brutal-pink text-white flex items-center justify-between font-black">
+            <div
+              class="meetings-col bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark flex flex-col overflow-hidden">
+              <div
+                class="p-3 border-b-2 border-black dark:border-white bg-brutal-pink text-white flex items-center justify-between font-black">
                 <span class="text-xs uppercase tracking-wider flex items-center gap-1.5">
                   <i class="fa-solid fa-rocket"></i> Deployments & P1 Prod Follow-Ups
                 </span>
-                <span id="deploymentsCountBadge" class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-white">0</span>
+                <span id="deploymentsCountBadge"
+                  class="bg-black text-white text-xs font-mono px-2 py-0.5 border border-white">0</span>
               </div>
               <div id="followUpsListContainer" class="flex-1 p-3 overflow-y-auto space-y-3"></div>
             </div>
@@ -1115,37 +1267,45 @@
         <section id="view-metrics" class="hidden h-full overflow-y-auto space-y-4">
           <!-- Metric KPI Stat Cards -->
           <div class="metrics-kpi-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div class="metrics-kpi-card bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
-              <div class="text-[11px] font-black uppercase tracking-wider text-black/60 dark:text-white/60">Total Tasks</div>
+            <div
+              class="metrics-kpi-card bg-white dark:bg-brutal-surfaceDark p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+              <div class="text-[11px] font-black uppercase tracking-wider text-black/60 dark:text-white/60">Total Tasks
+              </div>
               <div id="statTotal" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Across all modules</div>
             </div>
 
-            <div class="metrics-kpi-card bg-brutal-pink text-white p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="metrics-kpi-card bg-brutal-pink text-white p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider opacity-90">Open P1 Blockers</div>
               <div id="statP1" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Production SLA Critical</div>
             </div>
 
-            <div class="metrics-kpi-card bg-brutal-yellow text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="metrics-kpi-card bg-brutal-yellow text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Pending With Teams</div>
               <div id="statPendingExternal" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Waiting BSG / QA / DBA</div>
             </div>
 
-            <div class="metrics-kpi-card bg-brutal-purple text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="metrics-kpi-card bg-brutal-purple text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Prod Releases</div>
               <div id="statDeployments" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Ready for release</div>
             </div>
 
-            <div class="metrics-kpi-card bg-brutal-cyan text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="metrics-kpi-card bg-brutal-cyan text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Avg Task Ageing</div>
-              <div id="statAvgAgeing" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0 <span class="text-xs font-normal">d</span></div>
+              <div id="statAvgAgeing" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0 <span
+                  class="text-xs font-normal">d</span></div>
               <div class="text-[10px] font-bold mt-0.5">Active backlog items</div>
             </div>
 
-            <div class="metrics-kpi-card bg-brutal-green text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="metrics-kpi-card bg-brutal-green text-black p-3.5 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <div class="text-[11px] font-black uppercase tracking-wider">Closed / Done</div>
               <div id="statClosed" class="metrics-kpi-val text-3xl font-black mt-1 font-mono">0</div>
               <div class="text-[10px] font-bold mt-0.5">Resolved items</div>
@@ -1154,7 +1314,8 @@
 
           <!-- Charts Row -->
           <div class="metrics-charts-grid grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-hourglass-half text-amber-500"></i> Bottlenecks (Pending With)
               </h3>
@@ -1163,7 +1324,8 @@
               </div>
             </div>
 
-            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-chart-column text-brutal-cyan"></i> Pipeline By Status
               </h3>
@@ -1172,7 +1334,8 @@
               </div>
             </div>
 
-            <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <div
+              class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
               <h3 class="text-xs font-black uppercase tracking-wider mb-3 flex items-center gap-1.5">
                 <i class="fa-solid fa-cubes-stacked text-brutal-purple"></i> Module Distribution
               </h3>
@@ -1183,12 +1346,15 @@
           </div>
 
           <!-- SLA Ageing Health Grid -->
-          <div class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
-            <h3 class="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5 text-red-600 dark:text-red-400">
+          <div
+            class="bg-white dark:bg-brutal-surfaceDark p-4 border-4 border-black dark:border-white shadow-brutal dark:shadow-brutal-dark">
+            <h3
+              class="text-xs font-black uppercase tracking-wider mb-2 flex items-center gap-1.5 text-red-600 dark:text-red-400">
               <i class="fa-solid fa-triangle-exclamation"></i> SLA Ageing Risk Matrix (> 7 Days Open)
             </h3>
             <!-- Mobile Horizontal Swipe Indicator -->
-            <div class="lg:hidden bg-brutal-pink text-white text-[10px] font-mono font-black px-3 py-1.5 border-2 border-black mb-2 flex items-center justify-between flex-shrink-0">
+            <div
+              class="lg:hidden bg-brutal-pink text-white text-[10px] font-mono font-black px-3 py-1.5 border-2 border-black mb-2 flex items-center justify-between flex-shrink-0">
               <span class="flex items-center gap-1.5">
                 <i class="fa-solid fa-arrows-left-right text-xs"></i> SWIPE MATRIX HORIZONTALLY (9 COLS)
               </span>
@@ -1196,7 +1362,8 @@
             </div>
             <div class="overflow-x-auto touch-scroll">
               <table class="w-full text-xs text-left min-w-[780px]">
-                <thead class="bg-black text-white dark:bg-white dark:text-black font-mono font-black border-b-2 border-black dark:border-white uppercase">
+                <thead
+                  class="bg-black text-white dark:bg-white dark:text-black font-mono font-black border-b-2 border-black dark:border-white uppercase">
                   <tr>
                     <th class="p-2">Task ID</th>
                     <th class="p-2">Module</th>
@@ -1220,24 +1387,30 @@
   </div>
 
   <!-- ================= MOBILE / TABLET BRUTALIST BOTTOM NAV ================= -->
-  <nav id="mobileBottomNav" class="lg:hidden bg-white dark:bg-brutal-surfaceDark border-t-4 border-black dark:border-white flex items-stretch justify-around z-30 flex-shrink-0 shadow-brutal-sm">
-    <button data-view="kanban" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-black bg-brutal-yellow text-black border-r-2 border-black dark:border-white transition active:bg-brutal-yellow">
+  <nav id="mobileBottomNav"
+    class="lg:hidden bg-white dark:bg-brutal-surfaceDark border-t-4 border-black dark:border-white flex items-stretch justify-around z-30 flex-shrink-0 shadow-brutal-sm">
+    <button data-view="kanban"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-black bg-brutal-yellow text-black border-r-2 border-black dark:border-white transition active:bg-brutal-yellow">
       <i class="fa-solid fa-table-columns text-sm"></i>
       <span>KANBAN</span>
     </button>
-    <button data-view="timesheet" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-green hover:text-black transition active:bg-brutal-green">
+    <button data-view="timesheet"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-green hover:text-black transition active:bg-brutal-green">
       <i class="fa-solid fa-business-time text-sm"></i>
       <span>TIMESHEET</span>
     </button>
-    <button data-view="list" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-cyan hover:text-black transition active:bg-brutal-cyan">
+    <button data-view="list"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-cyan hover:text-black transition active:bg-brutal-cyan">
       <i class="fa-solid fa-list-check text-sm"></i>
       <span>LIST</span>
     </button>
-    <button data-view="meetings" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-purple hover:text-black transition active:bg-brutal-purple">
+    <button data-view="meetings"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white border-r-2 border-black dark:border-white hover:bg-brutal-purple hover:text-black transition active:bg-brutal-purple">
       <i class="fa-solid fa-calendar-day text-sm"></i>
       <span>SYNCS</span>
     </button>
-    <button data-view="metrics" class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white hover:bg-brutal-pink hover:text-white transition active:bg-brutal-pink">
+    <button data-view="metrics"
+      class="mobile-nav-btn flex-1 py-2 px-1 flex flex-col items-center justify-center gap-0.5 text-[10px] font-mono font-bold text-black dark:text-white hover:bg-brutal-pink hover:text-white transition active:bg-brutal-pink">
       <i class="fa-solid fa-chart-pie text-sm"></i>
       <span>METRICS</span>
     </button>
@@ -1246,13 +1419,17 @@
   <!-- ================= BRUTALIST MODALS ================= -->
 
   <!-- 1. CREATE / EDIT TASK MODAL -->
-  <div id="taskModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
-    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden">
-      
+  <div id="taskModal"
+    class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
+    <div
+      class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden">
+
       <!-- Modal Header -->
-      <div class="px-5 py-3.5 bg-brutal-yellow text-black border-b-4 border-black dark:border-white flex items-center justify-between">
+      <div
+        class="px-5 py-3.5 bg-brutal-yellow text-black border-b-4 border-black dark:border-white flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
-          <span class="w-7 h-7 bg-black text-white flex items-center justify-center text-xs font-black border border-black">
+          <span
+            class="w-7 h-7 bg-black text-white flex items-center justify-center text-xs font-black border border-black">
             <i class="fa-solid fa-pen-to-square"></i>
           </span>
           <div>
@@ -1260,20 +1437,25 @@
             <p class="text-[11px] font-bold">Track modules, technical solutions & production blockers</p>
           </div>
         </div>
-        <button id="closeTaskModalBtn" class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
+        <button id="closeTaskModalBtn"
+          class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
       <!-- Modal Tabs Header -->
-      <div class="modal-tab-bar flex border-b-2 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-xs font-black overflow-x-auto no-scrollbar touch-scroll flex-nowrap">
-        <button data-tab="tab-general" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white whitespace-nowrap flex-shrink-0">
+      <div
+        class="modal-tab-bar flex border-b-2 border-black dark:border-white bg-brutal-bgLight dark:bg-brutal-cardDark text-xs font-black overflow-x-auto no-scrollbar touch-scroll flex-nowrap">
+        <button data-tab="tab-general"
+          class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white bg-white dark:bg-brutal-surfaceDark text-black dark:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-circle-info mr-1"></i> 1. CORE & ASSIGNEE
         </button>
-        <button data-tab="tab-technical" class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
+        <button data-tab="tab-technical"
+          class="modal-tab-btn py-2.5 px-4 border-r-2 border-black dark:border-white text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-code mr-1"></i> 2. RCA & CODE FIX
         </button>
-        <button data-tab="tab-meeting" class="modal-tab-btn py-2.5 px-4 text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
+        <button data-tab="tab-meeting"
+          class="modal-tab-btn py-2.5 px-4 text-black/60 dark:text-white/60 hover:text-black dark:hover:text-white whitespace-nowrap flex-shrink-0">
           <i class="fa-solid fa-calendar mr-1"></i> 3. MEETING / KT SYNC
         </button>
       </div>
@@ -1287,12 +1469,14 @@
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Task ID *</label>
-              <input type="text" id="taskIdInput" required class="w-full text-xs font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 uppercase shadow-brutal-sm">
+              <input type="text" id="taskIdInput" required
+                class="w-full text-xs font-mono font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 uppercase shadow-brutal-sm">
             </div>
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Module *</label>
-              <select id="taskModuleInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <select id="taskModuleInput" required
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
                 <option value="BCRED">BCRED</option>
                 <option value="COLLNDISC">COLLNDISC</option>
                 <option value="ARIMP">ARIMP</option>
@@ -1306,7 +1490,8 @@
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Issue Type *</label>
-              <select id="taskIssueTypeInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <select id="taskIssueTypeInput" required
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
                 <option value="Production Issue">Production Issue</option>
                 <option value="UAT Defect">UAT Defect</option>
                 <option value="Development Activity">Development Activity</option>
@@ -1321,7 +1506,8 @@
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Priority *</label>
-              <select id="taskPriorityInput" required class="w-full text-xs font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <select id="taskPriorityInput" required
+                class="w-full text-xs font-black border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
                 <option value="P1">P1 - Blocker / Critical</option>
                 <option value="P2">P2 - High</option>
                 <option value="P3" selected>P3 - Medium</option>
@@ -1333,14 +1519,17 @@
           <!-- Summary -->
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Summary / Problem Statement *</label>
-            <input type="text" id="taskSummaryInput" required placeholder="e.g., EOD batch failure in BCRED_INTEREST job with ORA-01555" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
+            <input type="text" id="taskSummaryInput" required
+              placeholder="e.g., EOD batch failure in BCRED_INTEREST job with ORA-01555"
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
           </div>
 
           <!-- Status, Pending With, Environment -->
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Status *</label>
-              <select id="taskStatusInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <select id="taskStatusInput" required
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
                 <option value="Backlog">Backlog</option>
                 <option value="In Progress">In Progress</option>
                 <option value="UAT / Testing">UAT / Testing</option>
@@ -1354,7 +1543,8 @@
               <label class="block text-[11px] font-black uppercase mb-1 text-amber-600 dark:text-brutal-yellow">
                 Pending With *
               </label>
-              <select id="taskPendingWithInput" required class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
+              <select id="taskPendingWithInput" required
+                class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
                 <option value="None (Active)">None (Active / With Me)</option>
                 <option value="BSG">BSG (Business Solutions Group)</option>
                 <option value="DEV">DEV (Engineering Team)</option>
@@ -1370,7 +1560,8 @@
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Environment</label>
-              <select id="taskEnvInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
+              <select id="taskEnvInput"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
                 <option value="PROD">PROD (Production)</option>
                 <option value="UAT">UAT</option>
                 <option value="SIT">SIT</option>
@@ -1384,13 +1575,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Assigned To (Assignee)</label>
-              <input type="text" id="taskAssignedToInput" list="assigneeDatalist" placeholder="e.g., Bhai ,  S." class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="text" id="taskAssignedToInput" list="assigneeDatalist" placeholder="e.g., Bhai ,  S."
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
               <datalist id="assigneeDatalist"></datalist>
             </div>
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Assigned By / Reported By</label>
-              <input type="text" id="taskAssignedByInput" placeholder="Lead / Manager Name" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="text" id="taskAssignedByInput" placeholder="Lead / Manager Name"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
           </div>
 
@@ -1398,22 +1591,27 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 font-mono">
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Start Date *</label>
-              <input type="date" id="taskStartDateInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="date" id="taskStartDateInput" required
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Target End Date</label>
-              <input type="date" id="taskEndDateInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="date" id="taskEndDateInput"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Target Prod Date</label>
-              <input type="date" id="taskProdDateInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="date" id="taskProdDateInput"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
           </div>
 
           <!-- Details -->
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Task Details & Error Traces</label>
-            <textarea id="taskDetailsInput" rows="3" placeholder="Paste incident logs, stack traces or technical description..." class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+            <textarea id="taskDetailsInput" rows="3"
+              placeholder="Paste incident logs, stack traces or technical description..."
+              class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
           </div>
         </div>
 
@@ -1421,17 +1619,22 @@
         <div id="tab-technical" class="modal-tab-pane hidden space-y-4">
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Root Cause Analysis (RCA)</label>
-            <textarea id="taskRcaInput" rows="3" placeholder="RCA findings: e.g., Unindexed join condition on ACCT_MASTER, deadlock in Swift parser queue..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+            <textarea id="taskRcaInput" rows="3"
+              placeholder="RCA findings: e.g., Unindexed join condition on ACCT_MASTER, deadlock in Swift parser queue..."
+              class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
           </div>
 
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Solution / Code Fix Details / Workaround</label>
-            <textarea id="taskSolutionInput" rows="4" placeholder="Patch details, stored procedure corrections, release scripts..." class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+            <textarea id="taskSolutionInput" rows="4"
+              placeholder="Patch details, stored procedure corrections, release scripts..."
+              class="w-full text-xs font-mono font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
           </div>
 
           <div class="bg-brutal-cyan text-black border-2 border-black p-3 font-bold text-xs shadow-brutal-sm">
             <i class="fa-solid fa-lightbulb text-black mr-1"></i>
-            <strong>Banking Pro-Tip:</strong> When routing tasks to <em>BSG</em> or <em>Testers</em>, log the precise testing query and expected verification result here.
+            <strong>Banking Pro-Tip:</strong> When routing tasks to <em>BSG</em> or <em>Testers</em>, log the precise
+            testing query and expected verification result here.
           </div>
         </div>
 
@@ -1440,37 +1643,45 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 font-mono">
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Meeting Time</label>
-              <input type="time" id="taskMeetingTimeInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="time" id="taskMeetingTimeInput"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Duration (Min)</label>
-              <input type="number" id="taskMeetingDurationInput" placeholder="30" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="number" id="taskMeetingDurationInput" placeholder="30"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
 
             <div>
               <label class="block text-[11px] font-black uppercase mb-1">Attendees</label>
-              <input type="text" id="taskMeetingAttendeesInput" placeholder="DBA, BSG BA, Ops Lead" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+              <input type="text" id="taskMeetingAttendeesInput" placeholder="DBA, BSG BA, Ops Lead"
+                class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
             </div>
           </div>
 
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Meeting Agenda / KT Notes</label>
-            <textarea id="taskMeetingNotesInput" rows="4" placeholder="Key decisions made, action items, or KT walkthrough notes..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+            <textarea id="taskMeetingNotesInput" rows="4"
+              placeholder="Key decisions made, action items, or KT walkthrough notes..."
+              class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
           </div>
         </div>
 
         <!-- Modal Footer Actions -->
         <div class="pt-3 border-t-2 border-black dark:border-white flex flex-wrap items-center justify-between gap-2">
-          <button type="button" id="deleteTaskBtn" class="hidden text-xs bg-red-600 text-white font-black px-3 py-2 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+          <button type="button" id="deleteTaskBtn"
+            class="hidden text-xs bg-red-600 text-white font-black px-3 py-2 border-2 border-black dark:border-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             <i class="fa-solid fa-trash-can mr-1"></i> DELETE TASK
           </button>
-          
+
           <div class="flex items-center flex-wrap gap-2 ml-auto">
-            <button type="button" id="cancelTaskModalBtn" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+            <button type="button" id="cancelTaskModalBtn"
+              class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
               CANCEL
             </button>
-            <button type="submit" class="text-xs bg-brutal-yellow text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+            <button type="submit"
+              class="text-xs bg-brutal-yellow text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
               <i class="fa-solid fa-floppy-disk"></i> SAVE ITEM
             </button>
           </div>
@@ -1480,13 +1691,17 @@
   </div>
 
   <!-- 2. CREATE TIMESHEET MODAL (Corporate Layout)[cite: 1] -->
-  <div id="timesheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
-    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
-      <div class="px-5 py-3.5 bg-brutal-green text-black border-b-4 border-black dark:border-white flex items-center justify-between">
+  <div id="timesheetModal"
+    class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-3">
+    <div
+      class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+      <div
+        class="px-5 py-3.5 bg-brutal-green text-black border-b-4 border-black dark:border-white flex items-center justify-between">
         <h2 class="text-sm font-black uppercase flex items-center gap-2">
           <i class="fa-solid fa-stopwatch"></i> Log Daily Work Activity (Past Tense)
         </h2>
-        <button onclick="closeTimesheetModal()" class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
+        <button onclick="closeTimesheetModal()"
+          class="bg-black text-white px-2 py-1 border-2 border-black hover:bg-red-600 font-black text-sm">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -1495,33 +1710,39 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Resource Name *</label>
-            <input type="text" id="tsResourceInput" required value="Tanmay S / Lead-ICM" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            <input type="text" id="tsResourceInput" required value="Tanmay S / Lead-ICM"
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
           </div>
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">POD Name (IBG, ILC, ARIPM etc.) *</label>
-            <input type="text" id="tsPodInput" required value="IBG" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
+            <input type="text" id="tsPodInput" required value="IBG"
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm font-mono">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Date *</label>
-            <input type="date" id="tsDateInput" required onchange="syncTsDay()" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            <input type="date" id="tsDateInput" required onchange="syncTsDay()"
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
           </div>
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Day Name</label>
-            <input type="text" id="tsDayInput" readonly class="w-full text-xs font-bold border-2 border-black dark:border-white bg-gray-200 dark:bg-brutal-cardDark text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            <input type="text" id="tsDayInput" readonly
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-gray-200 dark:bg-brutal-cardDark text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
           </div>
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Time Spent (Hours) *</label>
-            <input type="number" step="0.25" min="0.25" max="24" id="tsHoursInput" required placeholder="e.g. 2.5" class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
+            <input type="number" step="0.25" min="0.25" max="24" id="tsHoursInput" required placeholder="e.g. 2.5"
+              class="w-full text-xs font-black border-2 border-black dark:border-white bg-brutal-yellow text-black px-2.5 py-2 shadow-brutal-sm">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Task Category *</label>
-            <select id="tsCategoryInput" required class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            <select id="tsCategoryInput" required
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
               <option value="New Development">New Development</option>
               <option value="Documentation">Documentation</option>
               <option value="Prod Support">Prod Support</option>
@@ -1534,7 +1755,8 @@
           </div>
           <div>
             <label class="block text-[11px] font-black uppercase mb-1">Priority</label>
-            <select id="tsPriorityInput" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+            <select id="tsPriorityInput"
+              class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
               <option value="High">High</option>
               <option value="Medium" selected>Medium</option>
               <option value="Low">Low</option>
@@ -1544,24 +1766,32 @@
 
         <div>
           <label class="block text-[11px] font-black uppercase mb-1">Task - Name / Title / Milestone *</label>
-          <input type="text" id="tsTitleInput" required placeholder="e.g. Attended daily morning scrum call from 09:00 to 10:00" class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
+          <input type="text" id="tsTitleInput" required
+            placeholder="e.g. Attended daily morning scrum call from 09:00 to 10:00"
+            class="w-full text-xs font-bold border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-3 py-2 shadow-brutal-sm">
         </div>
 
         <div>
-          <label class="block text-[11px] font-black uppercase mb-1">Task - Description (What you did in past tense) *</label>
-          <textarea id="tsDescInput" required rows="3" placeholder="e.g. Attended meeting from 09:00 to 10:00 for status update, then investigated incident INC882910 with DBA..." class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
+          <label class="block text-[11px] font-black uppercase mb-1">Task - Description (What you did in past tense)
+            *</label>
+          <textarea id="tsDescInput" required rows="3"
+            placeholder="e.g. Attended meeting from 09:00 to 10:00 for status update, then investigated incident INC882910 with DBA..."
+            class="w-full text-xs font-medium border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white p-2.5 shadow-brutal-sm"></textarea>
         </div>
 
         <div>
           <label class="block text-[11px] font-black uppercase mb-1">Effort Estimate (e.g. 2 Hours, 1 Day)</label>
-          <input type="text" id="tsEstimateInput" placeholder="2 Hours" class="w-full text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
+          <input type="text" id="tsEstimateInput" placeholder="2 Hours"
+            class="w-full text-xs font-mono border-2 border-black dark:border-white bg-white dark:bg-black text-black dark:text-white px-2.5 py-2 shadow-brutal-sm">
         </div>
 
         <div class="pt-3 border-t-2 border-black dark:border-white flex flex-wrap justify-end gap-2">
-          <button type="button" onclick="closeTimesheetModal()" class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
+          <button type="button" onclick="closeTimesheetModal()"
+            class="text-xs bg-white dark:bg-black text-black dark:text-white px-4 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">
             CANCEL
           </button>
-          <button type="submit" class="text-xs bg-brutal-green text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
+          <button type="submit"
+            class="text-xs bg-brutal-green text-black px-5 py-2 border-2 border-black dark:border-white font-black shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition flex items-center gap-1.5">
             <i class="fa-solid fa-plus"></i> APPEND TIMESHEET
           </button>
         </div>
@@ -1570,16 +1800,20 @@
   </div>
 
   <!-- 3. SAFE CONFIRMATION DIALOG -->
-  <div id="confirmDialog" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark max-w-sm w-full p-5 animate-in fade-in zoom-in-95">
+  <div id="confirmDialog"
+    class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div
+      class="bg-white dark:bg-brutal-surfaceDark border-4 border-black dark:border-white shadow-brutal-lg dark:shadow-brutal-dark max-w-sm w-full p-5 animate-in fade-in zoom-in-95">
       <div class="flex items-center space-x-3 text-red-600 dark:text-red-400 mb-2 font-black text-sm uppercase">
         <i class="fa-solid fa-triangle-exclamation text-xl"></i>
         <h3 id="confirmDialogTitle">CONFIRM ACTION</h3>
       </div>
       <p id="confirmDialogMessage" class="text-xs font-bold mb-5">Are you sure you want to perform this action?</p>
       <div class="flex justify-end space-x-2">
-        <button id="confirmDialogCancelBtn" class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CANCEL</button>
-        <button id="confirmDialogProceedBtn" class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-red-600 text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CONFIRM</button>
+        <button id="confirmDialogCancelBtn"
+          class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-white dark:bg-black text-black dark:text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CANCEL</button>
+        <button id="confirmDialogProceedBtn"
+          class="px-3 py-1.5 text-xs border-2 border-black dark:border-white font-black bg-red-600 text-white shadow-brutal-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition">CONFIRM</button>
       </div>
     </div>
   </div>
@@ -1594,7 +1828,7 @@
     ------------------------------------------------------------- */
     const STORAGE_KEY_TASKS = 'PWMS_BANKING_TASKS_DATA_V2';
     const STORAGE_KEY_TIMESHEET = 'PWMS_BANKING_TIMESHEET_DATA_V2';
-    
+
     // Seed Banking Tasks with requested modules (BCRED, COLLNDISC, ARIMP, etc.)
     const SAMPLE_TASKS = [
       {
@@ -1928,19 +2162,19 @@
     function showToast(message, type = 'info') {
       const container = document.getElementById('toastContainer');
       const toast = document.createElement('div');
-      
+
       const typeBg = {
         success: 'bg-brutal-green text-black',
         error: 'bg-brutal-pink text-white',
         info: 'bg-brutal-yellow text-black'
       };
-      
+
       toast.className = `${typeBg[type] || 'bg-white text-black'} px-4 py-2.5 border-4 border-black dark:border-white shadow-brutal-lg text-xs font-black flex items-center space-x-2.5 uppercase pointer-events-auto transition-transform`;
       toast.innerHTML = `
         <i class="fa-solid fa-terminal text-sm"></i>
         <span>${escapeHtml(message)}</span>
       `;
-      
+
       container.appendChild(toast);
       setTimeout(() => {
         toast.style.opacity = '0';
@@ -1952,10 +2186,10 @@
       const dialog = document.getElementById('confirmDialog');
       document.getElementById('confirmDialogTitle').innerText = title;
       document.getElementById('confirmDialogMessage').innerText = message;
-      
+
       const proceedBtn = document.getElementById('confirmDialogProceedBtn');
       const cancelBtn = document.getElementById('confirmDialogCancelBtn');
-      
+
       const closeDialog = () => {
         dialog.classList.add('hidden');
         proceedBtn.onclick = null;
@@ -1978,7 +2212,7 @@
       const assigneeSelect = document.getElementById('filterAssignee');
       const currentSelected = assigneeSelect.value || 'ALL';
       const datalist = document.getElementById('assigneeDatalist');
-      
+
       const defaultMembers = ['Support Engineer', 'Rahul V. (Dev Lead)', 'Pooja M. (BA)', 'DBA On-Call', 'Infra On-Call', 'Unassigned'];
       const set = new Set(defaultMembers);
 
@@ -2097,7 +2331,7 @@
 
     function renderKanban(filteredTasks) {
       const columns = ['Backlog', 'In Progress', 'UAT / Testing', 'Ready for Prod', 'Blocked', 'Closed'];
-      
+
       const pillMap = {
         'Backlog': 'pill-count-Backlog',
         'In Progress': 'pill-count-InProgress',
@@ -2191,7 +2425,7 @@
       timesheets.forEach((item, index) => {
         totalHours += parseFloat(item.time_spent || 0);
         const pClass = item.priority === 'High' ? 'bg-brutal-pink text-white' : item.priority === 'Medium' ? 'bg-brutal-yellow text-black' : 'bg-brutal-green text-black';
-        
+
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-brutal-yellow/20 dark:hover:bg-brutal-cardDark transition border-b-2 border-black dark:border-white text-xs';
         tr.innerHTML = `
@@ -2423,7 +2657,7 @@
 
       const ctxPending = document.getElementById('pendingWithChart').getContext('2d');
       if (pendingChartInstance) pendingChartInstance.destroy();
-      
+
       pendingChartInstance = new Chart(ctxPending, {
         type: 'bar',
         data: {
@@ -2452,7 +2686,7 @@
 
       const ctxStatus = document.getElementById('statusChart').getContext('2d');
       if (statusChartInstance) statusChartInstance.destroy();
-      
+
       statusChartInstance = new Chart(ctxStatus, {
         type: 'bar',
         data: {
@@ -2556,7 +2790,7 @@
         document.getElementById('editTaskIdHidden').value = task.id;
         document.getElementById('taskIdInput').value = task.id;
         document.getElementById('taskIdInput').readOnly = true;
-        
+
         document.getElementById('taskModuleInput').value = task.module;
         document.getElementById('taskIssueTypeInput').value = task.issueType;
         document.getElementById('taskPriorityInput').value = task.priority;
@@ -2582,7 +2816,7 @@
         document.getElementById('taskModalTitle').innerText = 'CREATE BANKING WORK ITEM';
         document.getElementById('editTaskIdHidden').value = '';
         document.getElementById('taskIdInput').readOnly = false;
-        
+
         const highestNum = tasks.reduce((max, t) => {
           const num = parseInt(t.id.replace('BNK-', ''), 10);
           return !isNaN(num) && num > max ? num : max;
@@ -2650,9 +2884,9 @@
       if (tasks.length === 0) return showToast("No tasks to export", "error");
 
       const headers = [
-        "Task ID", "Module", "Issue Type", "Priority", "Status", "Pending With", 
+        "Task ID", "Module", "Issue Type", "Priority", "Status", "Pending With",
         "Environment", "Summary", "Task Details", "RCA", "Solution Fix",
-        "Assigned To", "Assigned By", "Start Date", "Target End Date", 
+        "Assigned To", "Assigned By", "Start Date", "Target End Date",
         "Production Date", "Ageing Days", "Meeting Time", "Meeting Notes"
       ];
 
@@ -2715,7 +2949,7 @@
     function importFromJson(file) {
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           const parsed = JSON.parse(e.target.result);
           const importedTasks = Array.isArray(parsed) ? parsed : (parsed.tasks || []);
@@ -2901,13 +3135,13 @@
       document.getElementById('filterIssueType').addEventListener('change', renderApp);
       document.getElementById('filterPriority').addEventListener('change', renderApp);
 
-      document.getElementById('toggleP1OnlyBtn').addEventListener('click', function() {
+      document.getElementById('toggleP1OnlyBtn').addEventListener('click', function () {
         this.classList.toggle('bg-red-600');
         this.classList.toggle('text-white');
         renderApp();
       });
 
-      document.getElementById('toggleHighAgeingBtn').addEventListener('click', function() {
+      document.getElementById('toggleHighAgeingBtn').addEventListener('click', function () {
         this.classList.toggle('bg-amber-500');
         this.classList.toggle('text-white');
         renderApp();
@@ -3082,4 +3316,5 @@
     };
   </script>
 </body>
+
 </html>

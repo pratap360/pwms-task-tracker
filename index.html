@@ -6,6 +6,38 @@
     <title>PWMS Design System Hub | Personal Web Management Suite</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Config (MUST be right after the CDN script) -->
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                50: "#f0f7ff",
+                500: "#0052cc",
+                600: "#0747a6",
+                900: "#0c2340",
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <!-- Apply dark mode before paint to prevent flash of unstyled content -->
+    <script>
+      (function () {
+        const savedTheme = localStorage.getItem("pwms_hub_theme");
+        const systemPrefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
     <!-- FontAwesome 6 CDN -->
     <link
       rel="stylesheet"

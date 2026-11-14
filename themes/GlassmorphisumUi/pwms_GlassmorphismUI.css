@@ -1,0 +1,535 @@
+ @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+    * {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace !important;
+    }
+
+    /* Ambient Glassmorphism Background Mesh */
+    body {
+      background: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                  radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                  radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.18) 0px, transparent 50%),
+                  #f1f5f9;
+      background-attachment: fixed;
+    }
+
+    .dark body {
+      background: radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.28) 0px, transparent 50%),
+                  radial-gradient(at 100% 0%, rgba(219, 39, 119, 0.22) 0px, transparent 50%),
+                  radial-gradient(at 50% 100%, rgba(14, 165, 233, 0.24) 0px, transparent 50%),
+                  #090d16;
+      background-attachment: fixed;
+    }
+
+    /* Frosted Glass Panes */
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 10px 30px 0 rgba(31, 38, 135, 0.07);
+    }
+
+    .dark .glass-panel {
+      background: rgba(18, 24, 38, 0.62);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 15px 35px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .dark .glass-card {
+      background: rgba(28, 36, 54, 0.55);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    /* Glass Inputs & Controls */
+    .glass-input {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .dark .glass-input {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f1f5f9;
+    }
+
+    /* Glass Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.25);
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.5);
+    }
+
+    /* Drag & Drop Glass Visuals */
+    .kanban-card.dragging {
+      opacity: 0.45;
+      transform: scale(0.97) rotate(-1deg);
+      border: 1px dashed #6366f1 !important;
+    }
+    .kanban-col.drag-over {
+      background: rgba(99, 102, 241, 0.15) !important;
+      border-color: rgba(99, 102, 241, 0.5) !important;
+    }
+
+    /* =========================================================
+       GLASSMORPHISM RESPONSIVE DESIGN & MEDIA QUERIES
+       (Comprehensive Mobile, Tablet & Desktop Layouts)
+    ========================================================= */
+
+    /* Touch & Smooth Scroll Utilities */
+    html, body {
+      overscroll-behavior-y: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      touch-action: manipulation;
+      min-height: 100vh;
+      min-height: 100dvh;
+      height: 100dvh;
+    }
+
+    :root {
+      --sat: env(safe-area-inset-top, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+    }
+
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    /* Safe Area Inset Support (Notched phones, iPhone home indicator) */
+    .safe-pb {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+    }
+    .safe-pt {
+      padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+    }
+
+    /* Table horizontal touch scroll container styling */
+    .table-responsive-container {
+      position: relative;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Active Kanban column pill highlight */
+    .kanban-pill-btn.active-pill {
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%) !important;
+      color: #ffffff !important;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      transform: scale(1.02);
+    }
+    .kanban-pill-btn.active-pill span[id^="pill-count-"] {
+      background: rgba(255, 255, 255, 0.25) !important;
+      color: #ffffff !important;
+    }
+
+    /* ---------------------------------------------------------
+       1. SHARED MOBILE & TABLET RULES (Viewport < 1024px)
+    --------------------------------------------------------- */
+    @media (max-width: 1023px) {
+      /* Off-canvas Glass Drawer Navigation */
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        width: 290px !important;
+        max-width: 85vw !important;
+        z-index: 50 !important;
+        border-radius: 0 1.5rem 1.5rem 0 !important;
+        transform: translateX(-100%);
+        transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+        box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5) !important;
+      }
+
+      /* Sidebar Backdrop Overlay */
+      #sidebarBackdrop, .sidebar-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 45 !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        opacity: 0;
+        pointer-events: none;
+        display: none;
+        transition: opacity 0.25s ease;
+      }
+
+      #sidebarBackdrop.active, .sidebar-backdrop.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        display: block !important;
+      }
+
+      #closeSidebarBtn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Edge-to-edge layout on mobile/tablet screens */
+      .main-body-container {
+        padding: 0 !important;
+        gap: 0 !important;
+      }
+
+      main.main-content-panel {
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      .view-content-wrapper {
+        padding: 0.5rem !important;
+      }
+
+      /* Mobile Bottom Navigation Bar */
+      #mobileBottomNav {
+        display: flex !important;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+      }
+
+      /* Meetings View: Free flowing layout on mobile/tablet without scroll traps */
+      #view-meetings {
+        overflow-y: auto !important;
+        height: 100% !important;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1.5rem;
+      }
+
+      #view-meetings .meetings-grid {
+        grid-template-columns: 1fr !important;
+        overflow: visible !important;
+        height: auto !important;
+        flex: none !important;
+      }
+
+      #view-meetings .meetings-col {
+        min-height: 280px !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+
+      /* Modals: Ensure modals sit above sidebar and backdrop */
+      #taskModal, #timesheetModal, #confirmDialog {
+        z-index: 60 !important;
+      }
+
+      #toastContainer {
+        z-index: 70 !important;
+        bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       2. DESKTOP VIEWPORT (Viewport >= 1024px)
+    --------------------------------------------------------- */
+    @media (min-width: 1024px) {
+      #sidebar {
+        position: relative !important;
+        transform: none !important;
+        transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      #sidebar.-ml-64 {
+        margin-left: -16rem !important;
+      }
+
+      #sidebarBackdrop, .sidebar-backdrop {
+        display: none !important;
+      }
+
+      #closeSidebarBtn {
+        display: none !important;
+      }
+
+      #mobileBottomNav {
+        display: none !important;
+      }
+
+      .kanban-board-container {
+        min-width: 1380px;
+      }
+
+      .kanban-col {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+
+      #view-meetings .meetings-grid {
+        overflow: hidden !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       3. TABLET VIEWPORT SPECIFIC (768px to 1023px)
+    --------------------------------------------------------- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      /* Kanban Columns on Tablet */
+      .kanban-board-container {
+        display: flex !important;
+        gap: 1rem !important;
+        min-width: max-content !important;
+      }
+
+      .kanban-col {
+        flex: 0 0 290px !important;
+        max-width: 290px !important;
+        min-width: 290px !important;
+        scroll-snap-align: start;
+      }
+
+      /* Modals on Tablet */
+      #taskModal > div, #timesheetModal > div {
+        max-width: 700px !important;
+        width: 90vw !important;
+        max-height: 88vh !important;
+      }
+
+      /* Metrics KPI Cards: 3 columns on tablet */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+      /* Charts on tablet */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+      #view-metrics .metrics-charts-grid > div:last-child {
+        grid-column: span 2 !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       4. MOBILE VIEWPORT SPECIFIC (Viewport < 768px)
+    --------------------------------------------------------- */
+    @media (max-width: 767px) {
+      /* Header adaptations */
+      header {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+        height: 3.5rem !important;
+      }
+
+      header .header-btn-label {
+        display: none !important;
+      }
+
+      /* Kanban mobile snap swiping */
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-padding: 0 1rem;
+        padding-bottom: 0.5rem;
+      }
+
+      .kanban-board-container {
+        display: flex !important;
+        gap: 0.75rem !important;
+        min-width: max-content !important;
+        padding-right: 1.25rem;
+      }
+
+      .kanban-col {
+        flex: 0 0 calc(88vw - 1rem) !important;
+        max-width: 335px !important;
+        min-width: 280px !important;
+        scroll-snap-align: center;
+        scroll-snap-stop: normal;
+        border-radius: 1.25rem !important;
+        padding: 0.75rem !important;
+      }
+
+      /* Kanban Cards on mobile */
+      .kanban-card {
+        padding: 0.75rem !important;
+      }
+
+      /* Modals on mobile: Bottom Sheet Style */
+      #taskModal, #timesheetModal {
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+
+      #confirmDialog {
+        padding: 0.75rem !important;
+      }
+
+      #taskModal > div, #timesheetModal > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 92vh !important;
+        max-height: 92dvh !important;
+        border-radius: 1.5rem 1.5rem 0 0 !important;
+        border-bottom: none !important;
+      }
+
+      #taskForm, #timesheetForm {
+        padding: 1rem !important;
+        gap: 0.75rem !important;
+      }
+
+      /* Touch-friendly inputs: prevent iOS auto-zoom by enforcing >= 16px font-size */
+      #taskForm input, 
+      #taskForm select, 
+      #taskForm textarea,
+      #timesheetForm input, 
+      #timesheetForm select, 
+      #timesheetForm textarea,
+      #filterToolbar select,
+      #globalSearchInput,
+      #mobileSearchInput {
+        font-size: 16px !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Modal Tab Bar scroll */
+      .modal-tab-bar {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+      }
+      .modal-tab-bar::-webkit-scrollbar {
+        display: none !important;
+      }
+      .modal-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 0.625rem 0.625rem !important;
+      }
+
+      /* Filter Toolbar on mobile */
+      #filterToolbar {
+        padding: 0.375rem 0.5rem !important;
+      }
+
+      #filterToolbar select,
+      #filterToolbar button {
+        font-size: 12px !important;
+        padding: 0.35rem 0.6rem !important;
+        min-height: 2.25rem;
+      }
+
+      /* KPI Stat cards in Metrics View */
+      #view-metrics .metrics-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.5rem !important;
+      }
+      #view-metrics .metrics-kpi-card {
+        padding: 0.75rem !important;
+        border-radius: 1.25rem !important;
+      }
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.5rem !important;
+        line-height: 1.75rem !important;
+      }
+
+      /* Charts in Metrics View */
+      #view-metrics .metrics-charts-grid {
+        grid-template-columns: 1fr !important;
+        gap: 0.75rem !important;
+      }
+      #view-metrics .metrics-chart-box {
+        height: 14rem !important;
+      }
+
+      /* Toast notifications */
+      #toastContainer {
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+        align-items: center;
+      }
+
+      #toastContainer > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+    }
+
+    /* ---------------------------------------------------------
+       5. EXTRA SMALL MOBILE VIEWPORT (Viewport < 480px)
+    --------------------------------------------------------- */
+    @media (max-width: 479px) {
+      .kanban-col {
+        flex: 0 0 calc(90vw - 0.5rem) !important;
+        min-width: 260px !important;
+      }
+
+      header {
+        padding-left: 0.375rem !important;
+        padding-right: 0.375rem !important;
+      }
+
+      .header-avatar-badge {
+        display: none !important;
+      }
+
+      #backupMenuDropdown {
+        max-width: calc(100vw - 1rem) !important;
+        right: -0.25rem !important;
+      }
+
+      #view-metrics .metrics-kpi-val {
+        font-size: 1.35rem !important;
+      }
+    }

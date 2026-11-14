@@ -1,0 +1,508 @@
+/* =========================================
+       LIQUID GLASS UI (Fluid, Molten, Caustic Glass Design)
+    ========================================= */
+    :root {
+      --liquid-font: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", "Segoe UI", Roboto, system-ui, sans-serif;
+      --liquid-radius-xs: 12px;
+      --liquid-radius-sm: 16px;
+      --liquid-radius-md: 22px;
+      --liquid-radius-lg: 28px;
+      --liquid-radius-xl: 36px;
+      --liquid-pill: 9999px;
+
+      /* Liquid Glass Light Palette */
+      --liquid-bg-light: radial-gradient(at 10% 20%, rgba(147, 197, 253, 0.45) 0px, transparent 50%),
+                         radial-gradient(at 90% 10%, rgba(216, 180, 254, 0.45) 0px, transparent 50%),
+                         radial-gradient(at 50% 50%, rgba(167, 243, 208, 0.35) 0px, transparent 50%),
+                         radial-gradient(at 80% 85%, rgba(199, 210, 254, 0.4) 0px, transparent 50%),
+                         radial-gradient(at 20% 90%, rgba(254, 205, 211, 0.4) 0px, transparent 50%),
+                         linear-gradient(135deg, #e0f2fe 0%, #fdf4ff 50%, #f0fdf4 100%);
+      --liquid-glass-light: rgba(255, 255, 255, 0.62);
+      --liquid-glass-subtle: rgba(255, 255, 255, 0.38);
+      --liquid-glass-card: rgba(255, 255, 255, 0.76);
+      --liquid-bevel-light: inset 0 2px 3px rgba(255, 255, 255, 0.95), 
+                            inset 2px 0 3px rgba(255, 255, 255, 0.7), 
+                            inset -2px -2px 3px rgba(0, 0, 0, 0.04),
+                            inset 0 -2px 4px rgba(147, 197, 253, 0.2);
+      --liquid-shadow-light: 0 16px 36px -8px rgba(14, 165, 233, 0.12), 
+                             0 8px 16px -4px rgba(99, 102, 241, 0.08);
+      --liquid-hover-shadow-light: 0 24px 48px -10px rgba(56, 189, 248, 0.28), 
+                                   0 12px 24px -4px rgba(168, 85, 247, 0.18);
+
+      /* Liquid Glass Dark Palette (Deep Bioluminescent Abyss) */
+      --liquid-bg-dark: radial-gradient(at 0% 0%, rgba(14, 116, 144, 0.5) 0px, transparent 55%),
+                        radial-gradient(at 100% 0%, rgba(109, 40, 217, 0.45) 0px, transparent 50%),
+                        radial-gradient(at 50% 60%, rgba(2, 44, 34, 0.6) 0px, transparent 55%),
+                        radial-gradient(at 85% 90%, rgba(30, 58, 138, 0.55) 0px, transparent 50%),
+                        radial-gradient(at 10% 90%, rgba(88, 28, 135, 0.45) 0px, transparent 50%),
+                        linear-gradient(135deg, #030712 0%, #081120 50%, #030712 100%);
+      --liquid-glass-dark: rgba(15, 23, 42, 0.65);
+      --liquid-glass-dark-subtle: rgba(15, 23, 42, 0.48);
+      --liquid-glass-dark-card: rgba(24, 34, 58, 0.72);
+      --liquid-bevel-dark: inset 0 1.5px 2px rgba(255, 255, 255, 0.45), 
+                           inset 1.5px 0 2px rgba(255, 255, 255, 0.25), 
+                           inset -1.5px -1.5px 2px rgba(0, 0, 0, 0.6),
+                           inset 0 -2px 4px rgba(56, 189, 248, 0.18);
+      --liquid-shadow-dark: 0 20px 45px -8px rgba(0, 0, 0, 0.75), 
+                            0 0 20px rgba(14, 165, 233, 0.15);
+      --liquid-hover-shadow-dark: 0 28px 55px -10px rgba(0, 0, 0, 0.9), 
+                                  0 0 35px rgba(56, 189, 248, 0.35);
+    }
+
+    /* Ambient Fluid Liquid Mesh Backdrop */
+    body {
+      background: var(--liquid-bg-light) !important;
+      background-attachment: fixed !important;
+      font-family: var(--liquid-font) !important;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.015em;
+    }
+
+    html.dark body {
+      background: var(--liquid-bg-dark) !important;
+      background-attachment: fixed !important;
+    }
+
+    /* Smooth Water-Droplet Scrollbars */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(125, 211, 252, 0.45);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: var(--liquid-pill);
+      border: 1.5px solid rgba(255, 255, 255, 0.5);
+    }
+    html.dark ::-webkit-scrollbar-thumb {
+      background: rgba(56, 189, 248, 0.28);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+      background: rgba(14, 165, 233, 0.75); 
+    }
+
+    /* Top Fluid Liquid Header */
+    header {
+      background: rgba(15, 23, 42, 0.72) !important;
+      backdrop-filter: blur(30px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(30px) saturate(210%) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 10px 32px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Fluid Translucent Sidebar */
+    #sidebar {
+      background: rgba(15, 23, 42, 0.78) !important;
+      backdrop-filter: blur(34px) saturate(220%) !important;
+      -webkit-backdrop-filter: blur(34px) saturate(220%) !important;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+      box-shadow: 12px 0 40px rgba(0, 0, 0, 0.25), inset -1px 0 2px rgba(255, 255, 255, 0.12) !important;
+    }
+
+    /* Floating Filter Toolbar with Liquid Membrane */
+    #filterToolbar {
+      background: var(--liquid-glass-light) !important;
+      backdrop-filter: blur(28px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+      box-shadow: 0 8px 25px rgba(14, 165, 233, 0.06), var(--liquid-bevel-light) !important;
+    }
+    html.dark #filterToolbar {
+      background: var(--liquid-glass-dark) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), var(--liquid-bevel-dark) !important;
+    }
+
+    main {
+      background: transparent !important;
+    }
+
+    /* Liquid Glass Kanban Columns (Fluid Basins) */
+    .kanban-col {
+      background: var(--liquid-glass-subtle) !important;
+      backdrop-filter: blur(28px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+      border-top: 2px solid rgba(255, 255, 255, 0.95) !important;
+      border-left: 2px solid rgba(255, 255, 255, 0.75) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: var(--liquid-radius-lg) !important;
+      box-shadow: var(--liquid-shadow-light), var(--liquid-bevel-light) !important;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    html.dark .kanban-col {
+      background: var(--liquid-glass-dark-subtle) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+      box-shadow: var(--liquid-shadow-dark), var(--liquid-bevel-dark) !important;
+    }
+
+    /* Molten Liquid Cards */
+    .kanban-card {
+      background: var(--liquid-glass-card) !important;
+      backdrop-filter: blur(22px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(210%) !important;
+      border-top: 2px solid rgba(255, 255, 255, 1) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.35) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25) !important;
+      border-radius: var(--liquid-radius-md) !important;
+      box-shadow: 0 10px 24px -5px rgba(14, 165, 233, 0.1), var(--liquid-bevel-light) !important;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer;
+    }
+    .kanban-card:hover {
+      transform: translateY(-5px) scale(1.018) !important;
+      box-shadow: var(--liquid-hover-shadow-light), var(--liquid-bevel-light) !important;
+      border-color: rgba(56, 189, 248, 0.7) !important;
+    }
+    html.dark .kanban-card {
+      background: var(--liquid-glass-dark-card) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.65), var(--liquid-bevel-dark) !important;
+    }
+    html.dark .kanban-card:hover {
+      transform: translateY(-5px) scale(1.018) !important;
+      box-shadow: var(--liquid-hover-shadow-dark), var(--liquid-bevel-dark) !important;
+      border-color: rgba(56, 189, 248, 0.6) !important;
+    }
+
+    /* Dragging & Fluid Dropzones */
+    .kanban-card.dragging {
+      opacity: 0.35 !important;
+      transform: scale(0.95) rotate(-1deg) !important;
+      border: 2px dashed #0284c7 !important;
+      box-shadow: 0 0 40px rgba(14, 165, 233, 0.5) !important;
+    }
+    .kanban-col.drag-over {
+      background: rgba(186, 230, 253, 0.55) !important;
+      outline: 2.5px dashed #0284c7 !important;
+      outline-offset: -3px !important;
+      transform: scale(1.01) !important;
+    }
+    html.dark .kanban-col.drag-over {
+      background: rgba(8, 47, 73, 0.55) !important;
+      outline-color: #38bdf8 !important;
+    }
+
+    /* Fluid View Containers (List, Timesheet, Metrics) */
+    #view-list > div,
+    #view-meetings > div,
+    #view-metrics > div {
+      background: var(--liquid-glass-light) !important;
+      backdrop-filter: blur(32px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+      border-top: 2px solid rgba(255, 255, 255, 0.95) !important;
+      border-left: 2px solid rgba(255, 255, 255, 0.75) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: var(--liquid-radius-xl) !important;
+      box-shadow: var(--liquid-shadow-light), var(--liquid-bevel-light) !important;
+    }
+    html.dark #view-list > div,
+    html.dark #view-meetings > div,
+    html.dark #view-metrics > div {
+      background: var(--liquid-glass-dark) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+      box-shadow: var(--liquid-shadow-dark), var(--liquid-bevel-dark) !important;
+    }
+
+    /* Fluid Metric & KPI Bubbles */
+    #view-metrics .grid > div,
+    #view-meetings .grid > div {
+      border-radius: var(--liquid-radius-lg) !important;
+      backdrop-filter: blur(24px) !important;
+      -webkit-backdrop-filter: blur(24px) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.6) !important;
+      box-shadow: 0 8px 24px rgba(14, 165, 233, 0.08), var(--liquid-bevel-light) !important;
+      transition: all 0.25s ease !important;
+    }
+    #view-metrics .grid > div:hover,
+    #view-meetings .grid > div:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 16px 32px rgba(14, 165, 233, 0.18), var(--liquid-bevel-light) !important;
+    }
+    html.dark #view-metrics .grid > div,
+    html.dark #view-meetings .grid > div {
+      border-top: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), var(--liquid-bevel-dark) !important;
+    }
+    html.dark #view-metrics .grid > div:hover,
+    html.dark #view-meetings .grid > div:hover {
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.3) !important;
+    }
+
+    /* Fluid Glass Table Styling */
+    table thead {
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(18px) !important;
+      -webkit-backdrop-filter: blur(18px) !important;
+      border-bottom: 1.5px solid rgba(226, 232, 240, 0.8) !important;
+    }
+    html.dark table thead {
+      background: rgba(15, 23, 42, 0.9) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    }
+
+    /* Water-Droplet Inputs & Controls */
+    input, select, textarea {
+      background: rgba(255, 255, 255, 0.78) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 1) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.8) !important;
+      border-right: 1px solid rgba(203, 213, 225, 0.7) !important;
+      border-bottom: 1px solid rgba(203, 213, 225, 0.6) !important;
+      border-radius: var(--liquid-radius-sm) !important;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    input:focus, select:focus, textarea:focus {
+      background: rgba(255, 255, 255, 0.98) !important;
+      border-color: #0284c7 !important;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25), 0 8px 20px rgba(14, 165, 233, 0.15) !important;
+      outline: none !important;
+    }
+    html.dark input, html.dark select, html.dark textarea {
+      background: rgba(15, 23, 42, 0.7) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark input:focus, html.dark select:focus, html.dark textarea:focus {
+      background: rgba(15, 23, 42, 0.95) !important;
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.3), 0 8px 22px rgba(56, 189, 248, 0.2) !important;
+    }
+
+    button {
+      border-radius: var(--liquid-radius-sm) !important;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    button:hover {
+      filter: brightness(1.08) saturate(110%);
+      transform: translateY(-2px);
+    }
+    button:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    /* Molten Glass Modals */
+    #taskModal > div, #workLogModal > div, #confirmDialog > div {
+      background: rgba(255, 255, 255, 0.88) !important;
+      backdrop-filter: blur(42px) saturate(220%) !important;
+      -webkit-backdrop-filter: blur(42px) saturate(220%) !important;
+      border-top: 2.5px solid rgba(255, 255, 255, 1) !important;
+      border-left: 2px solid rgba(255, 255, 255, 0.9) !important;
+      border-right: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+      border-radius: var(--liquid-radius-xl) !important;
+      box-shadow: 0 35px 90px -15px rgba(14, 165, 233, 0.35), var(--liquid-bevel-light) !important;
+    }
+    html.dark #taskModal > div, html.dark #workLogModal > div, html.dark #confirmDialog > div {
+      background: rgba(15, 23, 42, 0.9) !important;
+      border-top: 2px solid rgba(255, 255, 255, 0.32) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.22) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 40px 100px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(56, 189, 248, 0.2), var(--liquid-bevel-dark) !important;
+    }
+
+    #taskModal header, #workLogModal header, #taskModal .bg-jira-bg, #workLogModal .bg-jira-bg {
+      background: rgba(255, 255, 255, 0.45) !important;
+      border-bottom: 1.5px solid rgba(226, 232, 240, 0.7) !important;
+    }
+    html.dark #taskModal header, html.dark #workLogModal header, html.dark #taskModal .bg-jira-bg, html.dark #workLogModal .bg-jira-bg {
+      background: rgba(30, 41, 59, 0.6) !important;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    }
+
+    /* Fluid Caustic Dropdown Menu */
+    #backupMenuDropdown {
+      background: rgba(255, 255, 255, 0.94) !important;
+      backdrop-filter: blur(32px) !important;
+      -webkit-backdrop-filter: blur(32px) !important;
+      border-top: 2px solid rgba(255, 255, 255, 1) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.85) !important;
+      border-radius: var(--liquid-radius-md) !important;
+      box-shadow: 0 20px 50px rgba(14, 165, 233, 0.2), var(--liquid-bevel-light) !important;
+    }
+    html.dark #backupMenuDropdown {
+      background: rgba(15, 23, 42, 0.94) !important;
+      border-top: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+      border-left: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75), var(--liquid-bevel-dark) !important;
+    }
+
+    /* Liquid Pill Badges with Fluid Bevel Highlights */
+    span[class*="rounded"] {
+      border-radius: var(--liquid-pill) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* =========================================
+       RESPONSIVE & MOBILE / TABLET OPTIMIZATIONS (LIQUID GLASS)
+    ========================================= */
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    #mobileBottomNav {
+      align-items: stretch;
+      justify-content: space-around;
+      gap: 0.375rem;
+      padding: 0.375rem 0.5rem env(safe-area-inset-bottom, 0px);
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border-top: 1px solid rgba(255, 255, 255, 0.75);
+      box-shadow: 0 -8px 24px rgba(14, 165, 233, 0.1), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+    html.dark #mobileBottomNav {
+      background: rgba(15, 23, 42, 0.78);
+      border-top-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.35), inset 0 1px 2px rgba(255, 255, 255, 0.12);
+    }
+    .mobile-nav-btn {
+      min-width: 0;
+      min-height: 3.25rem;
+      border: 1px solid transparent;
+      border-radius: var(--liquid-radius-sm);
+      color: #475569;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html.dark .mobile-nav-btn {
+      color: #cbd5e1;
+    }
+    .mobile-nav-btn.is-active {
+      color: #075985;
+      background: rgba(186, 230, 253, 0.48);
+      border-color: rgba(56, 189, 248, 0.28);
+      box-shadow: var(--liquid-bevel-light), 0 4px 12px rgba(14, 165, 233, 0.12);
+    }
+    html.dark .mobile-nav-btn.is-active {
+      color: #bae6fd;
+      background: rgba(14, 116, 144, 0.3);
+      border-color: rgba(56, 189, 248, 0.24);
+      box-shadow: var(--liquid-bevel-dark), 0 4px 14px rgba(14, 165, 233, 0.16);
+    }
+    .mobile-nav-btn:focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: 2px;
+    }
+
+    /* Off-canvas sidebar for tablet and mobile */
+    @media (max-width: 1023px) {
+      #toastContainer {
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        z-index: 50 !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        background: rgba(15, 23, 42, 0.94) !important;
+        backdrop-filter: blur(28px) !important;
+        -webkit-backdrop-filter: blur(28px) !important;
+        border-right: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+      }
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+      }
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(3, 7, 18, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 45;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .sidebar-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    /* Kanban mobile swipe with scroll snap */
+    @media (max-width: 767px) {
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        padding-bottom: 0.75rem;
+      }
+      .kanban-board-container {
+        display: flex !important;
+        gap: 0.75rem !important;
+        min-width: 0 !important;
+        width: max-content;
+      }
+      .kanban-col {
+        scroll-snap-align: center;
+        flex: 0 0 calc(85vw - 1rem) !important;
+        max-width: calc(85vw - 1rem) !important;
+        min-width: 260px !important;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x proximity;
+      }
+      .kanban-board-container {
+        display: flex !important;
+        min-width: 0 !important;
+        width: max-content;
+      }
+      .kanban-col {
+        scroll-snap-align: start;
+        flex: 0 0 290px !important;
+        max-width: 290px !important;
+      }
+    }
+
+    /* Modal responsiveness */
+    @media (max-width: 640px) {
+      #taskModal > div, #workLogModal > div {
+        max-height: 95vh !important;
+        width: 96% !important;
+        border-radius: var(--liquid-radius-md) !important;
+      }
+      .modal-tab-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    }

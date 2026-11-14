@@ -1,0 +1,530 @@
+/* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; border: 1px solid #000; }
+    ::-webkit-scrollbar-track { background: #fff; }
+    .dark ::-webkit-scrollbar-track { background: #000; border: 1px solid #00ff00; }
+    ::-webkit-scrollbar-thumb { background: #000; border-radius: 0; }
+    .dark ::-webkit-scrollbar-thumb { background: #00ff00; }
+
+    /* Kanban Drag & Drop ghost styles */
+    .kanban-card.dragging { opacity: 0.45; transform: scale(0.98); border: 4px dashed #000 !important; }
+    .kanban-col.drag-over { background-color: #ffff00 !important; outline: 4px dashed #000 !important; outline-offset: -2px; }
+    .dark .kanban-card.dragging { border: 4px dashed #00ff00 !important; }
+    .dark .kanban-col.drag-over { background-color: #003300 !important; outline-color: #00ff00 !important; }
+
+    /* =========================================
+       BRUTALISM UI OVERRIDES
+    ========================================= */
+    body { font-family: 'Courier New', Courier, monospace !important; }
+    * { border-radius: 0 !important; }
+
+    /* Light Mode Brutalism */
+    .kanban-card, .bg-white, .modal-tab-pane, #sidebar, header, .kanban-col, #filterToolbar {
+        background-color: #ffffff !important;
+        border: 3px solid #000000 !important;
+        box-shadow: 4px 4px 0px #000000 !important;
+        color: #000000 !important;
+    }
+    header { background-color: #ffcc00 !important; }
+    #sidebar { background-color: #e0e0e0 !important; }
+    
+    button, select, input, textarea {
+        border: 2px solid #000 !important;
+        box-shadow: 3px 3px 0px #000 !important;
+        border-radius: 0 !important;
+        transition: transform 0.1s, box-shadow 0.1s !important;
+    }
+    button:active {
+        transform: translate(3px, 3px) !important;
+        box-shadow: none !important;
+    }
+    
+    /* Badges & Pills Brutalism Fix */
+    span[class*="bg-"], div[class*="bg-blue-"], div[class*="bg-emerald-"] {
+        border: 2px solid #000 !important;
+        border-radius: 0 !important;
+        box-shadow: 2px 2px 0px #000 !important;
+    }
+
+    /* Dark Mode Brutalism (Terminal Hacker Vibe) */
+    html.dark body, html.dark .bg-jira-bg {
+        background-color: #000000 !important;
+        color: #00ff00 !important;
+    }
+    html.dark .kanban-card, html.dark .bg-white, html.dark .modal-tab-pane, html.dark #sidebar, html.dark header, html.dark .kanban-col, html.dark #filterToolbar {
+        background-color: #000000 !important;
+        border: 3px solid #00ff00 !important;
+        box-shadow: 4px 4px 0px #00ff00 !important;
+        color: #00ff00 !important;
+    }
+    html.dark button, html.dark select, html.dark input, html.dark textarea {
+        background-color: #000 !important;
+        border: 2px solid #00ff00 !important;
+        box-shadow: 3px 3px 0px #00ff00 !important;
+        color: #00ff00 !important;
+    }
+    html.dark button:active {
+        transform: translate(3px, 3px) !important;
+        box-shadow: none !important;
+    }
+    html.dark span[class*="bg-"], html.dark div[class*="bg-"] {
+        background-color: #000 !important;
+        border: 1px solid #00ff00 !important;
+        box-shadow: 2px 2px 0px #00ff00 !important;
+        color: #00ff00 !important;
+    }
+    /* Ensure text contrasts in dark mode */
+    html.dark .text-gray-500, html.dark .text-gray-400, html.dark .text-jira-text, html.dark .text-blue-800, html.dark .text-xs, html.dark .text-sm, html.dark p, html.dark span, html.dark div, html.dark h2, html.dark h3 {
+        color: #00ff00 !important;
+    }
+    html.dark i.fa-solid, html.dark i.fa-regular, html.dark i.fa-brands {
+        color: #00ff00 !important;
+    }
+
+    /* =========================================
+       RESPONSIVE DESIGN & MEDIA QUERIES
+       (Mobile, Tablet & Desktop Adaptations)
+    ========================================= */
+
+    /* Touch & Smooth Scroll Utilities */
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    /* Safe-area inset support for notched devices */
+    @supports (padding: env(safe-area-inset-bottom)) {
+      body { padding-bottom: env(safe-area-inset-bottom); }
+      header { padding-left: max(0.5rem, env(safe-area-inset-left)); padding-right: max(0.5rem, env(safe-area-inset-right)); }
+    }
+
+    /* -----------------------------------------
+       TABLET & MOBILE SHARED (< 1024px)
+    ----------------------------------------- */
+    @media (max-width: 1023px) {
+      /* Off-canvas brutalist mobile/tablet drawer */
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        z-index: 50 !important;
+        transform: translateX(-100%);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+        box-shadow: none !important;
+        border-right: 3px solid #000 !important;
+        overflow-y: auto !important;
+      }
+
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+        box-shadow: 6px 6px 0px #000000 !important;
+      }
+      html.dark #sidebar.sidebar-open {
+        box-shadow: 6px 6px 0px #00ff00 !important;
+        border-right: 3px solid #00ff00 !important;
+      }
+
+      #sidebarBackdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+
+      #sidebarBackdrop.active {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        display: block !important;
+      }
+
+      #closeSidebarBtn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Filter toolbar: wrap filters and make them scrollable */
+      #filterToolbar {
+        flex-wrap: wrap !important;
+      }
+      #filterToolbar > div:first-child {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+      }
+
+      /* Header: allow all items to fit */
+      header {
+        height: auto !important;
+        min-height: 3.5rem !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+      }
+
+      /* Backup dropdown: position it within viewport */
+      #backupMenuDropdown {
+        right: 0 !important;
+        max-width: calc(100vw - 2rem) !important;
+      }
+
+      /* Metrics KPI stat cards - 2 columns on tablet */
+      #view-metrics .grid-cols-2.md\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      /* Metrics charts: stack vertically */
+      #view-metrics .lg\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Timesheet top bar: stack resource/pod/week/buttons */
+      #view-meetings > div:first-child {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+      #view-meetings > div:first-child > div:last-child {
+        width: 100% !important;
+        justify-content: flex-start !important;
+      }
+    }
+
+    /* -----------------------------------------
+       DESKTOP SCREENS (>= 1024px)
+    ----------------------------------------- */
+    @media (min-width: 1024px) {
+      #sidebar {
+        position: relative !important;
+        transform: none !important;
+        transition: margin-left 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      }
+
+      #sidebarBackdrop {
+        display: none !important;
+      }
+
+      #closeSidebarBtn {
+        display: none !important;
+      }
+
+      .kanban-board-container {
+        min-width: 1240px;
+      }
+
+      .kanban-col {
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
+      }
+    }
+
+    /* -----------------------------------------
+       TABLET SPECIFIC (768px to 1023px)
+    ----------------------------------------- */
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .kanban-board-container {
+        display: flex;
+        gap: 0.875rem;
+        min-width: max-content !important;
+      }
+
+      .kanban-col {
+        flex: 0 0 290px !important;
+        min-width: 290px !important;
+      }
+
+      /* Modal adjustments for tablets */
+      #taskModal > div, #workLogModal > div {
+        max-width: 720px !important;
+        width: 92vw !important;
+        max-height: 90vh !important;
+      }
+
+      /* Timesheet hours cards: 3 cols on tablet */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+    }
+
+    /* -----------------------------------------
+       MOBILE SPECIFIC (< 768px)
+    ----------------------------------------- */
+    @media (max-width: 767px) {
+      /* Kanban horizontal snap swiping */
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.75rem;
+      }
+
+      .kanban-board-container {
+        display: flex;
+        gap: 0.75rem;
+        min-width: max-content !important;
+        padding-right: 1rem;
+      }
+
+      .kanban-col {
+        flex: 0 0 calc(85vw - 1rem) !important;
+        min-width: 275px !important;
+        max-width: 325px !important;
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+      }
+
+      /* Modals on small screens */
+      #taskModal, #workLogModal, #confirmDialog {
+        padding: 0.5rem !important;
+      }
+
+      #taskModal > div, #workLogModal > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 95vh !important;
+        max-height: 95dvh !important;
+      }
+
+      #taskForm, #workLogForm {
+        padding: 0.875rem !important;
+      }
+
+      /* Modal Tab Bar scroll */
+      .modal-tab-bar {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important;
+        padding-left: 0.875rem !important;
+        padding-right: 0.875rem !important;
+      }
+      .modal-tab-bar::-webkit-scrollbar {
+        display: none !important;
+      }
+      .modal-tab-btn {
+        flex-shrink: 0 !important;
+        font-size: 11px !important;
+        padding: 0.625rem 0.625rem !important;
+      }
+
+      /* Toolbar on mobile: vertical stack for filter groups */
+      #filterToolbar {
+        padding: 0.5rem 0.625rem !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.5rem !important;
+      }
+      #filterToolbar > div:first-child {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.375rem !important;
+        overflow-x: visible !important;
+      }
+      #filterToolbar > div:first-child > div {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+      }
+      #filterToolbar > div:first-child > div > span {
+        display: none !important;
+      }
+      #filterToolbar select {
+        font-size: 11px !important;
+        padding: 0.375rem 0.5rem !important;
+        width: 100% !important;
+        min-width: 0 !important;
+      }
+      #filterToolbar button {
+        font-size: 11px !important;
+      }
+
+      /* Timesheet & Meeting buttons wrap */
+      .timesheet-action-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-width: 0;
+      }
+
+      /* Timesheet hours summary: 2 cols on mobile */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      /* Timesheet top bar: fully stacked */
+      #view-meetings > div:first-child .flex.items-center.space-x-3:first-child {
+        width: 100%;
+      }
+      #view-meetings > div:first-child > div:last-child {
+        flex-wrap: wrap !important;
+      }
+
+      /* Header compact on mobile */
+      header {
+        height: auto !important;
+        min-height: 3rem !important;
+        padding: 0.375rem 0.5rem !important;
+      }
+      header .flex.items-center.space-x-3 > .flex.items-center.space-x-2 .flex.flex-col span.font-bold {
+        font-size: 12px !important;
+      }
+      header .flex.items-center.space-x-3 > .flex.items-center.space-x-2 .flex.flex-col span.text-\[11px\] {
+        display: none !important;
+      }
+
+      /* View containers: tighter padding */
+      #view-kanban, #view-list, #view-meetings, #view-metrics {
+        padding: 0.5rem !important;
+      }
+
+      /* Modal form grids: single column on mobile */
+      #taskForm .grid.grid-cols-1.md\:grid-cols-4,
+      #taskForm .grid.grid-cols-1.md\:grid-cols-3,
+      #taskForm .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+      }
+      #workLogForm .grid.grid-cols-1.sm\:grid-cols-3,
+      #workLogForm .grid.grid-cols-1.sm\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Metrics KPI stat cards: 2 columns on mobile */
+      #view-metrics .grid {
+        gap: 0.5rem !important;
+      }
+
+      /* SLA table: scrollable */
+      #view-metrics .overflow-x-auto table {
+        min-width: 600px !important;
+      }
+
+      /* Ensure toast notifications fit neatly */
+      #toastContainer {
+        left: 1rem !important;
+        right: 1rem !important;
+        bottom: 1rem !important;
+        align-items: center;
+      }
+
+      #toastContainer > div {
+        max-width: 100% !important;
+        width: 100% !important;
+      }
+
+      /* Brutalism overrides: reduce box-shadow on mobile for less clutter */
+      .kanban-card, .bg-white, .modal-tab-pane, #sidebar, header, .kanban-col, #filterToolbar {
+        box-shadow: 2px 2px 0px #000000 !important;
+      }
+      html.dark .kanban-card, html.dark .bg-white, html.dark .modal-tab-pane, html.dark #sidebar, html.dark header, html.dark .kanban-col, html.dark #filterToolbar {
+        box-shadow: 2px 2px 0px #00ff00 !important;
+      }
+      button, select, input, textarea {
+        box-shadow: 2px 2px 0px #000 !important;
+      }
+      html.dark button, html.dark select, html.dark input, html.dark textarea {
+        box-shadow: 2px 2px 0px #00ff00 !important;
+      }
+    }
+
+    /* -----------------------------------------
+       EXTRA SMALL MOBILE (< 420px)
+    ----------------------------------------- */
+    @media (max-width: 419px) {
+      .kanban-col {
+        flex: 0 0 calc(92vw - 0.5rem) !important;
+        min-width: 260px !important;
+        max-width: none !important;
+      }
+
+      header {
+        padding-left: 0.375rem !important;
+        padding-right: 0.375rem !important;
+      }
+
+      /* Reduce logo icon size */
+      header .w-8.h-8 {
+        width: 1.5rem !important;
+        height: 1.5rem !important;
+        font-size: 0.625rem !important;
+      }
+
+      /* Header action buttons: tighter spacing */
+      header > div > div:last-child {
+        gap: 0.25rem !important;
+      }
+      header > div > div:last-child > * {
+        padding: 0.25rem !important;
+      }
+
+      /* Filter toolbar: even more compact */
+      #filterToolbar select {
+        font-size: 10px !important;
+        padding: 0.25rem 0.375rem !important;
+      }
+
+      /* Modal form: remove excessive padding */
+      #taskForm, #workLogForm {
+        padding: 0.625rem !important;
+      }
+
+      /* Modal header: compact */
+      #taskModal .px-5,
+      #workLogModal .px-5 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+
+      /* Timesheet hours stat cards: single column */
+      #view-meetings .grid.grid-cols-2.md\:grid-cols-5 {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Timesheet action buttons: stack vertically */
+      .timesheet-action-btn {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+      }
+
+      /* Metrics KPI stat cards: single column on very small */
+      #view-metrics .grid-cols-2.md\:grid-cols-3.lg\:grid-cols-6 {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* -----------------------------------------
+       SMALL MOBILE LANDSCAPE (short height)
+    ----------------------------------------- */
+    @media (max-height: 500px) and (orientation: landscape) {
+      header {
+        height: 2.5rem !important;
+        min-height: 2.5rem !important;
+      }
+
+      #view-kanban, #view-list, #view-meetings, #view-metrics {
+        padding: 0.375rem !important;
+      }
+
+      #taskModal > div, #workLogModal > div {
+        max-height: 98vh !important;
+        max-height: 98dvh !important;
+      }
+
+      /* Kanban cols shorter in landscape */
+      .kanban-col {
+        max-height: calc(100vh - 7rem) !important;
+        max-height: calc(100dvh - 7rem) !important;
+      }
+    }

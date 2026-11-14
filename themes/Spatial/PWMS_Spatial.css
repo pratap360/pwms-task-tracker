@@ -1,0 +1,444 @@
+ /* =========================================
+       SPATIAL UI (visionOS / Spatial Glass Design)
+    ========================================= */
+    :root {
+      --spatial-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --spatial-radius-sm: 10px;
+      --spatial-radius-md: 16px;
+      --spatial-radius-lg: 22px;
+      --spatial-radius-xl: 28px;
+
+      /* Spatial Light Palette */
+      --spatial-bg-radial: radial-gradient(circle at 50% 0%, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+      --spatial-glass-light: rgba(255, 255, 255, 0.68);
+      --spatial-glass-light-subtle: rgba(255, 255, 255, 0.42);
+      --spatial-glass-light-card: rgba(255, 255, 255, 0.82);
+      --spatial-border-light: rgba(255, 255, 255, 0.85);
+      --spatial-border-light-dim: rgba(255, 255, 255, 0.45);
+      --spatial-specular-light: inset 0 1px 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.04);
+      --spatial-shadow-ambient-light: 0 20px 45px -10px rgba(15, 23, 42, 0.12), 0 8px 18px -4px rgba(15, 23, 42, 0.08);
+      --spatial-shadow-hover-light: 0 30px 60px -12px rgba(15, 23, 42, 0.22), 0 12px 24px -4px rgba(59, 130, 246, 0.25);
+
+      /* Spatial Dark Palette */
+      --spatial-bg-radial-dark: radial-gradient(circle at 50% -10%, #1e293b 0%, #0f172a 45%, #020617 100%);
+      --spatial-glass-dark: rgba(26, 34, 52, 0.65);
+      --spatial-glass-dark-subtle: rgba(15, 23, 42, 0.52);
+      --spatial-glass-dark-card: rgba(30, 41, 67, 0.75);
+      --spatial-border-dark: rgba(255, 255, 255, 0.18);
+      --spatial-border-dark-dim: rgba(255, 255, 255, 0.08);
+      --spatial-specular-dark: inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5);
+      --spatial-shadow-ambient-dark: 0 24px 50px -10px rgba(0, 0, 0, 0.6), 0 10px 20px -5px rgba(0, 0, 0, 0.4);
+      --spatial-shadow-hover-dark: 0 32px 65px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.22);
+    }
+
+    /* Ambient Spatial Backdrop */
+    body {
+      background: var(--spatial-bg-radial) !important;
+      background-attachment: fixed !important;
+      font-family: var(--spatial-font) !important;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.011em;
+    }
+
+    html.dark body {
+      background: var(--spatial-bg-radial-dark) !important;
+      background-attachment: fixed !important;
+    }
+
+    /* Spatial Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    html.dark ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.7); }
+
+    /* Spatial Floating Header */
+    header {
+      background: rgba(15, 23, 42, 0.78) !important;
+      backdrop-filter: blur(28px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Spatial Floating Sidebar */
+    #sidebar {
+      background: rgba(15, 23, 42, 0.82) !important;
+      backdrop-filter: blur(32px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+      box-shadow: 10px 0 35px rgba(0, 0, 0, 0.22), inset -1px 0 1px rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Spatial Floating Filter Toolbar */
+    #filterToolbar {
+      background: var(--spatial-glass-light) !important;
+      backdrop-filter: blur(24px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+      border-bottom: 1px solid var(--spatial-border-light-dim) !important;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04), inset 0 1px 1px rgba(255, 255, 255, 0.8) !important;
+    }
+    html.dark #filterToolbar {
+      background: var(--spatial-glass-dark) !important;
+      border-bottom: 1px solid var(--spatial-border-dark-dim) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+    }
+
+    main {
+      background: transparent !important;
+    }
+
+    /* Spatial Kanban Columns (Floating Pods) */
+    .kanban-col {
+      background: var(--spatial-glass-light-subtle) !important;
+      backdrop-filter: blur(26px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(180%) !important;
+      border: 1px solid var(--spatial-border-light) !important;
+      border-radius: var(--spatial-radius-lg) !important;
+      box-shadow: var(--spatial-shadow-ambient-light), var(--spatial-specular-light) !important;
+      transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+    }
+    html.dark .kanban-col {
+      background: var(--spatial-glass-dark-subtle) !important;
+      border: 1px solid var(--spatial-border-dark) !important;
+      box-shadow: var(--spatial-shadow-ambient-dark), var(--spatial-specular-dark) !important;
+    }
+
+    /* Spatial Cards (Elevated Glass Cushions) */
+    .kanban-card {
+      background: var(--spatial-glass-light-card) !important;
+      backdrop-filter: blur(20px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.95) !important;
+      border-radius: var(--spatial-radius-md) !important;
+      box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.9) !important;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      cursor: pointer;
+    }
+    .kanban-card:hover {
+      transform: translateY(-4px) scale(1.012) !important;
+      box-shadow: var(--spatial-shadow-hover-light), inset 0 1px 2px rgba(255, 255, 255, 1) !important;
+      border-color: rgba(59, 130, 246, 0.5) !important;
+    }
+    html.dark .kanban-card {
+      background: var(--spatial-glass-dark-card) !important;
+      border: 1px solid var(--spatial-border-dark) !important;
+      box-shadow: 0 10px 24px -5px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+    }
+    html.dark .kanban-card:hover {
+      transform: translateY(-4px) scale(1.012) !important;
+      box-shadow: var(--spatial-shadow-hover-dark), inset 0 1px 1.5px rgba(255, 255, 255, 0.3) !important;
+      border-color: rgba(56, 189, 248, 0.5) !important;
+    }
+
+    /* Dragging and Drop Zones */
+    .kanban-card.dragging {
+      opacity: 0.35 !important;
+      transform: scale(0.95) translateZ(30px) !important;
+      border: 2px dashed #0284c7 !important;
+      box-shadow: 0 0 30px rgba(2, 132, 199, 0.4) !important;
+    }
+    .kanban-col.drag-over {
+      background: rgba(186, 230, 253, 0.45) !important;
+      outline: 2px dashed #0284c7 !important;
+      outline-offset: -3px !important;
+      transform: scale(1.008) !important;
+    }
+    html.dark .kanban-col.drag-over {
+      background: rgba(14, 116, 144, 0.35) !important;
+      outline-color: #38bdf8 !important;
+    }
+
+    /* Spatial Containers for Views (List, Timesheet, Metrics) */
+    #view-list > div,
+    #view-meetings > div,
+    #view-metrics > div {
+      background: var(--spatial-glass-light) !important;
+      backdrop-filter: blur(28px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+      border: 1px solid var(--spatial-border-light) !important;
+      border-radius: var(--spatial-radius-xl) !important;
+      box-shadow: var(--spatial-shadow-ambient-light), var(--spatial-specular-light) !important;
+    }
+    html.dark #view-list > div,
+    html.dark #view-meetings > div,
+    html.dark #view-metrics > div {
+      background: var(--spatial-glass-dark) !important;
+      border: 1px solid var(--spatial-border-dark) !important;
+      box-shadow: var(--spatial-shadow-ambient-dark), var(--spatial-specular-dark) !important;
+    }
+
+    /* Spatial Floating Metric Pods */
+    #view-metrics .grid > div,
+    #view-meetings .grid > div {
+      border-radius: var(--spatial-radius-lg) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+    }
+    #view-metrics .grid > div:hover,
+    #view-meetings .grid > div:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Spatial Table Headers & Dividers */
+    table thead {
+      background: rgba(255, 255, 255, 0.75) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+    }
+    html.dark table thead {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Spatial Capsule Buttons & Input Fields */
+    input, select, textarea {
+      background: rgba(255, 255, 255, 0.72) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(203, 213, 225, 0.85) !important;
+      border-radius: var(--spatial-radius-sm) !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    input:focus, select:focus, textarea:focus {
+      background: rgba(255, 255, 255, 0.98) !important;
+      border-color: #0284c7 !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.22), 0 4px 12px rgba(2, 132, 199, 0.15) !important;
+      outline: none !important;
+    }
+    html.dark input, html.dark select, html.dark textarea {
+      background: rgba(15, 23, 42, 0.65) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark input:focus, html.dark select:focus, html.dark textarea:focus {
+      background: rgba(15, 23, 42, 0.9) !important;
+      border-color: #38bdf8 !important;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25), 0 4px 14px rgba(56, 189, 248, 0.2) !important;
+    }
+
+    button {
+      border-radius: var(--spatial-radius-sm) !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    button:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1.5px);
+    }
+    button:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    /* Spatial Modal Windows (Floating visionOS Glass Orbs) */
+    #taskModal > div, #workLogModal > div, #confirmDialog > div {
+      background: rgba(255, 255, 255, 0.86) !important;
+      backdrop-filter: blur(38px) saturate(210%) !important;
+      -webkit-backdrop-filter: blur(38px) saturate(210%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.95) !important;
+      border-radius: var(--spatial-radius-xl) !important;
+      box-shadow: 0 30px 80px -15px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 1) !important;
+    }
+    html.dark #taskModal > div, html.dark #workLogModal > div, html.dark #confirmDialog > div {
+      background: rgba(15, 23, 42, 0.88) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: 0 35px 90px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.1), inset 0 1.5px 2px rgba(255, 255, 255, 0.25) !important;
+    }
+
+    #taskModal header, #workLogModal header, #taskModal .bg-jira-bg, #workLogModal .bg-jira-bg {
+      background: rgba(255, 255, 255, 0.4) !important;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7) !important;
+    }
+    html.dark #taskModal header, html.dark #workLogModal header, html.dark #taskModal .bg-jira-bg, html.dark #workLogModal .bg-jira-bg {
+      background: rgba(30, 41, 59, 0.5) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Spatial Dropdowns */
+    #backupMenuDropdown {
+      background: rgba(255, 255, 255, 0.92) !important;
+      backdrop-filter: blur(28px) !important;
+      -webkit-backdrop-filter: blur(28px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.9) !important;
+      border-radius: var(--spatial-radius-md) !important;
+      box-shadow: 0 16px 45px rgba(15, 23, 42, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+    }
+    html.dark #backupMenuDropdown {
+      background: rgba(15, 23, 42, 0.92) !important;
+      border: 1px solid rgba(255, 255, 255, 0.18) !important;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+    }
+
+    /* Spatial Pill Badges with Specular Light */
+    span[class*="rounded"] {
+      border-radius: 9999px !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    }
+
+    /* =========================================
+       RESPONSIVE & MOBILE / TABLET OPTIMIZATIONS (SPATIAL VISIONOS)
+    ========================================= */
+    .touch-scroll {
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    #mobileBottomNav {
+      align-items: stretch;
+      justify-content: space-around;
+      background: var(--spatial-glass-light);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-top: 1px solid var(--spatial-border-light);
+      box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.1), var(--spatial-specular-light);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    html.dark #mobileBottomNav {
+      background: var(--spatial-glass-dark);
+      border-top-color: var(--spatial-border-dark);
+      box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.32), var(--spatial-specular-dark);
+    }
+    .mobile-nav-btn {
+      min-width: 0;
+      min-height: 3.5rem;
+      border-right: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 0 !important;
+      color: #475569;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-nav-btn:last-child {
+      border-right: 0;
+    }
+    html.dark .mobile-nav-btn {
+      color: #cbd5e1;
+      border-right-color: rgba(255, 255, 255, 0.1);
+    }
+    .mobile-nav-btn:hover {
+      filter: none;
+      transform: none;
+    }
+    .mobile-nav-btn.is-active {
+      color: #075985;
+      background: rgba(191, 219, 254, 0.3);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+    html.dark .mobile-nav-btn.is-active {
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .mobile-nav-btn:focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: -3px;
+    }
+
+    /* Off-canvas sidebar for tablet and mobile */
+    @media (max-width: 1023px) {
+      #toastContainer {
+        bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px)) !important;
+      }
+
+      #sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        z-index: 50 !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        height: 100vh !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+        background: rgba(15, 23, 42, 0.94) !important;
+        backdrop-filter: blur(28px) !important;
+        -webkit-backdrop-filter: blur(28px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+      }
+      #sidebar.sidebar-open {
+        transform: translateX(0) !important;
+      }
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 6, 23, 0.6);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 45;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .sidebar-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    /* Kanban mobile swipe with scroll snap */
+    @media (max-width: 767px) {
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x mandatory;
+        padding-bottom: 0.75rem;
+      }
+      .kanban-board-container {
+        display: flex !important;
+        gap: 0.75rem !important;
+        min-width: 0 !important;
+        width: max-content;
+      }
+      .kanban-col {
+        scroll-snap-align: center;
+        flex: 0 0 calc(85vw - 1rem) !important;
+        max-width: calc(85vw - 1rem) !important;
+        min-width: 260px !important;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1023px) {
+      .kanban-scroll-wrapper {
+        scroll-snap-type: x proximity;
+      }
+      .kanban-board-container {
+        display: flex !important;
+        min-width: 0 !important;
+        width: max-content;
+      }
+      .kanban-col {
+        scroll-snap-align: start;
+        flex: 0 0 290px !important;
+        max-width: 290px !important;
+      }
+    }
+
+    /* Modal responsiveness */
+    @media (max-width: 640px) {
+      #taskModal > div, #workLogModal > div {
+        max-height: 95vh !important;
+        width: 96% !important;
+        border-radius: var(--spatial-radius-md) !important;
+      }
+      .modal-tab-bar {
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
